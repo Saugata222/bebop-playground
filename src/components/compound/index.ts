@@ -13,5 +13,5 @@ export { nav, navContainer, navItemSize, navItemTypography, navItemStyleRest, na
 export { header, headerContainer, headerSection, headerModelPicker, headerActionButton, headerTypeIcons, headerBreakpoints, headerTypography } from './header';
 export { addMenu, addMenuHeader, addMenuToggle, addMenuDivider, addMenuItem } from './addMenu';
 export { sourcesMenu, sourcesMenuContainer, sourcesMenuItemDefault, sourcesMenuItemSmall, sourcesMenuItemStyle, sourcesMenuToggleLabel, sourcesMenuConnectButton, sourcesMenuScrollbar, sourcesMenuTypography } from './sourcesMenu';
-export { settings, settingsSurface, settingsTitleBar, settingsNavPane, settingsNavItem, settingsNavItemSelected, settingsContent, settingsSourcesHeader, settingsConnectedCard, settingsConnectorCard, settingsSectionTitle } from './settings';
+export { settings, settingsSurface, settingsHeader, settingsNavPane, settingsNavItem, settingsContent, settingsSourcesHeader, settingsConnectedCard, settingsConnectorCard, settingsSectionTitle } from './settings';
 export { responseFooter, responseFooterContainer, responseFooterActionToolbar, responseFooterActionButton, responseFooterActionButtonHover, responseFooterActionButtonPressed, responseFooterDivider, responseFooterSourcesButton, responseFooterSourcesButtonHover, responseFooterSourcesIconStack, responseFooterSourcesChevron } from './responseFooter';

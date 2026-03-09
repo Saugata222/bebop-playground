@@ -1,11 +1,15 @@
 /**
- * Settings — Interactive HTML Preview (Sources Tab)
+ * Settings — Interactive HTML Preview (Sources Tab, Bebop Style)
  *
- * Shows the settings dialog with left nav pane and Sources content:
- *   - Title bar with breadcrumb and dismiss
- *   - 5 nav items (Sources selected with blue pill)
- *   - Connected source card (Notion)
- *   - Connect more grid (8 connector cards)
+ * Fully Bebop-native settings dialog:
+ *   - 16px surface radius, standard shadow
+ *   - 56px header, Bebop breadcrumb
+ *   - Nav items: 36px, 12px radius, #ebebeb selected + semibold
+ *   - Nav pane: right border #dedede
+ *   - Cards: #dedede borders, 12px radius
+ *   - Typography: Segoe UI functional, #5d5d5d secondary
+ *   - Links: #242424 underlined
+ *   - Bebop scrollbar
  *
  * Usage:  npx tsx preview/src/settings.ts
  * Output: preview/dist/settings.html
@@ -32,120 +36,107 @@ const moreIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xml
 
 const chevRightIco = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64645 2.14645C4.45118 2.34171 4.45118 2.65829 4.64645 2.85355L7.79289 6L4.64645 9.14645C4.45118 9.34171 4.45118 9.65829 4.64645 9.85355C4.84171 10.0488 5.15829 10.0488 5.35355 9.85355L8.85355 6.35355C9.04882 6.15829 9.04882 5.84171 8.85355 5.64645L5.35355 2.14645C5.15829 1.95118 4.84171 1.95118 4.64645 2.14645Z" fill="currentColor"/></svg>';
 
-// ─── Connector logos (colored placeholder circles) ──────────
-
+// Colored logo placeholders
 function logoCircle(color: string, letter: string): string {
-  return '<div style="width:20px;height:20px;border-radius:6px;background:' + color + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">' + letter + '</div>';
+  return '<div style="width:20px;height:20px;border-radius:6px;background:' + color + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;">' + letter + '</div>';
 }
-
 function logoBig(color: string, letter: string): string {
-  return '<div style="width:32px;height:32px;border-radius:8px;background:' + color + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;">' + letter + '</div>';
+  return '<div style="width:32px;height:32px;border-radius:8px;background:' + color + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;flex-shrink:0;">' + letter + '</div>';
 }
 
-// ─── CSS ────────────────────────────────────────────────────
+// ─── CSS (Bebop design language) ────────────────────────────
 
 let css = '';
 css += "*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n";
 css += "html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; background: #e8e8e8; display: flex; align-items: center; justify-content: center; }\n";
 
-// Scrollbar
+// Bebop scrollbar
 css += '::-webkit-scrollbar { width: 6px; background: transparent; }\n';
 css += '::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; border: 2px solid transparent; background-clip: content-box; }\n';
 css += '::-webkit-scrollbar-thumb:hover { border-width: 0; }\n';
 css += '::-webkit-scrollbar-track { background: transparent; }\n';
 
-// Dialog surface
-css += ".stg { width: 800px; height: 600px; background: #fff; border-radius: 24px; box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.2), 0px 14px 28px 0px rgba(0,0,0,0.24); display: flex; flex-direction: column; overflow: hidden; }\n";
+// Dialog surface — Bebop 16px radius, standard shadow
+css += ".stg { width: 800px; height: 600px; background: #fff; border-radius: 16px; box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.18); display: flex; flex-direction: column; overflow: hidden; }\n";
 
-// Title bar
-css += ".stg__title { display: flex; align-items: center; height: 64px; padding: 8px 20px; background: #fff; border-radius: 24px 24px 0 0; flex-shrink: 0; }\n";
-css += ".stg__breadcrumb { display: flex; align-items: center; gap: 4px; flex: 1; }\n";
-css += ".stg__bc-text { font-size: 14px; color: #616161; line-height: 20px; }\n";
-css += ".stg__bc-chev { display: flex; align-items: center; color: #616161; }\n";
+// Header — Bebop 56px
+css += ".stg__hdr { display: flex; align-items: center; height: 56px; padding: 0 20px; gap: 8px; flex-shrink: 0; }\n";
+css += ".stg__bc { display: flex; align-items: center; gap: 4px; flex: 1; }\n";
+css += ".stg__bc-rest { font-size: 14px; color: #5d5d5d; line-height: 1.4; }\n";
+css += ".stg__bc-chev { display: flex; align-items: center; color: #5d5d5d; }\n";
 css += ".stg__bc-chev svg { width: 12px; height: 12px; }\n";
-css += ".stg__bc-active { font-size: 14px; color: #242424; line-height: 20px; }\n";
-css += ".stg__dismiss { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; border-radius: 9999px; color: #242424; transition: background 0.1s; }\n";
-css += ".stg__dismiss:hover { background: rgba(0,0,0,0.04); }\n";
-css += ".stg__dismiss svg { width: 20px; height: 20px; }\n";
+css += ".stg__bc-active { font-size: 14px; color: #242424; font-weight: 400; line-height: 1.4; }\n";
+// Dismiss — Bebop action button
+css += ".stg__x { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; border-radius: 9999px; color: #242424; transition: background 0.1s; outline: none; }\n";
+css += ".stg__x:hover { background: rgba(36,36,36,0.04); }\n";
+css += ".stg__x:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }\n";
+css += ".stg__x svg { width: 20px; height: 20px; }\n";
 
-// Body (nav + content)
+// Body
 css += ".stg__body { display: flex; flex: 1; overflow: hidden; }\n";
 
-// Nav pane
-css += ".stg__nav { width: 220px; flex-shrink: 0; padding-top: 16px; display: flex; flex-direction: column; }\n";
-css += ".stg__nav-menu { display: flex; flex-direction: column; padding-left: 20px; }\n";
+// Nav pane — Bebop style with right border
+css += ".stg__nav { width: 220px; flex-shrink: 0; padding: 8px 6px; display: flex; flex-direction: column; border-right: 1px solid #dedede; overflow-y: auto; }\n";
 
-// Nav item
-css += ".stg__ni { display: flex; align-items: center; height: 40px; padding: 3px 0; width: 100%; border: none; cursor: pointer; background: transparent; font-family: inherit; text-align: left; outline: none; }\n";
-css += ".stg__ni-inner { display: flex; align-items: center; gap: 8px; height: 100%; flex: 1; padding: 0 12px 0 10px; border-radius: 4px; transition: background 0.1s; }\n";
-css += ".stg__ni:hover .stg__ni-inner { background: rgba(0,0,0,0.04); }\n";
-css += ".stg__ni-icon { width: 20px; height: 20px; flex-shrink: 0; color: #242424; }\n";
-css += ".stg__ni-icon svg { display: block; width: 20px; height: 20px; }\n";
-css += ".stg__ni-label { font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }\n";
+// Nav item — Bebop 36px, 12px radius
+css += ".stg__ni { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 10px 6px 12px; border-radius: 12px; width: 100%; border: none; cursor: pointer; background: transparent; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 1.4; color: #242424; text-align: left; transition: background 0.1s; outline: none; }\n";
+css += ".stg__ni:hover { background: rgba(36,36,36,0.04); }\n";
+css += ".stg__ni:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }\n";
+// Selected — Bebop selectedAffordance: #ebebeb backplate + semibold
+css += ".stg__ni.sel { background: #ebebeb; font-weight: 600; }\n";
+css += ".stg__ni.sel:hover { background: #e1e1e1; }\n";
+css += ".stg__ni svg { display: block; flex-shrink: 0; width: 20px; height: 20px; }\n";
 
-// Nav item selected
-css += ".stg__ni--sel { height: 48px; }\n";
-css += ".stg__ni--sel .stg__ni-inner { background: rgba(0,0,0,0.04); border-radius: 12px; position: relative; }\n";
-css += ".stg__ni--sel .stg__ni-inner::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 16px; background: #464feb; border-radius: 999px; }\n";
-css += ".stg__ni--sel:hover .stg__ni-inner { background: rgba(0,0,0,0.06); }\n";
-
-// Content area
-css += ".stg__content { flex: 1; overflow-y: auto; padding: 24px 24px 24px 0; display: flex; flex-direction: column; gap: 24px; }\n";
+// Content
+css += ".stg__content { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 24px; }\n";
 
 // Sources header
-css += ".stg__src-header { display: flex; flex-direction: column; gap: 10px; }\n";
-css += ".stg__src-title { font-size: 20px; font-weight: 700; line-height: 28px; color: #242424; }\n";
-css += ".stg__src-desc { font-size: 14px; font-weight: 400; line-height: 20px; color: #424242; }\n";
-css += ".stg__src-link { color: #464feb; text-decoration: none; cursor: pointer; }\n";
-css += ".stg__src-link:hover { text-decoration: underline; }\n";
+css += ".stg__sh { display: flex; flex-direction: column; gap: 8px; }\n";
+css += ".stg__sh-title { font-size: 20px; font-weight: 600; line-height: 28px; color: #242424; }\n";
+css += ".stg__sh-desc { font-size: 14px; font-weight: 400; line-height: 1.4; color: #5d5d5d; }\n";
+css += ".stg__sh-link { color: #242424; text-decoration: underline; cursor: pointer; }\n";
+css += ".stg__sh-link:hover { color: #1d1d1d; }\n";
 
-// Connected card
-css += ".stg__connected { border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; background: #fff; display: flex; align-items: center; }\n";
-css += ".stg__connected-info { display: flex; align-items: center; gap: 12px; flex: 1; }\n";
-css += ".stg__connected-logo { width: 32px; height: 32px; flex-shrink: 0; }\n";
-css += ".stg__connected-text { display: flex; flex-direction: column; gap: 4px; }\n";
-css += ".stg__connected-name { font-size: 14px; font-weight: 600; line-height: 20px; color: #242424; }\n";
-css += ".stg__connected-caption { font-size: 12px; font-weight: 400; line-height: 16px; color: #424242; }\n";
-css += ".stg__connected-more { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; border-radius: 9999px; color: #242424; transition: background 0.1s; flex-shrink: 0; }\n";
-css += ".stg__connected-more:hover { background: rgba(0,0,0,0.04); }\n";
-css += ".stg__connected-more svg { width: 20px; height: 20px; }\n";
+// Connected card — Bebop #dedede border, 12px radius
+css += ".stg__cc { border: 1px solid #dedede; border-radius: 12px; padding: 16px; background: #fff; display: flex; align-items: center; }\n";
+css += ".stg__cc-info { display: flex; align-items: center; gap: 12px; flex: 1; }\n";
+css += ".stg__cc-text { display: flex; flex-direction: column; gap: 2px; }\n";
+css += ".stg__cc-name { font-size: 14px; font-weight: 600; line-height: 1.4; color: #242424; }\n";
+css += ".stg__cc-cap { font-size: 12px; font-weight: 400; line-height: 1.4; color: #5d5d5d; }\n";
+// More button — Bebop subtle action
+css += ".stg__cc-more { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; border-radius: 9999px; color: #242424; transition: background 0.1s; flex-shrink: 0; outline: none; }\n";
+css += ".stg__cc-more:hover { background: rgba(36,36,36,0.04); }\n";
+css += ".stg__cc-more svg { width: 20px; height: 20px; }\n";
 
-// Section title
-css += ".stg__section-title { font-size: 16px; font-weight: 600; line-height: 24px; color: #242424; }\n";
+// Section title — Bebop body-medium-strong
+css += ".stg__st { font-size: 14px; font-weight: 600; line-height: 1.4; color: #242424; }\n";
 
-// Connector grid
-css += ".stg__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }\n";
-css += ".stg__card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; background: #fff; display: flex; flex-direction: column; gap: 4px; cursor: pointer; transition: background 0.1s; border: 1px solid #e0e0e0; }\n";
-css += ".stg__card:hover { background: rgba(0,0,0,0.04); }\n";
-css += ".stg__card-icon { width: 20px; height: 20px; flex-shrink: 0; }\n";
-css += ".stg__card-name { font-size: 14px; font-weight: 600; line-height: 20px; color: #242424; }\n";
+// Connector grid — Bebop #dedede borders, 12px radius
+css += ".stg__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }\n";
+css += ".stg__card { border: 1px solid #dedede; border-radius: 12px; padding: 16px; background: #fff; display: flex; flex-direction: column; gap: 4px; cursor: pointer; transition: background 0.1s, border-color 0.1s; outline: none; }\n";
+css += ".stg__card:hover { background: rgba(36,36,36,0.04); border-color: #c4c4c4; }\n";
+css += ".stg__card:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }\n";
+css += ".stg__card-name { font-size: 14px; font-weight: 600; line-height: 1.4; color: #242424; }\n";
 
-// Connect more section
-css += ".stg__connect-section { display: flex; flex-direction: column; gap: 16px; }\n";
+css += ".stg__connect { display: flex; flex-direction: column; gap: 12px; }\n";
 
 // ─── HTML ───────────────────────────────────────────────────
 
-let html = '<!DOCTYPE html>';
-html += '<html lang="en">';
-html += '<head>';
-html += '<meta charset="utf-8"/>';
+let html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>';
 html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
 html += '<title>Settings \u2014 Bebop Design System Preview</title>';
-html += '<style>' + css + '</style>';
-html += '</head>';
-html += '<body>';
+html += '<style>' + css + '</style></head><body>';
 
-// Dialog
 html += '<div class="stg">';
 
-// Title bar
-html += '<div class="stg__title">';
-html += '<div class="stg__breadcrumb">';
-html += '<span class="stg__bc-text">Settings</span>';
+// Header
+html += '<div class="stg__hdr">';
+html += '<div class="stg__bc">';
+html += '<span class="stg__bc-rest">Settings</span>';
 html += '<span class="stg__bc-chev">' + chevRightIco + '</span>';
 html += '<span class="stg__bc-active">Chat settings</span>';
 html += '</div>';
-html += '<button class="stg__dismiss" title="Close">' + dismissIco + '</button>';
+html += '<button class="stg__x" title="Close">' + dismissIco + '</button>';
 html += '</div>';
 
 // Body
@@ -153,58 +144,42 @@ html += '<div class="stg__body">';
 
 // Nav pane
 html += '<div class="stg__nav">';
-html += '<div class="stg__nav-menu">';
-
-// Nav items
 const navItems = [
-  { icon: settingsIco, label: 'General' },
-  { icon: dataUsageIco, label: 'Data controls' },
-  { icon: agentIco, label: 'Agents' },
-  { icon: peopleSettingsIco, label: 'Personalization' },
-  { icon: flowIco, label: 'Sources', selected: true },
+  { icon: settingsIco, label: 'General', sel: false },
+  { icon: dataUsageIco, label: 'Data controls', sel: false },
+  { icon: agentIco, label: 'Agents', sel: false },
+  { icon: peopleSettingsIco, label: 'Personalization', sel: false },
+  { icon: flowIco, label: 'Sources', sel: true },
 ];
-
-for (const item of navItems) {
-  const sel = (item as { selected?: boolean }).selected ? ' stg__ni--sel' : '';
-  html += '<button class="stg__ni' + sel + '">';
-  html += '<div class="stg__ni-inner">';
-  html += '<span class="stg__ni-icon">' + item.icon + '</span>';
-  html += '<span class="stg__ni-label">' + item.label + '</span>';
-  html += '</div>';
-  html += '</button>';
+for (const ni of navItems) {
+  html += '<button class="stg__ni' + (ni.sel ? ' sel' : '') + '">' + ni.icon + '<span>' + ni.label + '</span></button>';
 }
+html += '</div>';
 
-html += '</div>'; // nav-menu
-html += '</div>'; // nav
-
-// Content area
+// Content
 html += '<div class="stg__content">';
 
 // Sources header
-html += '<div class="stg__src-header">';
-html += '<div class="stg__src-title">Sources</div>';
-html += '<div class="stg__src-desc">Manage the sources Copilot uses to find and retrieve content for you. <a class="stg__src-link" href="#">Learn more.</a></div>';
+html += '<div class="stg__sh">';
+html += '<div class="stg__sh-title">Sources</div>';
+html += '<div class="stg__sh-desc">Manage the sources Copilot uses to find and retrieve content for you. <a class="stg__sh-link" href="#">Learn more.</a></div>';
 html += '</div>';
 
-// Connected source card
-html += '<div class="stg__connected">';
-html += '<div class="stg__connected-info">';
-html += '<div class="stg__connected-logo">' + logoBig('#000', 'N') + '</div>';
-html += '<div class="stg__connected-text">';
-html += '<div class="stg__connected-name">Notion</div>';
-html += '<div class="stg__connected-caption">Used in Chat and Researcher</div>';
-html += '</div>';
-html += '</div>';
-html += '<button class="stg__connected-more" title="More">' + moreIco + '</button>';
+// Connected card
+html += '<div class="stg__cc">';
+html += '<div class="stg__cc-info">';
+html += logoBig('#000', 'N');
+html += '<div class="stg__cc-text">';
+html += '<div class="stg__cc-name">Notion</div>';
+html += '<div class="stg__cc-cap">Used in Chat and Researcher</div>';
+html += '</div></div>';
+html += '<button class="stg__cc-more" title="More">' + moreIco + '</button>';
 html += '</div>';
 
-// Connect more section
-html += '<div class="stg__connect-section">';
-html += '<div class="stg__section-title">Connect more</div>';
-
-// Connector grid
+// Connect more
+html += '<div class="stg__connect">';
+html += '<div class="stg__st">Connect more</div>';
 html += '<div class="stg__grid">';
-
 const connectors = [
   { color: '#00C4CC', letter: 'C', name: 'Canva' },
   { color: '#1A73E8', letter: 'C', name: 'Confluence' },
@@ -215,40 +190,29 @@ const connectors = [
   { color: '#5E6AD2', letter: 'L', name: 'Linear' },
   { color: '#4A154B', letter: 'S', name: 'Slack' },
 ];
-
 for (const c of connectors) {
-  html += '<div class="stg__card">';
-  html += '<div class="stg__card-icon">' + logoCircle(c.color, c.letter) + '</div>';
-  html += '<div class="stg__card-name">' + c.name + '</div>';
-  html += '</div>';
+  html += '<button class="stg__card">' + logoCircle(c.color, c.letter) + '<div class="stg__card-name">' + c.name + '</div></button>';
 }
-
-html += '</div>'; // grid
-html += '</div>'; // connect-section
-
+html += '</div></div>';
 html += '</div>'; // content
 html += '</div>'; // body
 html += '</div>'; // stg
 
-// Script — nav item single selection
+// Script — single selection
 html += '<script>';
 html += 'document.querySelectorAll(".stg__ni").forEach(function(el) {';
 html += '  el.addEventListener("click", function() {';
-html += '    document.querySelectorAll(".stg__ni--sel").forEach(function(s) { s.classList.remove("stg__ni--sel"); });';
-html += '    el.classList.add("stg__ni--sel");';
+html += '    document.querySelectorAll(".stg__ni.sel").forEach(function(s) { s.classList.remove("sel"); });';
+html += '    el.classList.add("sel");';
 html += '  });';
 html += '});';
 html += '</script>';
 
-html += '</body>';
-html += '</html>';
+html += '</body></html>';
 
 // ─── Write ──────────────────────────────────────────────────
 
 const outDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'dist');
-if (!fs.existsSync(outDir)) {
-  fs.mkdirSync(outDir, { recursive: true });
-}
-const outPath = path.join(outDir, 'settings.html');
-fs.writeFileSync(outPath, html, 'utf-8');
-console.log('Done: ' + outPath);
+if (!fs.existsSync(outDir)) { fs.mkdirSync(outDir, { recursive: true }); }
+fs.writeFileSync(path.join(outDir, 'settings.html'), html, 'utf-8');
+console.log('Done: ' + path.join(outDir, 'settings.html'));
