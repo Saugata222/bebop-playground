@@ -181,10 +181,18 @@ html += '    toast.classList.add("rf__toast--visible");';
 html += '    setTimeout(function() { toast.classList.remove("rf__toast--visible"); }, 1500);';
 html += '  });';
 html += '});';
-// Like/Dislike toggle
+// Like/Dislike toggle — mutually exclusive within the same footer
 html += 'document.querySelectorAll(".rf__btn--like, .rf__btn--dislike").forEach(function(btn) {';
 html += '  btn.addEventListener("click", function() {';
-html += '    btn.classList.toggle("rf__btn--active");';
+html += '    var footer = btn.closest(".rf");';
+html += '    var isLike = btn.classList.contains("rf__btn--like");';
+html += '    var sibling = footer.querySelector(isLike ? ".rf__btn--dislike" : ".rf__btn--like");';
+html += '    if (btn.classList.contains("rf__btn--active")) {';
+html += '      btn.classList.remove("rf__btn--active");';
+html += '    } else {';
+html += '      btn.classList.add("rf__btn--active");';
+html += '      if (sibling) sibling.classList.remove("rf__btn--active");';
+html += '    }';
 html += '  });';
 html += '});';
 html += '</script>';
