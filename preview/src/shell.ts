@@ -81,6 +81,40 @@ css += '\n';
 css += "html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; }";
 css += '\n';
 
+// ─── Landing overlay ───
+css += '.landing { position: fixed; inset: 0; z-index: 9999; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: opacity 0.4s ease, visibility 0.4s ease; }';
+css += '\n';
+css += '.landing--hidden { opacity: 0; visibility: hidden; pointer-events: none; }';
+css += '\n';
+css += '.landing__logo { width: 64px; height: 64px; margin-bottom: 32px; color: #242424; animation: landFadeUp 0.6s ease both; }';
+css += '\n';
+css += '.landing__logo svg { width: 100%; height: 100%; }';
+css += '\n';
+css += ".landing__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 56px; font-weight: 300; line-height: 1.1; margin-bottom: 16px; color: #000; animation: landFadeUp 0.7s ease 0.1s both; }";
+css += '\n';
+css += '.landing__title strong { font-weight: 400; }';
+css += '\n';
+css += '.landing__sub { font-size: 18px; font-weight: 400; color: #6f6f6f; line-height: 1.6; max-width: 520px; margin-bottom: 40px; padding: 0 48px; animation: landFadeUp 0.8s ease 0.2s both; }';
+css += '\n';
+css += '.landing__cta { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 8px 20px; border-radius: 12px; background: #242424; color: #fff; font-family: inherit; font-size: 15px; font-weight: 400; text-decoration: none; border: none; cursor: pointer; transition: background 0.15s, transform 0.1s; animation: landFadeUp 0.9s ease 0.3s both; }';
+css += '\n';
+css += '.landing__cta:hover { background: #3b3b3b; }';
+css += '\n';
+css += '.landing__cta:active { transform: scale(0.97); }';
+css += '\n';
+css += '.landing__cta svg { width: 18px; height: 18px; }';
+css += '\n';
+css += '.landing__chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 48px; padding: 0 48px; animation: landFadeUp 1s ease 0.4s both; }';
+css += '\n';
+css += '.landing__chip { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #6f6f6f; background: #f5f5f5; letter-spacing: 0.3px; }';
+css += '\n';
+css += '.landing__chip--count { background: #ebebeb; color: #242424; }';
+css += '\n';
+css += '.landing__footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; padding: 20px; font-size: 12px; color: #929292; }';
+css += '\n';
+css += '@keyframes landFadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }';
+css += '\n';
+
 // ─── Shell layout ───
 css += '.shell { display: flex; height: 100vh; background: #fff; }';
 css += '\n';
@@ -588,6 +622,22 @@ html += '<style>' + css + '</style>';
 html += '</head>';
 html += '<body>';
 
+// ─── Landing overlay ───
+html += '<div class="landing" id="landing">';
+html += '<div class="landing__logo">' + copilotIco + '</div>';
+html += '<h1 class="landing__title"><strong>Bebop</strong> Playground</h1>';
+html += '<p class="landing__sub">AI-native prototyping for the Copilot shell. Interactive components, live previews, and a fully working prototype &mdash; all built from design tokens.</p>';
+html += '<button class="landing__cta" id="landingCta">Explore Playground <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+html += '<div class="landing__chips">';
+html += '<span class="landing__chip landing__chip--count">16 components</span>';
+html += '<span class="landing__chip">TypeScript tokens</span>';
+html += '<span class="landing__chip">Fluent icons</span>';
+html += '<span class="landing__chip">Self-contained HTML</span>';
+html += '<span class="landing__chip">AI-ready</span>';
+html += '</div>';
+html += '<div class="landing__footer">Designed by Saugata \u00B7 Bebop Design System \u00B7 Microsoft</div>';
+html += '</div>';
+
 // ─── Shell container ───
 html += '<div class="shell">';
 
@@ -823,6 +873,12 @@ html += '</div>'; // end shell
 // ─── Script ─────────────────────────────────────────────────────────
 
 html += '<script>';
+
+// Landing overlay dismiss
+html += 'document.getElementById("landingCta").addEventListener("click", function() {';
+html += '  document.getElementById("landing").classList.add("landing--hidden");';
+html += '});';
+html += '\n';
 
 // Chat input interactivity
 html += 'var ci = document.getElementById("chatInput");';
