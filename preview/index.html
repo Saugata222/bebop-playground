@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Bebop Design System</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #fff; color: #242424; min-height: 100vh; }
+
+/* ─── Top bar ─── */
+.topbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; display: flex; align-items: center; gap: 12px; padding: 0 48px; height: 56px; }
+.topbar__logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #242424; }
+.topbar__logo svg { width: 20px; height: 20px; }
+.topbar__logo span { font-size: 14px; font-weight: 600; }
+.topbar__spacer { flex: 1; }
+.topbar__nav { display: flex; gap: 4px; }
+.topbar__link { display: inline-flex; align-items: center; height: 32px; padding: 6px 10px; border-radius: 12px; font-size: 14px; font-weight: 400; color: #242424; text-decoration: none; background: transparent; transition: background 0.1s; }
+.topbar__link:hover { background: rgba(36,36,36,0.04); }
+.topbar__link--active { background: #ebebeb; font-weight: 600; }
+
+/* ─── Preview viewer (iframe overlay) ─── */
+.viewer { display: none; position: fixed; inset: 0; z-index: 100; background: #fff; flex-direction: column; }
+.viewer--open { display: flex; }
+.viewer__iframe { flex: 1; border: none; width: 100%; }
+
+/* ─── Hero ─── */
+.hero { padding: 80px 48px 48px; max-width: 1200px; margin: 0 auto; }
+.hero h1 { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 48px; font-weight: 300; line-height: 1.15; margin-bottom: 12px; }
+.hero h1 strong { font-weight: 400; color: #000; }
+.hero p { font-size: 16px; color: #6f6f6f; line-height: 1.6; max-width: 560px; }
+
+/* ─── Content ─── */
+.main { max-width: 1200px; margin: 0 auto; padding: 0 48px 80px; }
+
+/* ─── Section ─── */
+.section { margin-bottom: 48px; scroll-margin-top: 72px; }
+.section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.section-title { font-size: 20px; font-weight: 600; }
+.section-count { font-size: 12px; font-weight: 600; color: #6f6f6f; background: #f0f0f0; padding: 2px 8px; border-radius: 9999px; }
+
+/* ─── Grid ─── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+
+/* ─── Card ─── */
+.card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
+.card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.card__top { display: flex; align-items: center; gap: 8px; }
+.card__name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
+.card__arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
+.card:hover .card__arrow { color: #242424; transform: translateX(2px); }
+.card__desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.card__tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
+.card__tag--shell { background: #242424; color: #fff; }
+.card__tag--compound { background: #ebebeb; color: #242424; }
+.card__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
+
+/* ─── Featured card ─── */
+.card--featured { border: 1px solid #dedede; background: #fcfcfc; grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 32px; padding: 32px 40px; }
+.card--featured .card__info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.card--featured .card__name { font-size: 20px; }
+.card--featured .card__desc { font-size: 14px; max-width: 500px; }
+.card--featured .card__cta { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 8px 16px; border-radius: 12px; background: #242424; color: #fff; font-size: 14px; font-weight: 400; text-decoration: none; transition: background 0.1s; width: fit-content; margin-top: 4px; }
+.card--featured .card__cta:hover { background: #3b3b3b; }
+.card--featured .card__cta svg { width: 16px; height: 16px; }
+
+/* ─── Footer ─── */
+.footer { border-top: 1px solid #f0f0f0; padding: 24px 48px; text-align: center; font-size: 12px; color: #929292; }
+
+/* ─── Bebop scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <a class="topbar__logo" href="#">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.92704 2H12.1392C13.1927 2 14.1203 2.69397 14.4176 3.7046L14.8868 5.29901C15.0476 5.84546 15.5266 6.232 16.086 6.28068H16.3751C17.2627 6.28068 17.9479 6.53232 18.4023 7.04832C18.8449 7.55084 18.9913 8.21838 19.0009 8.88707C19.02 10.208 18.5033 11.849 18.0916 13.1554C17.7333 14.2924 17.273 15.4729 16.6552 16.3777C16.0399 17.2788 15.1999 18.0006 14.073 18.0006H7.87484L7.86695 18.0005H7.86063C6.80716 18.0005 5.87959 17.3066 5.58222 16.296L5.11309 14.7015C4.95237 14.1553 4.47368 13.7689 3.91456 13.7199H3.62488C2.73727 13.7199 2.05209 13.4683 1.59766 12.9523C1.15509 12.4498 1.00872 11.7822 0.999049 11.1135C0.979951 9.7926 1.49665 8.15165 1.90838 6.84517C2.26667 5.70826 2.72694 4.52772 3.34477 3.62288C3.96005 2.72178 4.80007 2 5.92704 2Z" fill="currentColor"/></svg>
+    <span>Bebop Design System</span>
+  </a>
+  <div class="topbar__spacer"></div>
+  <nav class="topbar__nav">
+    <a class="topbar__link topbar__link--active" href="#shell">Shell</a>
+    <a class="topbar__link" href="#compound">Compound</a>
+    <a class="topbar__link" href="#primitives">Primitives</a>
+  </nav>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <h1><strong>Hi</strong>, welcome to Bebop</h1>
+  <p>Interactive component previews for the Bebop Design System. Click any component to open its live preview — all files are self-contained and work offline.</p>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Shell -->
+  <div class="section" id="shell">
+    <div class="section-head">
+      <span class="section-title">Interactive Shell</span>
+      <span class="section-count">1</span>
+    </div>
+    <div class="grid">
+      <div class="card card--featured" style="cursor:default">
+        <div class="card__info">
+          <span class="card__name">Copilot Shell</span>
+          <span class="card__desc">Full interactive prototype with nav sidebar, header, chat input, add menu, sources panel, send &#x2192; thinking &#x2192; skip &#x2192; streaming response flow</span>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
+            <a class="card__cta" href="dist/shell.html">Open Shell <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="card__cta" href="getting-started.html" style="background:#f5f5f5; color:#242424;">Get Started &#x2192;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compound -->
+  <div class="section" id="compound">
+    <div class="section-head">
+      <span class="section-title">Compound Components</span>
+      <span class="section-count">9</span>
+    </div>
+    <div class="grid">
+      <a class="card" href="dist/nav.html"><div class="card__top"><span class="card__name">Nav</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Sidebar navigation with expand/collapse, nav items, sections, split items, me control</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/header.html"><div class="card__top"><span class="card__name">Header</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Top header bar with model picker and action buttons</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/chatInput.html"><div class="card__top"><span class="card__name">Chat Input</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Multi-line prompt input with toolbar, underline, mic, and send state changes</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/addMenu.html"><div class="card__top"><span class="card__name">Add Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Frosted overlay menu with Work IQ toggle, upload, cloud files, data sources</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/sourcesMenu.html"><div class="card__top"><span class="card__name">Sources Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Data source picker with toggle switches and connect buttons</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/menu.html"><div class="card__top"><span class="card__name">Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Dropdown menu with list items, section headers, secondary content, split items</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/dialog.html"><div class="card__top"><span class="card__name">Dialog</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Modal dialog with header, body, footer buttons, overlay dismiss</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/toolbar.html"><div class="card__top"><span class="card__name">Toolbar</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Formatting toolbar with bold, italic, lists, dividers, selected state</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/canvasChat.html"><div class="card__top"><span class="card__name">Canvas Chat</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Floating inline AI card with output, input, action buttons, attachments</span><span class="card__tag card__tag--compound">Compound</span></a>
+    </div>
+  </div>
+
+  <!-- Primitives -->
+  <div class="section" id="primitives">
+    <div class="section-head">
+      <span class="section-title">Primitives</span>
+      <span class="section-count">6</span>
+    </div>
+    <div class="grid">
+      <a class="card" href="dist/button.html"><div class="card__top"><span class="card__name">Button</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Subtle, outline, secondary, primary × small/medium/large × icon/text × selected/disabled</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/tag.html"><div class="card__top"><span class="card__name">Tag</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Dismissible chip with primary style, small/medium, icon-only, dismiss animation</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/tab.html"><div class="card__top"><span class="card__name">Tab &amp; TabList</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Pill-style tabs with text/icon-only, selected/unselected, tablist single-select</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/toggle.html"><div class="card__top"><span class="card__name">Toggle</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Small switch with checked/unchecked, label, disabled states</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/divider.html"><div class="card__top"><span class="card__name">Divider</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Horizontal/vertical divider with optional content label</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/suggestionChips.html"><div class="card__top"><span class="card__name">Suggestion Chips</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Prompt suggestion row with outline chips, overflow button</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Bebop Design System · TypeScript tokens + Fluent UI System Icons</div>
+
+<!-- Preview viewer -->
+<div class="viewer" id="viewer">
+  <iframe class="viewer__iframe" id="viewerFrame"></iframe>
+</div>
+
+<script>
+// Preview viewer — removed, pages now navigate directly
+var viewer = document.getElementById('viewer');
+var viewerFrame = document.getElementById('viewerFrame');
+
+// Escape key closes viewer
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && viewer.classList.contains('viewer--open')) {
+    viewer.classList.remove('viewer--open');
+    viewerFrame.src = '';
+    document.body.style.overflow = '';
+  }
+});
+
+// Highlight active nav link on scroll
+var sections = document.querySelectorAll('.section');
+var navLinks = document.querySelectorAll('.topbar__link');
+window.addEventListener('scroll', function() {
+  var scrollY = window.scrollY + 100;
+  sections.forEach(function(sec) {
+    var id = sec.getAttribute('id');
+    if (!id) return;
+    var top = sec.offsetTop;
+    var bottom = top + sec.offsetHeight;
+    var link = document.querySelector('.topbar__link[href="#' + id + '"]');
+    if (link) {
+      if (scrollY >= top && scrollY < bottom) {
+        navLinks.forEach(function(l) { l.classList.remove('topbar__link--active'); });
+        link.classList.add('topbar__link--active');
+      }
+    }
+  });
+});
+
+// Redirect to header page on fresh load (no referrer from within the site)
+if (!document.referrer || !document.referrer.includes('/preview/')) {
+  if (!sessionStorage.getItem('bebop-entered')) {
+    sessionStorage.setItem('bebop-entered', '1');
+    window.location.href = 'header.html';
+  }
+}
+</script>
+
+</body>
+</html>

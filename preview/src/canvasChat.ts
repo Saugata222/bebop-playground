@@ -1,0 +1,558 @@
+/**
+ * Canvas Chat — HTML Preview Generator
+ *
+ * Renders all Canvas Chat states as a standalone HTML file
+ * using actual resolved foundation token values matching the Figma spec.
+ *
+ * Usage:  npx tsx preview/canvasChat.ts
+ * Output: preview/canvasChat.html
+ */
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+// ─── Resolved foundation values (from Figma) ───────────────
+
+const t = {
+  // Colors
+  white: '#FFFFFF',
+  neutral26: '#242424',
+  neutral57: '#666666',
+  neutral94: '#E0E0E0',
+  neutralSubtle: '#f5f5f5',       // background/neutral/subtle
+  neutralDisabled: '#ebebeb',     // background/neutral/disabled
+  strokeSubtle: '#dedede',        // stroke/neutral/subtle
+  strokeLoud: '#6f6f6f',          // stroke/neutral/loud (rest underline)
+  strokeHeavy: '#242424',         // stroke/neutral/heavy (focus underline)
+  fgTertiary: '#6f6f6f',          // foreground/neutral/tertiary (placeholder)
+  fgPrimary: '#242424',           // foreground/neutral/primary
+
+  // Elevation
+  shadowStandard: '0px 3px 12px 0px rgba(0, 0, 0, 0.18)',
+
+  // Radius
+  radiusCompositeMedium: '16px',
+  radiusCompositeLarge: '24px',
+  radiusAtomicMedium: '12px',
+  radiusAtomicCircular: '9999px',
+  radiusAtomicLarge: '16px',
+
+  // Typography
+  fontBody: "'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif",
+  fontFunctional: "'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif",
+} as const;
+
+// ─── SVG Icons (Fluent UI System Icons — copied to src/components/icons/) ───
+
+const icons = {
+  // Add 16 Regular (ic_fluent_add_16_regular.svg)
+  plus: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2C8.27614 2 8.5 2.22386 8.5 2.5V7.5H13.5C13.7761 7.5 14 7.72386 14 8C14 8.27614 13.7761 8.5 13.5 8.5H8.5V13.5C8.5 13.7761 8.27614 14 8 14C7.72386 14 7.5 13.7761 7.5 13.5V8.5H2.5C2.22386 8.5 2 8.27614 2 8C2 7.72386 2.22386 7.5 2.5 7.5H7.5V2.5C7.5 2.22386 7.72386 2 8 2Z" fill="currentColor"/></svg>`,
+
+  // Mic 16 Regular (ic_fluent_mic_16_regular.svg)
+  mic: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 4.5C5.5 3.11929 6.61929 2 8 2C9.38071 2 10.5 3.11929 10.5 4.5V8C10.5 9.38071 9.38071 10.5 8 10.5C6.61929 10.5 5.5 9.38071 5.5 8V4.5ZM8 3C7.17157 3 6.5 3.67157 6.5 4.5V8C6.5 8.82843 7.17157 9.5 8 9.5C8.82843 9.5 9.5 8.82843 9.5 8V4.5C9.5 3.67157 8.82843 3 8 3ZM4 7.5C4.27614 7.5 4.5 7.72386 4.5 8C4.5 9.933 6.067 11.5 8 11.5C9.933 11.5 11.5 9.933 11.5 8C11.5 7.72386 11.7239 7.5 12 7.5C12.2761 7.5 12.5 7.72386 12.5 8C12.5 10.3163 10.75 12.2238 8.5 12.4725V13.5C8.5 13.7761 8.27614 14 8 14C7.72386 14 7.5 13.7761 7.5 13.5V12.4725C5.25002 12.2238 3.5 10.3163 3.5 8C3.5 7.72386 3.72386 7.5 4 7.5Z" fill="currentColor"/></svg>`,
+
+  // Arrow Up 16 Regular (ic_fluent_arrow_up_16_regular.svg)
+  arrowUp: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 13.5C7.5 13.7761 7.72386 14 8 14C8.27614 14 8.5 13.7761 8.5 13.5V3.80298L12.1283 7.83448C12.3131 8.03974 12.6292 8.05638 12.8345 7.87165C13.0397 7.68692 13.0564 7.37077 12.8716 7.16552L8.37165 2.16552C8.27683 2.06016 8.14174 2 8 2C7.85826 2 7.72317 2.06016 7.62835 2.16552L3.12836 7.16552C2.94363 7.37077 2.96027 7.68692 3.16552 7.87165C3.37078 8.05638 3.68692 8.03974 3.87165 7.83448L7.5 3.80298V13.5Z" fill="currentColor"/></svg>`,
+
+  // Chevron Up 12 Regular (ic_fluent_chevron_up_12_regular.svg)
+  chevronUp: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.14645 7.35355C2.34171 7.54882 2.65829 7.54882 2.85355 7.35355L6 4.20711L9.14645 7.35355C9.34171 7.54882 9.65829 7.54882 9.85355 7.35355C10.0488 7.15829 10.0488 6.84171 9.85355 6.64645L6.35355 3.14645C6.15829 2.95118 5.84171 2.95118 5.64645 3.14645L2.14645 6.64645C1.95118 6.84171 1.95118 7.15829 2.14645 7.35355Z" fill="currentColor"/></svg>`,
+
+  // Stop 16 Filled (ic_fluent_stop_16_filled.svg)
+  stop: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 2C2.67157 2 2 2.67157 2 3.5V12.5C2 13.3284 2.67157 14 3.5 14H12.5C13.3284 14 14 13.3284 14 12.5V3.5C14 2.67157 13.3284 2 12.5 2H3.5Z" fill="currentColor"/></svg>`,
+
+  // Spinner 24 — arc spinner matching Figma's .SpinnerBase
+  spinner: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="${t.neutral94}" stroke-width="2.5"/><path d="M12 3a9 9 0 0 1 9 9" stroke="${t.neutral26}" stroke-width="2.5" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></path></svg>`,
+};
+
+// ─── HTML ───────────────────────────────────────────────────
+
+const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Canvas Chat — Token Preview</title>
+<script type="module">
+  import {
+    provideFluentDesignSystem,
+    fluentButton,
+    fluentProgressRing,
+  } from '/node_modules/@fluentui/web-components/dist/web-components.js';
+
+  provideFluentDesignSystem().register(
+    fluentButton(),
+    fluentProgressRing(),
+  );
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: ${t.fontBody};
+    background: #f3f3f3;
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: ${t.neutral26};
+  }
+
+  .state-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: ${t.strokeLoud};
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 12px;
+  }
+
+  .preview-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ─── Card Container ─── */
+  .cc {
+    background: ${t.white};
+    border-radius: ${t.radiusCompositeMedium};
+    box-shadow: ${t.shadowStandard};
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    position: relative;
+  }
+  .cc--420  { width: 420px; }
+  .cc--600  { width: 600px; }
+
+  /* ─── Floating expand/collapse button (12px icon + 4px padding = 20px) ─── */
+  .cc__expand-btn {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  .cc__expand-btn::part(control) {
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
+    padding: 4px;
+    background: ${t.white};
+    border-radius: ${t.radiusAtomicCircular};
+    box-shadow: ${t.shadowStandard};
+    border: none;
+    color: ${t.fgPrimary};
+  }
+  .cc__expand-btn svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ─── Output area ─── */
+  .cc__output {
+    border-bottom: 1px solid ${t.strokeSubtle};
+    border-radius: ${t.radiusCompositeLarge} ${t.radiusCompositeLarge} 0 0;
+    padding: 16px;
+    max-height: 520px;
+    overflow-y: auto;
+  }
+  .cc__output--long {
+    padding: 24px;
+    max-height: 400px;
+  }
+  .cc__output p {
+    font-family: ${t.fontBody};
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: ${t.fgPrimary};
+    margin-bottom: 16px;
+  }
+  .cc__output p:last-child { margin-bottom: 0; }
+
+  /* ─── Input container ─── */
+  .cc__input-wrap {
+    padding: 6px 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── Input row (textarea area) ─── */
+  .cc__input-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+  .cc__input-row--h56 {
+    height: 56px;
+  }
+
+  /* ─── Icon button via fluent-button (16px icon + 4px padding = 24px) ─── */
+  .cc__icon-btn {
+    flex-shrink: 0;
+  }
+  .cc__icon-btn::part(control) {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: ${t.radiusAtomicCircular};
+    border: none;
+    background: transparent;
+    color: ${t.fgPrimary};
+  }
+  .cc__icon-btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  /* ─── Input field ─── */
+  .cc__input-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    position: relative;
+    min-width: 0;
+  }
+  .cc__text-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 4px;
+    min-width: 0;
+  }
+
+  /* Underline */
+  .cc__underline {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    border-radius: 4px;
+  }
+  .cc__underline--rest  { background: ${t.strokeLoud}; }
+  .cc__underline--focus { background: ${t.strokeHeavy}; }
+
+  .cc__placeholder {
+    font-family: ${t.fontBody};
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: ${t.fgTertiary};
+    white-space: nowrap;
+  }
+  .cc__entered {
+    font-family: ${t.fontBody};
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: ${t.fgPrimary};
+    white-space: nowrap;
+  }
+  .cc__cursor {
+    width: 1px;
+    height: 24px;
+    background: ${t.fgPrimary};
+    border-radius: 1px;
+    flex-shrink: 0;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ─── Send button via fluent-button (16px icon + 4px padding = 24px) ─── */
+  .cc__send {
+    flex-shrink: 0;
+  }
+  .cc__send::part(control) {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: ${t.radiusAtomicCircular};
+    border: none;
+  }
+  .cc__send svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    display: block;
+  }
+  .cc__send--off::part(control) {
+    background: ${t.neutralDisabled};
+    color: ${t.neutral57};
+    cursor: default;
+  }
+  .cc__send--on::part(control) {
+    background: ${t.fgPrimary};
+    color: ${t.white};
+  }
+
+  /* ─── Edit with Copilot (output mode) ─── */
+  .cc__edit-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    color: ${t.fgPrimary};
+    font-family: ${t.fontFunctional};
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    background: transparent;
+    border: none;
+    border-radius: ${t.radiusAtomicMedium};
+    cursor: pointer;
+  }
+  .cc__edit-btn:hover {
+    background: rgba(0,0,0,0.04);
+  }
+
+  /* ─── Latency row ─── */
+  .cc__latency {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+  }
+  .cc__latency-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding-left: 4px;
+    font-family: ${t.fontFunctional};
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    background: linear-gradient(to right, ${t.fgPrimary}, ${t.fgTertiary});
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+  }
+  .cc__stop {
+    flex-shrink: 0;
+  }
+  .cc__stop::part(control) {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: ${t.radiusAtomicCircular};
+    background: ${t.fgPrimary};
+    color: ${t.white};
+    border: none;
+  }
+  .cc__stop svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  /* ─── Attachment list ─── */
+  .cc__attachments {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px 2px 44px;
+    overflow: hidden;
+  }
+  .cc__chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: ${t.neutralSubtle};
+    border-radius: ${t.radiusAtomicLarge};
+    height: 44px;
+    padding: 0 12px;
+    max-width: 200px;
+    flex-shrink: 0;
+  }
+  .cc__chip-icon {
+    width: 20px; height: 20px;
+    background: ${t.neutral94};
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .cc__chip-label {
+    font-family: ${t.fontFunctional};
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: ${t.fgPrimary};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+  .cc__chip-overflow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${t.neutralSubtle};
+    border-radius: ${t.radiusAtomicLarge};
+    height: 44px;
+    padding: 0 12px;
+    font-family: ${t.fontFunctional};
+    font-size: 14px;
+    color: ${t.fgPrimary};
+    flex-shrink: 0;
+  }
+
+  /* ─── Fluent progress ring for spinner ─── */
+  .cc__spinner {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Canvas Chat \u2014 Component Token Preview</h1>
+
+<!-- ======= State 1: Rest (Output=N/A, Input=Rest) ======= -->
+<div class="preview-group">
+  <div class="state-label">Rest \u2014 No output</div>
+  <div class="cc cc--420">
+    <fluent-button appearance="stealth" class="cc__expand-btn" title="Expand">${icons.chevronUp}</fluent-button>
+    <div class="cc__input-wrap">
+      <div class="cc__input-row cc__input-row--h56">
+        <fluent-button appearance="stealth" class="cc__icon-btn" title="Add">${icons.plus}</fluent-button>
+        <div class="cc__input-field">
+          <div class="cc__text-wrap">
+            <span class="cc__placeholder">Edit with Copilot</span>
+            <div class="cc__underline cc__underline--rest"></div>
+          </div>
+          <fluent-button appearance="stealth" class="cc__icon-btn" title="Mic">${icons.mic}</fluent-button>
+        </div>
+        <fluent-button appearance="stealth" class="cc__send cc__send--off" title="Send">${icons.arrowUp}</fluent-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= State 2: Focus-entered (Output=N/A, Input=Focus-entered) ======= -->
+<div class="preview-group">
+  <div class="state-label">Focus \u2014 Text entered</div>
+  <div class="cc cc--600">
+    <div class="cc__input-wrap">
+      <div class="cc__input-row">
+        <fluent-button appearance="stealth" class="cc__icon-btn" title="Add">${icons.plus}</fluent-button>
+        <div class="cc__input-field">
+          <div class="cc__text-wrap">
+            <span class="cc__entered">Make the first paragraph more concise</span>
+            <span class="cc__cursor"></span>
+            <div class="cc__underline cc__underline--focus"></div>
+          </div>
+          <fluent-button appearance="stealth" class="cc__icon-btn" title="Mic">${icons.mic}</fluent-button>
+        </div>
+        <fluent-button appearance="stealth" class="cc__send cc__send--on" title="Send">${icons.arrowUp}</fluent-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= State 3: Focus-entered with attachments ======= -->
+<div class="preview-group">
+  <div class="state-label">Focus \u2014 With attachments</div>
+  <div class="cc cc--600">
+    <div class="cc__attachments">
+      <div class="cc__chip">
+        <div class="cc__chip-icon"></div>
+        <span class="cc__chip-label">2024-RFP-Template</span>
+      </div>
+      <div class="cc__chip">
+        <div class="cc__chip-icon"></div>
+        <span class="cc__chip-label">Sustainable building...</span>
+      </div>
+      <div class="cc__chip-overflow">+4</div>
+    </div>
+    <div class="cc__input-wrap">
+      <div class="cc__input-row">
+        <fluent-button appearance="stealth" class="cc__icon-btn" title="Add">${icons.plus}</fluent-button>
+        <div class="cc__input-field">
+          <div class="cc__text-wrap">
+            <span class="cc__entered">Summarize the key findings</span>
+            <span class="cc__cursor"></span>
+            <div class="cc__underline cc__underline--focus"></div>
+          </div>
+          <fluent-button appearance="stealth" class="cc__icon-btn" title="Mic">${icons.mic}</fluent-button>
+        </div>
+        <fluent-button appearance="stealth" class="cc__send cc__send--on" title="Send">${icons.arrowUp}</fluent-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= State 4: Short output (Output=Short, Input=N/A) ======= -->
+<div class="preview-group">
+  <div class="state-label">Short output</div>
+  <div class="cc cc--600">
+    <div class="cc__output">
+      <p>Escalation data shows a clear spike in incidents starting mid-May, aligning with the launch of the XStream Pro Series. Escalations tied to this product rose by 47% over two months, with common issues including connectivity dropouts, firmware update failures, and inconsistent performance.</p>
+    </div>
+    <div class="cc__input-wrap">
+      <div style="display:flex; align-items:center; gap:2px;">
+        <fluent-button appearance="stealth" class="cc__icon-btn" title="Add">${icons.plus}</fluent-button>
+        <fluent-button appearance="stealth" class="cc__edit-btn">Edit with Copilot</fluent-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= State 5: Long output expanded ======= -->
+<div class="preview-group">
+  <div class="state-label">Long output \u2014 Expanded</div>
+  <div class="cc cc--600">
+    <fluent-button appearance="stealth" class="cc__expand-btn" title="Collapse" style="transform: translateX(-50%) rotate(180deg);">${icons.chevronUp}</fluent-button>
+    <div class="cc__output cc__output--long">
+      <p>Escalation data shows a clear spike in incidents starting mid-May, aligning with the launch of the XStream Pro Series. Escalations tied to this product rose by 47% over two months, with common issues including connectivity dropouts, firmware update failures, and inconsistent performance.</p>
+      <p>Escalation data shows a clear spike in incidents starting mid-May, aligning with the launch of the XStream Pro Series. Escalations tied to this product rose by 47% over two months, with common issues including connectivity dropouts, firmware update failures, and inconsistent performance.</p>
+      <p>Escalation data shows a clear spike in incidents starting mid-May, aligning with the launch of the XStream Pro Series. Escalations tied to this product rose by 47% over two months, with common issues including connectivity dropouts, firmware update failures, and inconsistent performance.</p>
+    </div>
+    <div class="cc__input-wrap">
+      <div style="display:flex; align-items:center; gap:2px;">
+        <fluent-button appearance="stealth" class="cc__icon-btn" title="Add">${icons.plus}</fluent-button>
+        <fluent-button appearance="stealth" class="cc__edit-btn">Edit with Copilot</fluent-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= State 6: Latency ======= -->
+<div class="preview-group">
+  <div class="state-label">Latency \u2014 Generating</div>
+  <div class="cc cc--420">
+    <div class="cc__latency">
+      <fluent-progress-ring class="cc__spinner"></fluent-progress-ring>
+      <div class="cc__latency-text">Thinking</div>
+      <fluent-button appearance="stealth" class="cc__stop" title="Stop">${icons.stop}</fluent-button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>`;
+
+// ─── Write file ─────────────────────────────────────────────
+
+const outDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'dist');
+const outPath = path.join(outDir, 'canvasChat.html');
+fs.writeFileSync(outPath, html, 'utf-8');
+console.log(`\u2713  Preview written to ${outPath}`);
