@@ -130,6 +130,13 @@ const meta: Record<string, ComponentMeta> = {
     states: ['Expanded', 'Collapsed', 'Rest', 'Hover', 'Selected'],
     related: ['button', 'menu', 'header'],
   },
+  responseFooter: {
+    title: 'Response Footer',
+    desc: 'Post-response action bar with Copy, Thumbs Up, Thumbs Down buttons, vertical divider, and sources button with file-type icon stack.',
+    type: 'Compound',
+    states: ['Rest', 'Hover', 'Pressed'],
+    related: ['button', 'toolbar', 'chatInput'],
+  },
 };
 
 // ─── Shared CSS ─────────────────────────────────────────────
