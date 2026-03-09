@@ -74,9 +74,45 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 ::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
 ::-webkit-scrollbar-thumb:hover { border: 0; }
 * { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+/* ─── Landing overlay ─── */
+.landing { position: fixed; inset: 0; z-index: 9999; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: opacity 0.4s ease, visibility 0.4s ease; }
+.landing--hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.landing__logo { width: 64px; height: 64px; margin-bottom: 32px; color: #242424; animation: landFadeUp 0.6s ease both; }
+.landing__logo svg { width: 100%; height: 100%; }
+.landing__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 56px; font-weight: 300; line-height: 1.1; margin-bottom: 16px; color: #000; animation: landFadeUp 0.7s ease 0.1s both; }
+.landing__title strong { font-weight: 400; }
+.landing__sub { font-size: 18px; font-weight: 400; color: #6f6f6f; line-height: 1.6; max-width: 520px; margin-bottom: 40px; padding: 0 48px; animation: landFadeUp 0.8s ease 0.2s both; }
+.landing__cta { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 8px 20px; border-radius: 12px; background: #242424; color: #fff; font-family: inherit; font-size: 15px; font-weight: 400; text-decoration: none; border: none; cursor: pointer; transition: background 0.15s, transform 0.1s; animation: landFadeUp 0.9s ease 0.3s both; }
+.landing__cta:hover { background: #3b3b3b; }
+.landing__cta:active { transform: scale(0.97); }
+.landing__cta svg { width: 18px; height: 18px; }
+.landing__chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 48px; padding: 0 48px; animation: landFadeUp 1s ease 0.4s both; }
+.landing__chip { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #6f6f6f; background: #f5f5f5; letter-spacing: 0.3px; }
+.landing__chip--count { background: #ebebeb; color: #242424; }
+.landing__footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; padding: 20px; font-size: 12px; color: #929292; }
+@keyframes landFadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
+
+<!-- Landing overlay -->
+<div class="landing" id="landing">
+  <div class="landing__logo">
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.92704 2H12.1392C13.1927 2 14.1203 2.69397 14.4176 3.7046L14.8868 5.29901C15.0476 5.84546 15.5266 6.232 16.086 6.28068H16.3751C17.2627 6.28068 17.9479 6.53232 18.4023 7.04832C18.8449 7.55084 18.9913 8.21838 19.0009 8.88707C19.02 10.208 18.5033 11.849 18.0916 13.1554C17.7333 14.2924 17.273 15.4729 16.6552 16.3777C16.0399 17.2788 15.1999 18.0006 14.073 18.0006H7.87484L7.86695 18.0005H7.86063C6.80716 18.0005 5.87959 17.3066 5.58222 16.296L5.11309 14.7015C4.95237 14.1553 4.47368 13.7689 3.91456 13.7199H3.62488C2.73727 13.7199 2.05209 13.4683 1.59766 12.9523C1.15509 12.4498 1.00872 11.7822 0.999049 11.1135C0.979951 9.7926 1.49665 8.15165 1.90838 6.84517C2.26667 5.70826 2.72694 4.52772 3.34477 3.62288C3.96005 2.72178 4.80007 2 5.92704 2Z" fill="currentColor"/></svg>
+  </div>
+  <h1 class="landing__title"><strong>Bebop</strong> Playground</h1>
+  <p class="landing__sub">AI-native prototyping for the Copilot shell. Interactive components, live previews, and a fully working prototype &mdash; all built from design tokens.</p>
+  <button class="landing__cta" id="landingCta">Explore Playground <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="landing__chips">
+    <span class="landing__chip landing__chip--count">16 components</span>
+    <span class="landing__chip">TypeScript tokens</span>
+    <span class="landing__chip">Fluent icons</span>
+    <span class="landing__chip">Self-contained HTML</span>
+    <span class="landing__chip">AI-ready</span>
+  </div>
+  <div class="landing__footer">Designed by Saugata &middot; Bebop Design System &middot; Microsoft</div>
+</div>
 
 <!-- Top bar -->
 <div class="topbar">
@@ -199,12 +235,16 @@ window.addEventListener('scroll', function() {
   });
 });
 
-// Redirect to header page on fresh load (no referrer from within the site)
-if (!document.referrer || !document.referrer.includes('/preview/')) {
-  if (!sessionStorage.getItem('bebop-entered')) {
+// Landing overlay — show on first visit, dismiss on click
+var landing = document.getElementById('landing');
+var landingCta = document.getElementById('landingCta');
+if (sessionStorage.getItem('bebop-entered')) {
+  landing.style.display = 'none';
+} else {
+  landingCta.addEventListener('click', function() {
     sessionStorage.setItem('bebop-entered', '1');
-    window.location.href = 'header.html';
-  }
+    landing.classList.add('landing--hidden');
+  });
 }
 </script>
 
