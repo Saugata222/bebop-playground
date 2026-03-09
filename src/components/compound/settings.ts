@@ -27,8 +27,8 @@ export const settingsSurface = {
   background: '#ffffff',
   /** Border radius — Bebop dialog (16px) */
   borderRadius: '16px',
-  /** Box shadow — Bebop standard elevation */
-  boxShadow: '0px 3px 12px 0px rgba(0, 0, 0, 0.18)',
+  /** Box shadow — Bebop dialog elevation */
+  boxShadow: '0px 12px 48px 0px rgba(0, 0, 0, 0.24), 0px 0px 3px 0px rgba(0, 0, 0, 0.03)',
 } as const;
 
 // ─── Header Bar ─────────────────────────────────────────────

@@ -57,7 +57,7 @@ css += '::-webkit-scrollbar-thumb:hover { border-width: 0; }\n';
 css += '::-webkit-scrollbar-track { background: transparent; }\n';
 
 // Dialog surface — Bebop 16px radius, standard shadow
-css += ".stg { width: 800px; height: 600px; background: #fff; border-radius: 16px; box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.18); display: flex; flex-direction: column; overflow: hidden; }\n";
+css += ".stg { width: 800px; height: 600px; background: #fff; border-radius: 16px; box-shadow: 0px 12px 48px 0px rgba(0,0,0,0.24), 0px 0px 3px 0px rgba(0,0,0,0.03); display: flex; flex-direction: column; overflow: hidden; }\n";
 
 // Header — Bebop 56px
 css += ".stg__hdr { display: flex; align-items: center; height: 56px; padding: 0 20px; gap: 8px; flex-shrink: 0; }\n";
