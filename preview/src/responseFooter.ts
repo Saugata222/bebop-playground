@@ -39,10 +39,10 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
 h2 { font-size: 14px; font-weight: 600; margin: 32px 0 12px; }
 .hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
-.wrap { max-width: 780px; margin: 0 auto; }
+.wrap { width: 100%; max-width: 780px; margin: 0 auto; }
 
 /* Mock response text */
-.response-text { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #242424; max-width: 708px; }
+.response-text { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #242424; }
 .response-text p { margin: 0 0 12px; }
 
 /* Response footer container */
