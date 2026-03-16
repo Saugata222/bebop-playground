@@ -32,7 +32,7 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 .hero p { font-size: 16px; color: #6f6f6f; line-height: 1.6; max-width: 560px; }
 
 /* ─── Content ─── */
-.main { max-width: 1200px; margin: 0 auto; padding: 0 48px 80px; }
+.main { max-width: 1200px; margin: 0 auto; padding: 0 48px 50vh; }
 
 /* ─── Section ─── */
 .section { margin-bottom: 48px; scroll-margin-top: 72px; }
@@ -122,6 +122,7 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
   </a>
   <div class="topbar__spacer"></div>
   <nav class="topbar__nav">
+    <a class="topbar__link" href="#explorations">Explorations</a>
     <a class="topbar__link topbar__link--active" href="#shell">Shell</a>
     <a class="topbar__link" href="#compound">Compound</a>
     <a class="topbar__link" href="#primitives">Primitives</a>
@@ -136,6 +137,29 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 
 <!-- Main -->
 <div class="main">
+
+  <!-- Explorations -->
+  <div class="section" id="explorations">
+    <div class="section-head">
+      <span class="section-title">Explorations</span>
+      <span class="section-count">1</span>
+    </div>
+    <div class="grid">
+      <div class="card card--featured" style="cursor:default">
+        <div class="card__info">
+          <span class="card__name">Connectors Golden Flow</span>
+          <span class="card__desc">Exploration branched from the Copilot Shell to prototype the Connectors golden path experience.</span>
+          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span>Forked from <strong style="color:#6f6f6f;">Copilot Shell</strong> &middot; 10 Mar 2026</span>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+            <a class="card__cta" href="dist/connectorsGoldenFlow.html">Open Exploration <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Shell -->
   <div class="section" id="shell">
@@ -164,16 +188,16 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
       <span class="section-count">10</span>
     </div>
     <div class="grid">
-      <a class="card" href="dist/nav.html"><div class="card__top"><span class="card__name">Nav</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Sidebar navigation with expand/collapse, nav items, sections, split items, me control</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/header.html"><div class="card__top"><span class="card__name">Header</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Top header bar with model picker and action buttons</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/chatInput.html"><div class="card__top"><span class="card__name">Chat Input</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Multi-line prompt input with toolbar, underline, mic, and send state changes</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/addMenu.html"><div class="card__top"><span class="card__name">Add Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Frosted overlay menu with Work IQ toggle, upload, cloud files, data sources</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/sourcesMenu.html"><div class="card__top"><span class="card__name">Sources Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Data source picker with toggle switches and connect buttons</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/menu.html"><div class="card__top"><span class="card__name">Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Dropdown menu with list items, section headers, secondary content, split items</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/dialog.html"><div class="card__top"><span class="card__name">Dialog</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Modal dialog with header, body, footer buttons, overlay dismiss</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/toolbar.html"><div class="card__top"><span class="card__name">Toolbar</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Formatting toolbar with bold, italic, lists, dividers, selected state</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/canvasChat.html"><div class="card__top"><span class="card__name">Canvas Chat</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Floating inline AI card with output, input, action buttons, attachments</span><span class="card__tag card__tag--compound">Compound</span></a>
-      <a class="card" href="dist/responseFooter.html"><div class="card__top"><span class="card__name">Response Footer</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Post-response action bar with copy, like, dislike, divider, and sources button</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/nav.html"><div class="card__top"><span class="card__name">Nav</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Sidebar navigation with expand/collapse toggle, nav items, sections, and me control</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/header.html"><div class="card__top"><span class="card__name">Header</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Top header bar with model picker, action buttons, and temp chat controls</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/chatInput.html"><div class="card__top"><span class="card__name">Chat Input</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Multi-line prompt input with toolbar, auto-growing textarea, underline, and send states</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/addMenu.html"><div class="card__top"><span class="card__name">Add Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Frosted overlay menu with Work IQ toggle, file upload, cloud files, and data sources</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/sourcesMenu.html"><div class="card__top"><span class="card__name">Sources Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Data source picker with toggle switches, connected sources, and connect buttons</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/menu.html"><div class="card__top"><span class="card__name">Menu</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Dropdown menu with list items, section headers, split items, and checkmarks</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/dialog.html"><div class="card__top"><span class="card__name">Dialog</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Modal dialog with header, body text, footer buttons, and overlay dismiss</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/toolbar.html"><div class="card__top"><span class="card__name">Toolbar</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Formatting toolbar with icon buttons, dividers, and selected state toggling</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/canvasChat.html"><div class="card__top"><span class="card__name">Canvas Chat</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Floating inline AI card with output area, input field, and action buttons</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/responseFooter.html"><div class="card__top"><span class="card__name">Response Footer</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Post-response action bar with copy, like/dislike toggle, and sources button</span><span class="card__tag card__tag--compound">Compound</span></a>
     </div>
   </div>
 
@@ -184,12 +208,12 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
       <span class="section-count">6</span>
     </div>
     <div class="grid">
-      <a class="card" href="dist/button.html"><div class="card__top"><span class="card__name">Button</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Subtle, outline, secondary, primary × small/medium/large × icon/text × selected/disabled</span><span class="card__tag card__tag--primitive">Primitive</span></a>
-      <a class="card" href="dist/tag.html"><div class="card__top"><span class="card__name">Tag</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Dismissible chip with primary style, small/medium, icon-only, dismiss animation</span><span class="card__tag card__tag--primitive">Primitive</span></a>
-      <a class="card" href="dist/tab.html"><div class="card__top"><span class="card__name">Tab &amp; TabList</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Pill-style tabs with text/icon-only, selected/unselected, tablist single-select</span><span class="card__tag card__tag--primitive">Primitive</span></a>
-      <a class="card" href="dist/toggle.html"><div class="card__top"><span class="card__name">Toggle</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Small switch with checked/unchecked, label, disabled states</span><span class="card__tag card__tag--primitive">Primitive</span></a>
-      <a class="card" href="dist/divider.html"><div class="card__top"><span class="card__name">Divider</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Horizontal/vertical divider with optional content label</span><span class="card__tag card__tag--primitive">Primitive</span></a>
-      <a class="card" href="dist/suggestionChips.html"><div class="card__top"><span class="card__name">Suggestion Chips</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Prompt suggestion row with outline chips, overflow button</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/button.html"><div class="card__top"><span class="card__name">Button</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Multi-variant button with 4 styles, 3 sizes, icon and text layouts, and selected state</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/tag.html"><div class="card__top"><span class="card__name">Tag</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Dismissible chip with primary style, small and medium sizes, and dismiss animation</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/tab.html"><div class="card__top"><span class="card__name">Tab &amp; TabList</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Pill-style tabs with text and icon-only layouts, selected states, and single-select</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/toggle.html"><div class="card__top"><span class="card__name">Toggle</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Toggle switch with checked, unchecked, label, and disabled states</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/divider.html"><div class="card__top"><span class="card__name">Divider</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Horizontal and vertical divider with optional inline content label</span><span class="card__tag card__tag--primitive">Primitive</span></a>
+      <a class="card" href="dist/suggestionChips.html"><div class="card__top"><span class="card__name">Suggestion Chips</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Prompt suggestion row with outline chips, hover state, and overflow button</span><span class="card__tag card__tag--primitive">Primitive</span></a>
     </div>
   </div>
 

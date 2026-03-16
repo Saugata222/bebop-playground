@@ -143,7 +143,7 @@ const meta: Record<string, ComponentMeta> = {
 
 const sharedCSS = `
 /* ─── Bebop page overrides (injected by _inject.ts) ─── */
-body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; }
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
 
 /* Page wrapper */
 .bp-header { max-width: 900px; margin: 0 auto; padding: 60px 48px 0; }
@@ -199,19 +199,19 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 
 const chevronSvg = '<svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-const backBarHTML = '<div class="bebop-backbar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
+const backBarHTML = '<!-- INJECT:BACKBAR --><div class="bebop-backbar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR -->';
 
 function buildHeader(m: ComponentMeta): string {
   const tagClass = m.type === 'Compound' ? 'bp-header__tag--compound' : 'bp-header__tag--primitive';
   const states = m.states.map(s => '<span class="bp-header__state">' + s + '</span>').join('');
-  return '<div class="bp-header">'
+  return '<!-- INJECT:HEADER --><div class="bp-header">'
     + '<div class="bp-header__top">'
     + '<span class="bp-header__title">' + m.title + '</span>'
     + '<span class="bp-header__tag ' + tagClass + '">' + m.type + '</span>'
     + '</div>'
     + '<p class="bp-header__desc">' + m.desc + '</p>'
     + '<div class="bp-header__states">' + states + '</div>'
-    + '</div>';
+    + '</div><!-- /INJECT:HEADER -->';
 }
 
 function buildRelated(relatedKeys: string[]): string {
@@ -226,7 +226,7 @@ function buildRelated(relatedKeys: string[]): string {
       + '<span class="bp-related__card-tag ' + tagClass + '">' + r.type + '</span>'
       + '</a>';
   }
-  return '<div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid">' + cards + '</div></div>';
+  return '<!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid">' + cards + '</div></div><!-- /INJECT:RELATED -->';
 }
 
 // ─── Process files ──────────────────────────────────────────
@@ -262,11 +262,13 @@ for (const file of files) {
   const m = meta[componentName];
   if (!m) { console.log('  Skipped (no meta): ' + file); continue; }
 
-  // Strip any previous injection
+  // Strip any previous injection using comment sentinels
+  html = html.replace(/<!-- INJECT:BACKBAR -->[\s\S]*?<!-- \/INJECT:BACKBAR -->/g, '');
+  html = html.replace(/<!-- INJECT:HEADER -->[\s\S]*?<!-- \/INJECT:HEADER -->/g, '');
+  html = html.replace(/<!-- INJECT:RELATED -->[\s\S]*?<!-- \/INJECT:RELATED -->/g, '');
+  // Legacy strip (for files injected before sentinels were added)
   html = html.replace(/<div class="bebop-hover-zone">.*?<\/div>/g, '');
-  html = html.replace(/<div class="bebop-backbar">[\.\s\S]*?<\/div>/g, '');
-  html = html.replace(/<div class="bp-header">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/g, '');
-  html = html.replace(/<div class="bp-related">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/g, '');
+  html = html.replace(/<div class="bebop-backbar">[\s\S]*?<\/a><\/div>/g, '');
 
   // Inject CSS
   if (!html.includes('Bebop page overrides')) {

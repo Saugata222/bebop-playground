@@ -1,13 +1,11 @@
 /**
- * Shell — Full Copilot Shell Interactive Preview
+ * Connectors Golden Flow — Copilot Shell Exploration
  *
- * Renders the complete Copilot shell layout:
- *   - Left: Nav sidebar (256px)
- *   - Top-right: Header bar (56px)
- *   - Center: Greeting + Chat input + Suggestion chips
+ * Branched from the Copilot Shell to explore the Connectors golden path flow.
+ * Renders the complete Copilot shell layout as a starting point for iteration.
  *
- * Usage:  npx tsx preview/src/shell.ts
- * Output: preview/dist/shell.html
+ * Usage:  npx tsx preview/src/connectorsGoldenFlow.ts
+ * Output: preview/dist/connectorsGoldenFlow.html
  */
 
 import * as fs from 'fs';
@@ -23,6 +21,11 @@ function readIcon(name: string): string {
 const wordFileIco = readIcon('word-20-color.svg');
 const excelFileIco = readIcon('excel-20-color.svg');
 const pptFileIco = readIcon('powerpoint-20-color.svg');
+const serviceNowIco = readIcon('servicenow-20-color.svg');
+const jiraIco = '<img src="../../src/components/icons/jira-20-color.png" alt="Jira" width="20" height="20" style="display:block" />';
+const notionIco = readIcon('notion-20-color.svg');
+const hubspotIco = readIcon('hubspot-20-color.svg');
+const briefcaseOffIco = readIcon('briefcase-off-20-regular.svg');
 
 // ─── Icons (20px, fill="currentColor") ─────────────────────────────
 
@@ -239,11 +242,13 @@ css += '.ci { display: flex; gap: 0; align-items: flex-start; width: 100%; }';
 css += '\n';
 css += '.ci__container { flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }';
 css += '\n';
-css += '.ci__row { display: flex; gap: 16px; align-items: flex-end; width: 100%; }';
+css += '.ci__row { display: flex; gap: 0; align-items: flex-start; width: 100%; }';
 css += '\n';
-css += '.ci__toolbar { display: flex; gap: 4px; align-items: flex-start; padding-bottom: 4px; flex-shrink: 0; }';
+css += '.ci__toolbar { display: flex; gap: 4px; align-items: flex-start; padding-top: 8px; flex-shrink: 0; margin-right: 16px; }';
 css += '\n';
-css += '.ci__input { flex: 1; display: flex; align-items: flex-end; gap: 8px; padding: 8px 0; position: relative; min-width: 0; }';
+css += '.ci__content { flex: 1; display: flex; flex-direction: column; min-width: 0; }';
+css += '\n';
+css += '.ci__input { flex: none; width: 100%; display: flex; align-items: flex-end; gap: 8px; padding: 8px 0; position: relative; min-width: 0; }';
 css += '\n';
 css += '.ci__line { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; border-radius: 4px; background: #6f6f6f; transition: background 0.15s ease; }';
 css += '\n';
@@ -285,7 +290,7 @@ css += '.b--primary:hover { background: #3b3b3b; }';
 css += '\n';
 
 // ─── Send wrap ───
-css += '.ci__send-wrap { display: flex; align-items: flex-start; padding-bottom: 4px; flex-shrink: 0; }';
+css += '.ci__send-wrap { display: flex; align-items: flex-start; padding-top: 8px; flex-shrink: 0; margin-left: 16px; }';
 css += '\n';
 css += '.ci__send-icon--eq { display: block; }';
 css += '\n';
@@ -326,6 +331,28 @@ css += '\n';
 css += '.ci-area { display: flex; flex-direction: column; gap: 16px; width: 100%; }';
 css += '\n';
 
+// ─── Sources Tab (below input, replaces suggestion chips when sources modified) ───
+css += '.src-tab { display: none; align-items: center; gap: 8px; height: 32px; padding: 6px 10px; border-radius: 12px; background: #f5f5f5; width: fit-content; cursor: pointer; transition: background 0.1s; margin-top: 12px; }';
+css += '\n';
+css += '.src-tab:hover { background: #ebebeb; }';
+css += '\n';
+css += '.src-tab--visible { display: inline-flex; }';
+css += '\n';
+// src-tab-wrap removed — Sources Tab is now inside ci__content
+css += '\n';
+css += ".src-tab__label { font-family: 'Segoe UI', 'Segoe Sans', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; white-space: nowrap; }";
+css += '\n';
+css += '.src-tab__icons { display: flex; align-items: center; gap: 2px; }';
+css += '\n';
+css += '.src-tab__icons img, .src-tab__icons svg { width: 16px; height: 16px; display: block; }';
+css += '\n';
+css += ".src-tab__count { font-family: 'Segoe UI', sans-serif; font-size: 10px; font-weight: 400; line-height: 14px; color: #8f8f8f; white-space: nowrap; }";
+css += '\n';
+css += '.src-tab__workoff { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; color: #242424; }';
+css += '\n';
+css += '.src-tab__workoff svg { width: 20px; height: 20px; }';
+css += '\n';
+
 // ─── Add Menu overlay + flyout ───
 css += '.am-overlay { position: absolute; inset: 0; z-index: 80; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }';
 css += '\n';
@@ -341,6 +368,7 @@ css += '.src-panel { width: 820px; max-width: 100%; display: flex; flex-directio
 css += '\n';
 css += '.src-overlay--open .src-panel { opacity: 1; transform: translateY(0); }';
 css += '\n';
+// Search bar
 // Search bar — search icon + input with underline + dismiss button
 css += '.src-search { display: flex; align-items: center; gap: 16px; padding: 0; width: 100%; }';
 css += '\n';
@@ -367,7 +395,7 @@ css += '\n';
 // Source list
 css += '.src-list { display: flex; flex-direction: column; max-height: 340px; overflow-y: auto; padding: 0 56px 0 56px; }';
 css += '\n';
-// Source item
+// Source item (inline — reusing toggle styles from sourcesMenu preview)
 css += '.si { display: flex; align-items: center; width: 100%; height: 48px; padding: 4px 0; transition: opacity 0.2s; }';
 css += '\n';
 css += '.si--disabled { opacity: 0.4; pointer-events: none; }';
@@ -381,6 +409,12 @@ css += '\n';
 css += '.si__icon svg, .si__icon img { display: block; width: 20px; height: 20px; object-fit: contain; }';
 css += '\n';
 css += '.si__label { flex: 1 0 0; min-width: 1px; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }';
+css += '\n';
+css += ".si__subtitle { display: inline-flex; align-items: center; height: 24px; padding: 4px 8px; border-radius: 8px; border: none; background: transparent; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; line-height: 16px; color: #5d5d5d; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; flex-shrink: 0; }";
+css += '\n';
+css += '.si__divider { width: 100%; height: 1px; background: #dedede; margin: 4px 0; }';
+css += '\n';
+css += '.si__subtitle:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
 css += '.si__toggle-area { display: flex; align-items: center; gap: 6px; padding: 2px; flex-shrink: 0; }';
 css += '\n';
@@ -440,6 +474,8 @@ css += '.am__item-icon { display: flex; flex-shrink: 0; width: 20px; height: 20p
 css += '\n';
 css += '.am__item-icon svg { display: block; width: 20px; height: 20px; }';
 css += '\n';
+css += '.am__item-count { font-family: \"Segoe UI\", sans-serif; font-size: 10px; font-weight: 400; line-height: 14px; color: #8f8f8f; white-space: nowrap; flex-shrink: 0; }';
+css += '\n';
 
 // ─── Response view (hidden by default, shown after send) ───
 css += '.response-view { display: none; flex-direction: column; gap: 8px; width: 100%; max-width: 708px; padding: 20px 0; }';
@@ -449,6 +485,7 @@ css += '\n';
 css += '.shell--sent .greeting, .shell--sent .sc { display: none; }';
 css += '\n';
 css += '.shell--sent .content__inner { padding: 0; gap: 0; flex: 1; justify-content: flex-start; max-width: 852px; width: 100%; padding: 20px 40px; }';
+css += '\n';
 css += '\n';
 
 // ─── User message bubble ───
@@ -478,9 +515,9 @@ css += '.shell--sent .ci-area { display: none; }';
 css += '\n';
 css += '.shell--sent .content { padding-bottom: 180px; }';
 css += '\n';
-css += '.input-footer .ci { max-width: 708px; width: 100%; }';
+css += '.input-footer .ci { max-width: 820px; width: 100%; }';
 css += '\n';
-css += '.input-footer .ci__toolbar { padding-bottom: 4px; }';
+css += '.input-footer .ci__toolbar { padding-top: 8px; }';
 css += '\n';
 css += '.input-footer .ci__send-wrap { padding-bottom: 4px; }';
 css += '\n';
@@ -640,6 +677,20 @@ css += '\n';
 css += '.nav--collapsed .ni.nav__pin-collapsed { display: flex; }';
 css += '\n';
 
+// ─── Back bar (hover to navigate to catalog) ───
+css += '.bebop-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
+css += '\n';
+css += '.bebop-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
+css += '\n';
+css += '.bebop-shell-hover:hover ~ .bebop-shell-bar, .bebop-shell-bar:hover { transform: translateY(0); }';
+css += '\n';
+css += ".bebop-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
+css += '\n';
+css += '.bebop-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+css += '.bebop-shell-bar a svg { width: 16px; height: 16px; }';
+css += '\n';
+
 // ─── HTML ───────────────────────────────────────────────────────────
 
 var html = '<!DOCTYPE html>';
@@ -647,10 +698,14 @@ html += '<html lang="en">';
 html += '<head>';
 html += '<meta charset="utf-8"/>';
 html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
-html += '<title>Copilot Shell \u2014 Interactive Preview</title>';
+html += '<title>Connectors Golden Flow \u2014 Interactive Preview</title>';
 html += '<style>' + css + '</style>';
 html += '</head>';
 html += '<body>';
+
+// Back bar (hover top edge to show)
+html += '<div class="bebop-shell-hover"></div>';
+html += '<div class="bebop-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
 
 // ─── Shell container ───
 html += '<div class="shell">';
@@ -764,11 +819,19 @@ html += '<div class="ci__toolbar">';
 html += '<button class="b b--ilg b--subtle" title="Diamond Link">' + diamondLinkIco + '</button>';
 html += '<button class="b b--ilg b--subtle" id="addBtn" title="Add">' + addIco + '</button>';
 html += '</div>';
+html += '<div class="ci__content">';
 html += '<div class="ci__input">';
 html += '<textarea class="ci__textarea" id="textarea" rows="1" placeholder="Ask Copilot"></textarea>';
 html += '<button class="b b--imd b--subtle" title="Mic">' + micIco + '</button>';
 html += '<div class="ci__line"></div>';
 html += '</div>';
+html += '<div class="src-tab" id="srcTab">';
+html += '<span class="src-tab__label">Sources</span>';
+html += '<span class="src-tab__icons" id="srcTabIcons"></span>';
+html += '<span class="src-tab__count" id="srcTabCount" style="display:none"></span>';
+html += '<span class="src-tab__workoff" id="srcTabWorkOff" style="display:none">' + briefcaseOffIco + '</span>';
+html += '</div>';
+html += '</div>'; // end ci__content
 html += '<div class="ci__send-wrap">';
 html += '<button class="b b--ilg ci__send" id="sendBtn" title="Send">';
 html += '<span class="ci__send-icon--eq">' + deviceEqIco + '</span>';
@@ -786,6 +849,8 @@ html += '<button class="sc__chip" data-text="Prepare for what\u2019s ahead">Prep
 html += '<button class="sc__chip" data-text="Create something inspiring">Create something inspiring</button>';
 html += '<button class="sc__overflow" aria-label="More suggestions">' + moreHorizontalIco + '</button>';
 html += '</div>';
+
+// Sources Tab moved inside ci__content above
 
 html += '</div>'; // end ci-area
 
@@ -853,11 +918,19 @@ html += '<div class="ci__row">';
 html += '<div class="ci__toolbar">';
 html += '<button class="b b--ilg b--subtle" id="addBtn2" title="Add">' + addIco + '</button>';
 html += '</div>';
+html += '<div class="ci__content">';
 html += '<div class="ci__input">';
 html += '<textarea class="ci__textarea" id="textarea2" rows="1" placeholder="Ask Copilot"></textarea>';
 html += '<button class="b b--imd b--subtle" title="Mic">' + micIco + '</button>';
 html += '<div class="ci__line"></div>';
 html += '</div>';
+html += '<div class="src-tab" id="srcTab2">';
+html += '<span class="src-tab__label">Sources</span>';
+html += '<span class="src-tab__icons" id="srcTabIcons2"></span>';
+html += '<span class="src-tab__count" id="srcTabCount2" style="display:none"></span>';
+html += '<span class="src-tab__workoff" id="srcTabWorkOff2" style="display:none">' + briefcaseOffIco + '</span>';
+html += '</div>';
+html += '</div>'; // end ci__content
 html += '<div class="ci__send-wrap">';
 html += '<button class="b b--ilg" id="footerSendBtn" title="Stop">';
 html += '<span id="fSendStop">' + stopIco + '</span>';
@@ -868,6 +941,7 @@ html += '</div>';
 html += '</div>'; // end ci__row
 html += '</div>'; // end ci__container
 html += '</div>'; // end ci
+// Sources Tab moved inside ci__content above
 html += '<div class="disclaimer">AI-generated content may be incorrect</div>';
 html += '</div>'; // end input-footer
 
@@ -883,7 +957,7 @@ html += '<div class="am__divider"><div class="am__divider-line"></div></div>';
 html += '<button class="am__item"><span class="am__item-icon">' + addIco + '</span>Add work content</button>';
 html += '<button class="am__item"><span class="am__item-icon">' + arrowUploadIco + '</span>Upload images and files</button>';
 html += '<button class="am__item"><span class="am__item-icon">' + cloudIco + '</span>Attach cloud files</button>';
-html += '<button class="am__item" id="changeDsBtn"><span class="am__item-icon">' + flowIco + '</span>Change data sources</button>';
+html += '<button class="am__item" id="changeDsBtn"><span class="am__item-icon">' + flowIco + '</span><span style="flex:1;text-align:left">Change data sources</span><span class="am__item-count">3 of 3</span></button>';
 html += '<button class="am__item"><span class="am__item-icon">' + mentionIco + '</span>Chat with agents</button>';
 html += '</div>'; // end am
 html += '</div>'; // end am-overlay
@@ -903,17 +977,18 @@ html += '</div>';
 // Source items — exact Figma content
 html += '<div class="src-list">';
 // Work
-html += '<div class="si" id="siWork"><div class="si__inner"><span class="si__icon">' + briefcaseIco + '</span><span class="si__label">Work</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on" id="workToggle"><div class="tgl-thumb"></div></div></div></div></div>';
+html += '<div class="si" id="siWork"><div class="si__inner"><span class="si__icon">' + briefcaseIco + '</span><span class="si__label" style="flex:none">Work</span><button class="si__subtitle">Add or manage sources</button><span style="flex:1"></span><div class="si__toggle-area"><div class="tgl-track tgl-track--on" id="workToggle"><div class="tgl-thumb"></div></div></div></div></div>';
+html += '<div class="si__divider"></div>';
 // Microsoft 365 apps
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon">' + copilotIco + '</span><span class="si__label">Microsoft 365 apps</span><div class="si__toggle-area"><span class="si__toggle-label">Chats, Emails, Meetings</span><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
+html += '<div class="si si--child" data-src="m365"><div class="si__inner"><span class="si__icon">' + copilotIco + '</span><span class="si__label">Microsoft 365 apps</span><div class="si__toggle-area"><span class="si__toggle-label">Chats, Emails, Meetings</span><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
 // ServiceNow
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/servicenow-20-color.svg" alt="ServiceNow" width="20" height="20" style="display:block" /></span><span class="si__label">ServiceNow</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
+html += '<div class="si si--child" data-src="servicenow"><div class="si__inner"><span class="si__icon">' + serviceNowIco + '</span><span class="si__label">ServiceNow</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
 // Jira
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/jira-20-color.png" alt="Jira" width="20" height="20" style="display:block" /></span><span class="si__label">Jira</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
+html += '<div class="si si--child" data-src="jira"><div class="si__inner"><span class="si__icon">' + jiraIco + '</span><span class="si__label">Jira</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
 // Notion
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/notion-20-color.svg" alt="Notion" width="20" height="20" style="display:block" /></span><span class="si__label">Notion</span><button class="si__connect">Connect</button></div></div>';
+html += '<div class="si si--child"><div class="si__inner"><span class="si__icon">' + notionIco + '</span><span class="si__label">Notion</span><button class="si__connect">Connect</button></div></div>';
 // Hubspot
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/hubspot-20-color.svg" alt="Hubspot" width="20" height="20" style="display:block" /></span><span class="si__label">Hubspot</span><button class="si__connect">Connect</button></div></div>';
+html += '<div class="si si--child"><div class="si__inner"><span class="si__icon">' + hubspotIco + '</span><span class="si__label">Hubspot</span><button class="si__connect">Connect</button></div></div>';
 html += '</div>';
 html += '</div>'; // end src-panel
 html += '</div>'; // end src-overlay
@@ -936,7 +1011,7 @@ html += '\n';
 // ZQ positioning: keep greeting+input centered, responsive to input height
 html += 'var _padTop = 0;';
 html += 'var _taLines = 1;';
-html += 'function positionZQ() {';
+html += 'function positionZQ(initial) {';
 html += '  if (document.querySelector(".shell").classList.contains("shell--sent")) return;';
 html += '  var viewH = contentArea.clientHeight;';
 html += '  contentInner.style.paddingTop = "0px";';
@@ -949,9 +1024,10 @@ html += '  contentInner.style.paddingTop = top + "px";';
 html += '}';
 html += '\n';
 
+// Incremental adjust: shift by half a line per line change, not full recalc
 html += 'function adjustForLines(oldLines, newLines) {';
 html += '  var diff = newLines - oldLines;';
-html += '  var shift = Math.round(diff * 18);';
+html += '  var shift = Math.round(diff * 18);';  // half of 36px line height
 html += '  var newPad = Math.max(40, _padTop - shift);';
 html += '  _padTop = newPad;';
 html += '  contentInner.style.paddingTop = newPad + "px";';
@@ -1077,18 +1153,85 @@ html += 'var changeDsBtn = document.getElementById(\"changeDsBtn\");';
 html += '\n';
 
 html += 'function openSources() { srcOverlay.classList.add(\"src-overlay--open\"); }';
-html += 'function closeSources() { srcOverlay.classList.remove(\"src-overlay--open\"); }';
+
+// Sources tab update logic
+html += 'var srcTab = document.getElementById("srcTab");';
+html += 'var srcTabIcons = document.getElementById("srcTabIcons");';
+html += 'var srcTabCount = document.getElementById("srcTabCount");';
+html += 'var srcTabWorkOff = document.getElementById("srcTabWorkOff");';
+html += 'var srcTab2 = document.getElementById("srcTab2");';
+// srcTabWrap2 removed — srcTab2 is now directly inside ci__content
+html += 'var srcTabIcons2 = document.getElementById("srcTabIcons2");';
+html += 'var srcTabCount2 = document.getElementById("srcTabCount2");';
+html += 'var srcTabWorkOff2 = document.getElementById("srcTabWorkOff2");';
+html += 'var scDiv = document.querySelector(".sc");';
+html += 'var changeDsCount = document.querySelector(".am__item-count");';
+html += '\n';
+
+// Icon HTML for each non-Work source (16x16 versions)
+html += 'var srcIconMap = {';
+html += '  m365: \'' + copilotIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\',';
+html += '  servicenow: \'' + serviceNowIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\',';
+html += '  jira: \'' + jiraIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\'';
+html += '};';
+html += '\n';
+
+html += 'function updateSourcesTab() {';
+html += '  var workIsOn = workToggle.classList.contains("tgl-track--on");';
+html += '  var tabs = [{t:srcTab,i:srcTabIcons,c:srcTabCount,w:srcTabWorkOff},{t:srcTab2,i:srcTabIcons2,c:srcTabCount2,w:srcTabWorkOff2}];';
+html += '  if (!workIsOn) {';
+html += '    if (scDiv) scDiv.style.display = "none";';
+html += '    tabs.forEach(function(s){ s.t.classList.add("src-tab--visible"); s.i.style.display="none"; s.c.style.display="none"; s.w.style.display=""; });';
+html += '    if (changeDsCount) changeDsCount.textContent = "0 of 3";';
+html += '    return;';
+html += '  }';
+html += '  tabs.forEach(function(s){ s.w.style.display = "none"; });';
+html += '  var srcItems = document.querySelectorAll(".si--child[data-src]");';
+html += '  var totalToggleable = 0; var onCount = 0; var onKeys = [];';
+html += '  srcItems.forEach(function(item) {';
+html += '    var tgl = item.querySelector(".tgl-track"); if (!tgl) return;';
+html += '    totalToggleable++;';
+html += '    if (tgl.classList.contains("tgl-track--on")) { onCount++; onKeys.push(item.getAttribute("data-src")); }';
+html += '  });';
+html += '  if (changeDsCount) changeDsCount.textContent = onCount + " of " + totalToggleable;';
+html += '  if (onCount === totalToggleable) {';
+html += '    tabs.forEach(function(s){ s.t.classList.remove("src-tab--visible"); });';
+html += '    if (scDiv) scDiv.style.display = "";';
+html += '    return;';
+html += '  }';
+html += '  if (scDiv) scDiv.style.display = "none";';
+html += '  tabs.forEach(function(s){ s.t.classList.add("src-tab--visible"); });';
+html += '  if (onCount <= 3 && onCount > 0) {';
+html += '    var iconsHtml = ""; onKeys.forEach(function(key) { if (srcIconMap[key]) iconsHtml += srcIconMap[key]; });';
+html += '    tabs.forEach(function(s){ s.i.innerHTML = iconsHtml; s.i.style.display=""; s.c.style.display="none"; });';
+html += '  } else if (onCount > 3) {';
+html += '    var ct = onCount + " of " + totalToggleable;';
+html += '    tabs.forEach(function(s){ s.i.style.display="none"; s.c.style.display=""; s.c.textContent=ct; });';
+html += '  } else {';
+html += '    var zt = "0 of " + totalToggleable;';
+html += '    tabs.forEach(function(s){ s.i.style.display="none"; s.c.style.display=""; s.c.textContent=zt; });';
+html += '  }';
+html += '}';
+html += '\n';
+
+html += 'function closeSources() {';
+html += '  srcOverlay.classList.remove(\"src-overlay--open\");';
+html += '  updateSourcesTab();';
+html += '}';
 html += '\n';
 
 // "Change data sources" in add menu → instant swap (no frost gap)
 html += 'changeDsBtn.addEventListener(\"click\", function(e) {';
 html += '  e.stopPropagation();';
 html += '  var srcPanel = srcOverlay.querySelector(\".src-panel\");';
+// Disable ALL transitions for instant swap
 html += '  srcOverlay.style.transition = \"none\";';
 html += '  amOverlay.style.transition = \"none\";';
 html += '  if (srcPanel) srcPanel.style.transition = \"none\";';
+// Swap states
 html += '  srcOverlay.classList.add(\"src-overlay--open\");';
 html += '  amOverlay.classList.remove(\"am-overlay--open\");';
+// Force reflow then restore transitions
 html += '  void srcOverlay.offsetHeight;';
 html += '  srcOverlay.style.transition = \"\";';
 html += '  amOverlay.style.transition = \"\";';
@@ -1100,15 +1243,35 @@ html += '\n';
 html += 'srcDismiss.addEventListener(\"click\", function() { closeSources(); });';
 html += '\n';
 
+// Sources Tab click → open sources overlay
+html += 'srcTab.addEventListener(\"click\", function() { openSources(); });';
+html += 'srcTab2.addEventListener(\"click\", function() { openSources(); });';
+html += '\n';
+
 // Click outside sources panel closes it
 html += 'srcOverlay.addEventListener(\"click\", function(e) {';
 html += '  if (e.target === srcOverlay) { closeSources(); }';
 html += '});';
 html += '\n';
 
-// Toggle switches inside sources panel
-html += 'document.querySelectorAll(\".src-list .tgl-track\").forEach(function(el) {';
-html += '  el.addEventListener(\"click\", function() { el.classList.toggle(\"tgl-track--on\"); });';
+// Toggle switches inside sources panel — Work toggle is master
+html += 'var workToggle = document.getElementById("workToggle");';
+html += 'var childItems = document.querySelectorAll(".si--child");';
+html += '\n';
+html += 'function updateChildItems() {';
+html += '  var isOn = workToggle.classList.contains("tgl-track--on");';
+html += '  childItems.forEach(function(item) {';
+html += '    if (isOn) { item.classList.remove("si--disabled"); } else { item.classList.add("si--disabled"); }';
+html += '  });';
+html += '}';
+html += '\n';
+html += 'workToggle.addEventListener("click", function() {';
+html += '  workToggle.classList.toggle("tgl-track--on");';
+html += '  updateChildItems();';
+html += '});';
+html += '\n';
+html += 'document.querySelectorAll(".src-list .tgl-track:not(#workToggle)").forEach(function(el) {';
+html += '  el.addEventListener("click", function() { el.classList.toggle("tgl-track--on"); });';
 html += '});';
 html += '\n';
 // ─── Send transition: greeting → response ───
@@ -1132,9 +1295,13 @@ html += '\n';
 html += '  setTimeout(function() { var ct = document.querySelector(".content"); var msg = document.getElementById("userMsg"); ct.scrollTop = msg.offsetTop - ct.offsetTop; }, 100);';
 html += '\n';
 html += '  clearTimeout(window._skipTimer);';
+html += '  clearTimeout(window._autoSkipTimer);';
 html += '  window._skipTimer = setTimeout(function() {';
 html += '    document.getElementById("skipThinking").classList.add("skip-thinking--visible");';
 html += '  }, 2000);';
+html += '  window._autoSkipTimer = setTimeout(function() {';
+html += '    document.getElementById("skipThinking").click();';
+html += '  }, 10000);';
 html += '}';
 html += '\n';
 
@@ -1188,6 +1355,7 @@ html += '  document.getElementById("responseFooter").classList.remove("rf--visib
 html += '  document.querySelectorAll(".rf__btn--active").forEach(function(b) { b.classList.remove("rf__btn--active"); });';
 html += '  document.getElementById("thinkingRow").style.display = "";';
 html += '  clearTimeout(window._skipTimer);';
+html += '  clearTimeout(window._autoSkipTimer);';
 html += '  ta.value = "";';
 html += '  ta2.value = "";';
 html += '  setFooterBtn("stop");';
@@ -1240,10 +1408,13 @@ html += '  thinkRow.style.display = "";';
 html += '  respText.classList.remove("response-text--visible");';
 html += '  ta2.value = "";';
 html += '  setFooterBtn("stop");';
-// Show skip thinking after 2s
+// Show skip thinking after 2s, auto-skip after 10s
 html += '  window._skipTimer = setTimeout(function() {';
 html += '    skipBtn.classList.add("skip-thinking--visible");';
 html += '  }, 2000);';
+html += '  window._autoSkipTimer = setTimeout(function() {';
+html += '    skipBtn.click();';
+html += '  }, 10000);';
 html += '}';
 html += '\n';
 
@@ -1307,6 +1478,7 @@ html += '\n';
 
 html += 'document.getElementById("skipThinking").addEventListener("click", function() {';
 html += '  clearTimeout(window._skipTimer);';
+html += '  clearTimeout(window._autoSkipTimer);';
 html += '  setFooterBtn("eq");';
 html += '  streamResponse();';
 html += '});';
@@ -1352,6 +1524,6 @@ const outDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 
 if (!fs.existsSync(outDir)) {
   fs.mkdirSync(outDir, { recursive: true });
 }
-const outPath = path.join(outDir, 'shell.html');
+const outPath = path.join(outDir, 'connectorsGoldenFlow.html');
 fs.writeFileSync(outPath, html, 'utf-8');
 console.log('Done: ' + outPath);

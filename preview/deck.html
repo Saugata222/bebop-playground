@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Bebop Playground — Team Intro</title>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #fff; color: #242424; }
+
+/* ─── Slide container ─── */
+.deck { display: flex; width: 300vw; height: 100vh; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.slide { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px; flex-shrink: 0; position: relative; }
+.slide--1 { background: #fff; }
+.slide--2 { background: #fafafa; }
+.slide--3 { background: #fff; }
+
+/* ─── Logo ─── */
+.logo { width: 48px; height: 48px; color: #242424; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
+.logo svg { width: 100%; height: 100%; }
+
+/* ─── Title ─── */
+.slide__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 48px; font-weight: 300; line-height: 1.15; text-align: center; max-width: 720px; margin-bottom: 20px; opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards; }
+.slide__title strong { font-weight: 400; color: #000; }
+
+/* ─── Body text ─── */
+.slide__body { font-size: 18px; font-weight: 400; color: #6f6f6f; line-height: 1.7; text-align: center; max-width: 640px; margin-bottom: 40px; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+
+/* ─── List ─── */
+.slide__list { list-style: none; display: flex; flex-direction: column; gap: 12px; max-width: 703px; width: 100%; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
+.slide__list li { display: flex; align-items: flex-start; gap: 24px; font-size: 16px; line-height: 1.6; }
+.slide__list li strong { color: #242424; font-weight: 700; width: 160px; flex-shrink: 0; }
+.slide__list li span { color: #6f6f6f; font-weight: 400; }
+
+/* ─── Chips ─── */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px; opacity: 0; animation: fadeUp 0.6s ease 0.6s forwards; }
+.chip { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; }
+.chip--dark { background: #242424; color: #fff; }
+.chip--light { background: #f5f5f5; color: #6f6f6f; }
+
+/* ─── Slide number ─── */
+.slide__num { position: absolute; bottom: 32px; right: 48px; font-size: 12px; font-weight: 600; color: #929292; letter-spacing: 0.5px; }
+
+/* ─── Nav dots ─── */
+.nav-dots { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 100; }
+.nav-dot { width: 8px; height: 8px; border-radius: 9999px; background: #dedede; border: none; cursor: pointer; transition: background 0.2s, width 0.2s; padding: 0; }
+.nav-dot--active { background: #242424; width: 24px; }
+
+/* ─── Arrow hint ─── */
+.arrow-hint { position: fixed; bottom: 32px; left: 48px; font-size: 12px; color: #929292; opacity: 0; animation: fadeUp 0.6s ease 1s forwards; }
+
+/* ─── Footer ─── */
+.slide__footer { position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; font-size: 12px; color: #929292; }
+
+/* ─── Workflow grid ─── */
+.workflow { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; max-width: 640px; margin-top: 8px; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
+.workflow__step { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 140px; }
+.workflow__icon { width: 40px; height: 40px; border-radius: 12px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: #6f6f6f; }
+.workflow__icon svg { width: 20px; height: 20px; }
+.workflow__label { font-size: 13px; font-weight: 600; color: #242424; text-align: center; }
+.workflow__desc { font-size: 12px; color: #929292; text-align: center; line-height: 1.4; }
+.workflow__arrow { display: flex; align-items: center; color: #dedede; margin-top: 20px; }
+
+/* ─── What's next ─── */
+.next-list { margin-top: 40px; max-width: 560px; opacity: 0; animation: fadeUp 0.6s ease 0.7s forwards; }
+.next-list p { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 12px; }
+.next-list ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.next-list li { font-size: 15px; line-height: 1.6; color: #6f6f6f; }
+.next-list li strong { color: #242424; font-weight: 500; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- Slide 1: Vision -->
+  <div class="slide slide--1">
+    <div class="logo">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.92704 2H12.1392C13.1927 2 14.1203 2.69397 14.4176 3.7046L14.8868 5.29901C15.0476 5.84546 15.5266 6.232 16.086 6.28068H16.3751C17.2627 6.28068 17.9479 6.53232 18.4023 7.04832C18.8449 7.55084 18.9913 8.21838 19.0009 8.88707C19.02 10.208 18.5033 11.849 18.0916 13.1554C17.7333 14.2924 17.273 15.4729 16.6552 16.3777C16.0399 17.2788 15.1999 18.0006 14.073 18.0006H7.87484L7.86695 18.0005H7.86063C6.80716 18.0005 5.87959 17.3066 5.58222 16.296L5.11309 14.7015C4.95237 14.1553 4.47368 13.7689 3.91456 13.7199H3.62488C2.73727 13.7199 2.05209 13.4683 1.59766 12.9523C1.15509 12.4498 1.00872 11.7822 0.999049 11.1135C0.979951 9.7926 1.49665 8.15165 1.90838 6.84517C2.26667 5.70826 2.72694 4.52772 3.34477 3.62288C3.96005 2.72178 4.80007 2 5.92704 2Z" fill="currentColor"/></svg>
+    </div>
+    <h1 class="slide__title"><strong>Bebop</strong> Playground</h1>
+    <p class="slide__body">A prototyping toolkit for the Copilot shell that designers can extend by prompting AI. Download the project, open it in VS Code, and describe what you want to build &mdash; Copilot or Claude generates the working prototype for you. No coding required.</p>
+    <div class="chips">
+      <span class="chip chip--dark">Specification as code</span>
+      <span class="chip chip--light">AI-extendable</span>
+      <span class="chip chip--light">Self-contained HTML</span>
+      <span class="chip chip--light">Figma &rarr; Tokens &rarr; Prototype</span>
+    </div>
+    <span class="slide__num">1 / 3</span>
+  </div>
+
+  <!-- Slide 2: What it does -->
+  <div class="slide slide--2">
+    <h1 class="slide__title">What it <strong>does</strong></h1>
+    <p class="slide__body">A fully working Copilot shell prototype with 17 components &mdash; all generated from design tokens and interactive out of the box.</p>
+    <ul class="slide__list">
+      <li><strong>Interactive shell</strong> <span>nav, header, chat input, add menu, sources, send &rarr; thinking &rarr; streaming response</span></li>
+      <li><strong>Component catalog</strong> <span>10 compound + 6 primitive components, each with live preview and state showcase</span></li>
+      <li><strong>Explorations</strong> <span>fork the shell into named explorations and iterate independently</span></li>
+      <li><strong>AI-ready</strong> <span>prompt Copilot or Claude to modify the prototype. Project context is provided automatically</span></li>
+      <li><strong>Zero dependencies</strong> <span>every preview is a single HTML file. Download, double-click, done</span></li>
+    </ul>
+    <span class="slide__num">2 / 3</span>
+  </div>
+
+  <!-- Slide 3: How & what's next -->
+  <div class="slide slide--3">
+    <h1 class="slide__title">How it was <strong>built</strong> &amp; what's next</h1>
+    <div class="workflow">
+      <div class="workflow__step">
+        <div class="workflow__icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2Z" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="10" r="3" fill="currentColor"/></svg></div>
+        <span class="workflow__label">Figma specs</span>
+        <span class="workflow__desc">Extracted tokens from Bebop Figma via MCP</span>
+      </div>
+      <div class="workflow__arrow"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="workflow__step">
+        <div class="workflow__icon"><svg viewBox="0 0 20 20" fill="none"><path d="M4 4h12v12H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 8h12M8 8v8" stroke="currentColor" stroke-width="1.2"/></svg></div>
+        <span class="workflow__label">TypeScript tokens</span>
+        <span class="workflow__desc">Typed const objects with as&nbsp;const literal types</span>
+      </div>
+      <div class="workflow__arrow"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="workflow__step">
+        <div class="workflow__icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 5l7-3 7 3v6c0 3.5-3 6.5-7 8-4-1.5-7-4.5-7-8V5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+        <span class="workflow__label">HTML previews</span>
+        <span class="workflow__desc">Self-contained, interactive, zero-dep</span>
+      </div>
+    </div>
+    <div class="next-list">
+      <p>What's next</p>
+      <ul>
+        <li><strong>Pattern library</strong> &mdash; page-level compositions built from existing component tokens</li>
+        <li><strong>More explorations</strong> &mdash; fork the shell for new feature flows and golden paths</li>
+        <li><strong>Team adoption</strong> &mdash; designers prompt AI to prototype directly from their ideas</li>
+      </ul>
+    </div>
+    <span class="slide__num">3 / 3</span>
+    <span class="slide__footer">Designed by Saugata &middot; Bebop Design System &middot; Microsoft</span>
+  </div>
+
+</div>
+
+<!-- Nav dots -->
+<div class="nav-dots" id="navDots">
+  <button class="nav-dot nav-dot--active" data-slide="0"></button>
+  <button class="nav-dot" data-slide="1"></button>
+  <button class="nav-dot" data-slide="2"></button>
+</div>
+
+<!-- Arrow hint -->
+<div class="arrow-hint">&larr; &rarr; to navigate</div>
+
+<script>
+var current = 0;
+var total = 3;
+var deck = document.getElementById('deck');
+var dots = document.querySelectorAll('.nav-dot');
+
+function goTo(n) {
+  current = Math.max(0, Math.min(total - 1, n));
+  deck.style.transform = 'translateX(-' + (current * 100) + 'vw)';
+  dots.forEach(function(d, i) {
+    d.classList.toggle('nav-dot--active', i === current);
+  });
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+});
+
+dots.forEach(function(d) {
+  d.addEventListener('click', function() { goTo(Number(d.dataset.slide)); });
+});
+
+// Swipe support
+var startX = 0;
+document.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; });
+document.addEventListener('touchend', function(e) {
+  var diff = startX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) { goTo(current + (diff > 0 ? 1 : -1)); }
+});
+</script>
+
+</body>
+</html>

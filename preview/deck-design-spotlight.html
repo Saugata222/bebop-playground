@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Design Spotlight — Bi-Weekly Cross-Team Crit</title>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #fff; color: #242424; }
+
+/* ─── Slide container ─── */
+.deck { display: flex; width: 800vw; height: 100vh; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.slide { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px; flex-shrink: 0; position: relative; }
+.slide--white { background: #fff; }
+.slide--subtle { background: #fafafa; }
+
+/* ─── Logo ─── */
+.logo { width: 48px; height: 48px; color: #242424; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
+.logo svg { width: 100%; height: 100%; }
+
+/* ─── Title ─── */
+.slide__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 48px; font-weight: 300; line-height: 1.15; text-align: center; max-width: 720px; margin-bottom: 20px; opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards; }
+.slide__title strong { font-weight: 400; color: #000; }
+
+/* ─── Subtitle ─── */
+.slide__subtitle { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 20px; font-weight: 400; color: #6f6f6f; text-align: center; max-width: 560px; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.6s ease 0.35s forwards; }
+
+/* ─── Body text ─── */
+.slide__body { font-size: 18px; font-weight: 400; color: #6f6f6f; line-height: 1.7; text-align: center; max-width: 640px; margin-bottom: 40px; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+
+/* ─── Chips ─── */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
+.chip { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; }
+.chip--dark { background: #242424; color: #fff; }
+.chip--light { background: #f5f5f5; color: #6f6f6f; }
+.chip--outline { background: transparent; color: #929292; border: 1px solid #dedede; }
+
+/* ─── Card grid (2×2) ─── */
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 640px; width: 100%; opacity: 0; animation: fadeUp 0.6s ease 0.45s forwards; }
+.card { background: #f5f5f5; border-radius: 12px; padding: 28px 24px; }
+.card__label { font-size: 15px; font-weight: 600; color: #242424; margin-bottom: 6px; }
+.card__desc { font-size: 14px; font-weight: 400; color: #6f6f6f; line-height: 1.55; }
+
+/* ─── Timeline (horizontal flow) ─── */
+.timeline { display: flex; align-items: flex-start; gap: 0; max-width: 800px; width: 100%; justify-content: center; opacity: 0; animation: fadeUp 0.6s ease 0.45s forwards; }
+.timeline__step { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 140px; flex-shrink: 0; }
+.timeline__pill { width: 100%; padding: 14px 12px; border-radius: 12px; background: #f5f5f5; text-align: center; }
+.timeline__pill--active { background: #242424; }
+.timeline__pill--active .timeline__name { color: #fff; }
+.timeline__pill--active .timeline__time { color: rgba(255,255,255,0.6); }
+.timeline__name { font-size: 13px; font-weight: 600; color: #242424; line-height: 1.3; }
+.timeline__time { font-size: 11px; font-weight: 600; color: #929292; margin-top: 4px; letter-spacing: 0.3px; }
+.timeline__desc { font-size: 12px; color: #929292; text-align: center; line-height: 1.45; padding: 0 4px; }
+.timeline__arrow { display: flex; align-items: center; color: #dedede; margin-top: 18px; flex-shrink: 0; }
+
+/* ─── Total bar ─── */
+.total-bar { margin-top: 32px; display: flex; align-items: center; gap: 8px; opacity: 0; animation: fadeUp 0.6s ease 0.6s forwards; }
+.total-bar__line { width: 40px; height: 1px; background: #dedede; }
+.total-bar__label { font-size: 12px; font-weight: 600; color: #929292; letter-spacing: 0.5px; }
+
+/* ─── Presenter card ─── */
+.presenter { max-width: 520px; width: 100%; text-align: left; opacity: 0; animation: fadeUp 0.6s ease 0.45s forwards; }
+.presenter__row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.presenter__key { font-size: 13px; font-weight: 600; color: #929292; width: 80px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+.presenter__val { font-size: 18px; font-weight: 400; color: #242424; }
+.presenter__val--placeholder { color: #dedede; font-style: italic; }
+.presenter__stage { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; background: #f5f5f5; color: #6f6f6f; }
+
+/* ─── Numbered list ─── */
+.num-list { list-style: none; display: flex; flex-direction: column; gap: 16px; max-width: 640px; width: 100%; opacity: 0; animation: fadeUp 0.6s ease 0.45s forwards; counter-reset: item; }
+.num-list li { display: flex; align-items: flex-start; gap: 16px; font-size: 15px; line-height: 1.6; counter-increment: item; }
+.num-list li::before { content: counter(item); display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 8px; background: #f5f5f5; font-size: 12px; font-weight: 600; color: #929292; flex-shrink: 0; margin-top: 2px; }
+.num-list li strong { color: #242424; font-weight: 600; }
+.num-list li span { color: #6f6f6f; font-weight: 400; }
+
+/* ─── Spectrum cards (3-col) ─── */
+.spectrum { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 720px; width: 100%; opacity: 0; animation: fadeUp 0.6s ease 0.45s forwards; }
+.spectrum__card { border-radius: 12px; padding: 24px 20px; background: #fff; border: 1px solid #f0f0f0; }
+.spectrum__card--early { border-top: 3px solid #dedede; }
+.spectrum__card--mid { border-top: 3px solid #929292; }
+.spectrum__card--late { border-top: 3px solid #242424; }
+.spectrum__label { font-size: 14px; font-weight: 600; color: #242424; margin-bottom: 4px; }
+.spectrum__stage { font-size: 11px; font-weight: 600; color: #929292; letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 14px; }
+.spectrum__questions { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.spectrum__questions li { font-size: 13px; color: #6f6f6f; line-height: 1.5; padding-left: 12px; position: relative; }
+.spectrum__questions li::before { content: ''; position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 9999px; background: #dedede; }
+
+/* ─── Closing slide ─── */
+.closing-stats { display: flex; gap: 32px; margin-bottom: 40px; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
+.closing-stat { text-align: center; }
+.closing-stat__num { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 40px; font-weight: 300; color: #242424; }
+.closing-stat__label { font-size: 12px; font-weight: 600; color: #929292; letter-spacing: 0.3px; margin-top: 4px; }
+
+/* ─── Slide number ─── */
+.slide__num { position: absolute; bottom: 32px; right: 48px; font-size: 12px; font-weight: 600; color: #929292; letter-spacing: 0.5px; }
+
+/* ─── Nav dots ─── */
+.nav-dots { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 100; }
+.nav-dot { width: 8px; height: 8px; border-radius: 9999px; background: #dedede; border: none; cursor: pointer; transition: background 0.2s, width 0.2s; padding: 0; }
+.nav-dot--active { background: #242424; width: 24px; }
+
+/* ─── Arrow hint ─── */
+.arrow-hint { position: fixed; bottom: 32px; left: 48px; font-size: 12px; color: #929292; opacity: 0; animation: fadeUp 0.6s ease 1s forwards; }
+
+/* ─── Footer ─── */
+.slide__footer { position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; font-size: 12px; color: #929292; }
+
+/* ─── Divider ─── */
+.slide__divider { width: 40px; height: 1px; background: #dedede; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.6s ease 0.25s forwards; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 1: Title                                          -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--white">
+    <div class="logo">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.92704 2H12.1392C13.1927 2 14.1203 2.69397 14.4176 3.7046L14.8868 5.29901C15.0476 5.84546 15.5266 6.232 16.086 6.28068H16.3751C17.2627 6.28068 17.9479 6.53232 18.4023 7.04832C18.8449 7.55084 18.9913 8.21838 19.0009 8.88707C19.02 10.208 18.5033 11.849 18.0916 13.1554C17.7333 14.2924 17.273 15.4729 16.6552 16.3777C16.0399 17.2788 15.1999 18.0006 14.073 18.0006H7.87484L7.86695 18.0005H7.86063C6.80716 18.0005 5.87959 17.3066 5.58222 16.296L5.11309 14.7015C4.95237 14.1553 4.47368 13.7689 3.91456 13.7199H3.62488C2.73727 13.7199 2.05209 13.4683 1.59766 12.9523C1.15509 12.4498 1.00872 11.7822 0.999049 11.1135C0.979951 9.7926 1.49665 8.15165 1.90838 6.84517C2.26667 5.70826 2.72694 4.52772 3.34477 3.62288C3.96005 2.72178 4.80007 2 5.92704 2Z" fill="currentColor"/></svg>
+    </div>
+    <h1 class="slide__title">Design <strong>Spotlight</strong></h1>
+    <p class="slide__subtitle">Bi-weekly cross-team design crit</p>
+    <p class="slide__body">60 minutes to share work-in-progress, exchange insights, and strengthen the connective tissue across all four teams.</p>
+    <div class="chips">
+      <span class="chip chip--dark">Bi-weekly</span>
+      <span class="chip chip--light">Cross-team</span>
+      <span class="chip chip--light">Informal crit</span>
+      <span class="chip chip--light">~25 members</span>
+    </div>
+    <span class="slide__num">1 / 8</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 2: Why this session exists                        -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--subtle">
+    <h1 class="slide__title">Why this session <strong>exists</strong></h1>
+    <p class="slide__body" style="margin-bottom: 32px;">Every team does great work. Most of us only see our own.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card__label">Visibility</div>
+        <div class="card__desc">Know what's happening across all four teams &mdash; beyond your immediate orbit.</div>
+      </div>
+      <div class="card">
+        <div class="card__label">Connect the dots</div>
+        <div class="card__desc">Spot overlaps, shared patterns, and know exactly who to reach out to.</div>
+      </div>
+      <div class="card">
+        <div class="card__label">Broader feedback</div>
+        <div class="card__desc">Get design and product input from people who aren't your direct stakeholders.</div>
+      </div>
+      <div class="card">
+        <div class="card__label">Shared craft</div>
+        <div class="card__desc">Raise the bar together by learning from each other's process and decisions.</div>
+      </div>
+    </div>
+    <span class="slide__num">2 / 8</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 3: Session structure                              -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--white">
+    <h1 class="slide__title">How it <strong>works</strong></h1>
+    <p class="slide__body" style="margin-bottom: 36px;">Five phases, one hour. The presenter drives the first half; the audience drives the second.</p>
+    <div class="timeline">
+      <div class="timeline__step">
+        <div class="timeline__pill timeline__pill--active">
+          <div class="timeline__name">Opening Context</div>
+          <div class="timeline__time">5 min</div>
+        </div>
+        <div class="timeline__desc">Team, project, user problem, where it stands</div>
+      </div>
+      <div class="timeline__arrow"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="timeline__step">
+        <div class="timeline__pill">
+          <div class="timeline__name">Walkthrough</div>
+          <div class="timeline__time">30 min</div>
+        </div>
+        <div class="timeline__desc">Show the work, insights, roadblocks, and hard decisions</div>
+      </div>
+      <div class="timeline__arrow"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="timeline__step">
+        <div class="timeline__pill">
+          <div class="timeline__name">Clarifying Qs</div>
+          <div class="timeline__time">5 min</div>
+        </div>
+        <div class="timeline__desc">Audience asks questions to understand context &amp; constraints</div>
+      </div>
+      <div class="timeline__arrow"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="timeline__step">
+        <div class="timeline__pill">
+          <div class="timeline__name">Design Feedback</div>
+          <div class="timeline__time">10 min</div>
+        </div>
+        <div class="timeline__desc">Craft-focused: flows, hierarchy, patterns, interactions</div>
+      </div>
+      <div class="timeline__arrow"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="timeline__step">
+        <div class="timeline__pill">
+          <div class="timeline__name">Product / Strategy</div>
+          <div class="timeline__time">10 min</div>
+        </div>
+        <div class="timeline__desc">Scope, positioning, cross-team alignment, strategic trade-offs</div>
+      </div>
+    </div>
+    <div class="total-bar">
+      <div class="total-bar__line"></div>
+      <div class="total-bar__label">60 MINUTES TOTAL</div>
+      <div class="total-bar__line"></div>
+    </div>
+    <span class="slide__num">3 / 8</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 4: This session (presenter intro)                 -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--subtle">
+    <h1 class="slide__title">This <strong>session</strong></h1>
+    <p class="slide__body" style="margin-bottom: 36px;">Today's presenter and project at a glance.</p>
+    <div class="presenter">
+      <div class="presenter__row">
+        <span class="presenter__key">Presenter</span>
+        <span class="presenter__val presenter__val--placeholder">[Name]</span>
+      </div>
+      <div class="presenter__row">
+        <span class="presenter__key">Team</span>
+        <span class="presenter__val presenter__val--placeholder">[Team name]</span>
+      </div>
+      <div class="presenter__row">
+        <span class="presenter__key">Project</span>
+        <span class="presenter__val presenter__val--placeholder">[Project name]</span>
+      </div>
+      <div class="presenter__row">
+        <span class="presenter__key">Summary</span>
+        <span class="presenter__val presenter__val--placeholder">[What it is, in plain language]</span>
+      </div>
+      <div class="presenter__row">
+        <span class="presenter__key">Stage</span>
+        <span class="presenter__stage">[Early exploration / Mid-fidelity / Shipping / Post-launch]</span>
+      </div>
+    </div>
+    <span class="slide__num">4 / 8</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 5: Notes for the presenter                        -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--white">
+    <div class="slide__divider"></div>
+    <h1 class="slide__title">If you're <strong>presenting</strong></h1>
+    <p class="slide__body" style="margin-bottom: 32px;">Low prep, high signal. Here's how to make the most of your 60 minutes.</p>
+    <ol class="num-list">
+      <li><span><strong>Don't make a deck</strong> &mdash; Screen-share your Figma, prototype, or working doc. Messy is fine; real is better than polished.</span></li>
+      <li><span><strong>Start with the "why"</strong> &mdash; Two sentences on the user problem and business context. Not everyone knows your project.</span></li>
+      <li><span><strong>Name your stage</strong> &mdash; Early exploration? Final polish? This calibrates the feedback you'll receive.</span></li>
+      <li><span><strong>Say what feedback you want</strong> &mdash; "Does this flow make sense?" beats "any thoughts?" Be specific about where you need eyes.</span></li>
+      <li><span><strong>Show the hard decisions</strong> &mdash; The forks in the road are the most interesting part. Share what you chose and why.</span></li>
+      <li><span><strong>It's a conversation, not a keynote</strong> &mdash; Expect interruptions. That's a signal people are engaged.</span></li>
+    </ol>
+    <span class="slide__num">5 / 8</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 6: Notes for the audience                         -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--subtle">
+    <div class="slide__divider"></div>
+    <h1 class="slide__title">If you're in the <strong>audience</strong></h1>
+    <p class="slide__body" style="margin-bottom: 32px;">Great feedback is a skill. Here's how to make yours count.</p>
+    <ol class="num-list">
+      <li><span><strong>Listen for the stage</strong> &mdash; Early work needs directional feedback, not pixel-level critique.</span></li>
+      <li><span><strong>Lead with questions, not opinions</strong> &mdash; "What did you consider for X?" opens more doors than "I think you should do Y."</span></li>
+      <li><span><strong>Connect, don't compete</strong> &mdash; If their problem overlaps yours, say so. That's the whole point of this session.</span></li>
+      <li><span><strong>Be specific</strong> &mdash; "The hierarchy feels unclear on the second screen" beats "looks good."</span></li>
+      <li><span><strong>Follow up after</strong> &mdash; If you have a deeper thought, DM the presenter. The time window is tight.</span></li>
+    </ol>
+    <span class="slide__num">6 / 8</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 7: Feedback spectrum                              -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--white">
+    <h1 class="slide__title">Match feedback to the <strong>stage</strong></h1>
+    <p class="slide__body" style="margin-bottom: 32px;">The kind of feedback that helps depends on where the work is.</p>
+    <div class="spectrum">
+      <div class="spectrum__card spectrum__card--early">
+        <div class="spectrum__label">Early / Exploring</div>
+        <div class="spectrum__stage">Divergent</div>
+        <ul class="spectrum__questions">
+          <li>Is this the right problem to solve?</li>
+          <li>Are there approaches you haven't considered?</li>
+          <li>Who else should you talk to?</li>
+          <li>What assumptions are you making?</li>
+        </ul>
+      </div>
+      <div class="spectrum__card spectrum__card--mid">
+        <div class="spectrum__label">Mid-fidelity</div>
+        <div class="spectrum__stage">Convergent</div>
+        <ul class="spectrum__questions">
+          <li>Does the flow make sense end-to-end?</li>
+          <li>What's confusing or surprising?</li>
+          <li>Does this scale to edge cases?</li>
+          <li>Are the trade-offs well reasoned?</li>
+        </ul>
+      </div>
+      <div class="spectrum__card spectrum__card--late">
+        <div class="spectrum__label">Late / Shipping</div>
+        <div class="spectrum__stage">Polishing</div>
+        <ul class="spectrum__questions">
+          <li>Are the details and micro-interactions polished?</li>
+          <li>Anything inconsistent with existing patterns?</li>
+          <li>Edge cases or error states missing?</li>
+          <li>Is the handoff spec clear for engineering?</li>
+        </ul>
+      </div>
+    </div>
+    <span class="slide__num">7 / 8</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- Slide 8: Closing / recurring reminder                   -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="slide slide--subtle">
+    <div class="logo" style="margin-bottom: 24px;">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.92704 2H12.1392C13.1927 2 14.1203 2.69397 14.4176 3.7046L14.8868 5.29901C15.0476 5.84546 15.5266 6.232 16.086 6.28068H16.3751C17.2627 6.28068 17.9479 6.53232 18.4023 7.04832C18.8449 7.55084 18.9913 8.21838 19.0009 8.88707C19.02 10.208 18.5033 11.849 18.0916 13.1554C17.7333 14.2924 17.273 15.4729 16.6552 16.3777C16.0399 17.2788 15.1999 18.0006 14.073 18.0006H7.87484L7.86695 18.0005H7.86063C6.80716 18.0005 5.87959 17.3066 5.58222 16.296L5.11309 14.7015C4.95237 14.1553 4.47368 13.7689 3.91456 13.7199H3.62488C2.73727 13.7199 2.05209 13.4683 1.59766 12.9523C1.15509 12.4498 1.00872 11.7822 0.999049 11.1135C0.979951 9.7926 1.49665 8.15165 1.90838 6.84517C2.26667 5.70826 2.72694 4.52772 3.34477 3.62288C3.96005 2.72178 4.80007 2 5.92704 2Z" fill="currentColor"/></svg>
+    </div>
+    <h1 class="slide__title">Every other <strong>[Day]</strong></h1>
+    <div class="closing-stats">
+      <div class="closing-stat">
+        <div class="closing-stat__num">60</div>
+        <div class="closing-stat__label">MINUTES</div>
+      </div>
+      <div class="closing-stat">
+        <div class="closing-stat__num">4</div>
+        <div class="closing-stat__label">TEAMS</div>
+      </div>
+      <div class="closing-stat">
+        <div class="closing-stat__num">1</div>
+        <div class="closing-stat__label">PRESENTER</div>
+      </div>
+    </div>
+    <p class="slide__body">Low prep, high value. Rotating across all teams.<br/>Upcoming: <em style="color: #dedede;">[Next presenter &middot; Team]</em></p>
+    <span class="slide__num">8 / 8</span>
+    <span class="slide__footer">Design Spotlight &middot; Microsoft</span>
+  </div>
+
+</div>
+
+<!-- Nav dots -->
+<div class="nav-dots" id="navDots">
+  <button class="nav-dot nav-dot--active" data-slide="0"></button>
+  <button class="nav-dot" data-slide="1"></button>
+  <button class="nav-dot" data-slide="2"></button>
+  <button class="nav-dot" data-slide="3"></button>
+  <button class="nav-dot" data-slide="4"></button>
+  <button class="nav-dot" data-slide="5"></button>
+  <button class="nav-dot" data-slide="6"></button>
+  <button class="nav-dot" data-slide="7"></button>
+</div>
+
+<!-- Arrow hint -->
+<div class="arrow-hint">&larr; &rarr; to navigate</div>
+
+<script>
+var current = 0;
+var total = 8;
+var deck = document.getElementById('deck');
+var dots = document.querySelectorAll('.nav-dot');
+
+function goTo(n) {
+  current = Math.max(0, Math.min(total - 1, n));
+  deck.style.transform = 'translateX(-' + (current * 100) + 'vw)';
+  dots.forEach(function(d, i) {
+    d.classList.toggle('nav-dot--active', i === current);
+  });
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+});
+
+dots.forEach(function(d) {
+  d.addEventListener('click', function() { goTo(Number(d.dataset.slide)); });
+});
+
+// Swipe support
+var startX = 0;
+document.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; });
+document.addEventListener('touchend', function(e) {
+  var diff = startX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) { goTo(current + (diff > 0 ? 1 : -1)); }
+});
+
+// URL-based slide navigation (?slide=N, 1-indexed)
+var params = new URLSearchParams(window.location.search);
+var slideParam = parseInt(params.get('slide'), 10);
+if (slideParam >= 1 && slideParam <= total) { goTo(slideParam - 1); }
+</script>
+
+</body>
+</html>
