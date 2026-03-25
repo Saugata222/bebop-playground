@@ -67,6 +67,13 @@ const meta: Record<string, ComponentMeta> = {
     states: ['Rest', 'Hover', 'Focused'],
     related: ['button', 'chatInput', 'tag'],
   },
+  sourceCard: {
+    title: 'Source Card',
+    desc: 'Compact connector card for the Apps & Sources view. Shows a service icon, name, and action control in 4 states: Add, Added, Enabled, Disabled.',
+    type: 'Primitive',
+    states: ['Add', 'Added', 'Enabled', 'Disabled'],
+    related: ['toggle', 'button', 'sourcesMenu'],
+  },
   menu: {
     title: 'Menu',
     desc: 'Dropdown menu surface with list items, section headers, secondary content positioning, split items, checkmarks, and chevron indicators.',

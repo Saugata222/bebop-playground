@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # Bebop Design System — Agent Instructions
 
 ## What This Project Is
@@ -33,8 +37,8 @@ src/
       focusRing.ts         2px black outer + 1px white inner
       disabledState.ts     #929292 text, #ebebeb bg, not-allowed cursor
       selectedAffordance.ts  Semibold text, filled icons, #ebebeb backplate
-    primitives/            9 atomic components: button, tag, tab, tabList, toggle, divider, scrollbar, suggestionChips
-    compound/              10 composed components: toolbar, chatInput, canvasChat, dialog, menu, nav, header, addMenu, sourcesMenu
+    primitives/            10 atomic components: button, tag, tab, tabList, toggle, divider, scrollbar, suggestionChips, sourceCard
+    compound/              12 composed components: toolbar, chatInput, canvasChat, dialog, menu, nav, header, addMenu, sourcesMenu, responseFooter, connectDialog
     icons/                 64 Fluent UI System Icon assets (SVG + PNG + GIF)
     index.ts               Barrel: shared + primitives + compound
 
@@ -49,7 +53,7 @@ preview/
     _inject.ts             Injects catalog topbar into all preview HTML files
     shell.ts               1185-line interactive Copilot prototype generator
     {component}.ts         One generator per component → writes to preview/dist/{component}.html
-  dist/                    16 generated HTML files (gitignored)
+  dist/                    Generated HTML files (gitignored) — component previews + flow explorations
 ```
 
 ## Code Style
@@ -134,11 +138,12 @@ Defined in `src/components/shared/selectedAffordance.ts`.
 ## Build & Verify
 
 ```sh
-npx tsc --noEmit            # Type-check
-npx tsx preview/src/X.ts    # Generate single component preview
+npm run typecheck           # Type-check (tsc --noEmit)
+npx tsx preview/src/X.ts    # Generate single preview
 npm run build               # Build shell preview only
-npm run build:all           # Build all 16 previews + inject catalog topbar
+npm run build:all           # Build all previews + inject catalog topbar
 npm run serve               # python3 -m http.server 8765
+npm run dev                 # build + serve
 ```
 
 View at: `http://localhost:8765/preview/dist/shell.html` (or `preview/index.html` for the catalog)
@@ -161,6 +166,15 @@ Each `preview/src/{component}.ts` file:
 const outDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'dist');
 fs.writeFileSync(path.join(outDir, 'componentName.html'), html, 'utf-8');
 ```
+
+## Flow Explorations
+
+Beyond component previews, `preview/src/` also contains multi-step flow prototypes branched from `shell.ts`:
+
+- `connectorsGoldenFlow.ts` → `preview/dist/connectorsGoldenFlow.html` — Connectors onboarding golden path
+- `seamlessConnect.ts` → `preview/dist/seamlessConnect.html` — Seamless connect flow
+
+These read icons directly via `fs.readFileSync` from `src/components/icons/` rather than importing from `_icons.ts`. They are full shell replicas with flow-specific state and UI layers added on top.
 
 ## Shell Preview — How to Modify
 

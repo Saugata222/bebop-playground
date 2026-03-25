@@ -414,6 +414,47 @@ css += ".si__subtitle { display: inline-flex; align-items: center; height: 24px;
 css += '\n';
 css += '.si__divider { width: 100%; height: 1px; background: #dedede; margin: 4px 0; }';
 css += '\n';
+// ─── Connect Dialog ───
+css += '.conn-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; }';
+css += '\n';
+css += '.conn-overlay--open { display: flex; }';
+css += '\n';
+css += '.conn-dlg { width: 556px; background: #fff; border-radius: 16px; border: 1px solid #dedede; overflow: hidden; position: relative; box-shadow: 0px 12px 48px rgba(0,0,0,0.12); }';
+css += '\n';
+css += '.conn-dlg__banner { width: 100%; height: 122px; background: #f5f5f5; }';
+css += '\n';
+css += '.conn-dlg__icons { position: absolute; top: 38px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; }';
+css += '\n';
+css += '.conn-dlg__icons .conn-dlg__ico { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }';
+css += '\n';
+css += '.conn-dlg__icons .conn-dlg__ico svg, .conn-dlg__icons .conn-dlg__ico img { width: 48px; height: 48px; display: block; }';
+css += '\n';
+css += '.conn-dlg__dots { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #242424; }';
+css += '\n';
+css += '.conn-dlg__dots svg { width: 32px; height: 32px; }';
+css += '\n';
+css += '.conn-dlg__content { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 16px; }';
+css += '\n';
+css += ".conn-dlg__title { font-family: 'Segoe UI', sans-serif; font-size: 20px; font-weight: 600; line-height: 28px; color: #242424; }";
+css += '\n';
+css += ".conn-dlg__dev { font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; line-height: 16px; color: #424242; margin-top: 2px; }";
+css += '\n';
+css += ".conn-dlg__body { font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; margin-top: 8px; }";
+css += '\n';
+css += '.conn-dlg__body a { color: #242424; text-decoration: underline; }';
+css += '\n';
+css += '.conn-dlg__footer { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }';
+css += '\n';
+css += ".conn-dlg__btn { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 6px 12px; border-radius: 12px; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; border: none; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; }";
+css += '\n';
+css += '.conn-dlg__btn--primary { background: #242424; color: #fff; }';
+css += '\n';
+css += '.conn-dlg__btn--primary:hover { background: #3b3b3b; }';
+css += '\n';
+css += '.conn-dlg__btn--secondary { background: #f5f5f5; color: #242424; }';
+css += '\n';
+css += '.conn-dlg__btn--secondary:hover { background: #ebebeb; }';
+css += '\n';
 css += '.si__subtitle:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
 css += '.si__toggle-area { display: flex; align-items: center; gap: 6px; padding: 2px; flex-shrink: 0; }';
@@ -986,14 +1027,37 @@ html += '<div class="si si--child" data-src="servicenow"><div class="si__inner">
 // Jira
 html += '<div class="si si--child" data-src="jira"><div class="si__inner"><span class="si__icon">' + jiraIco + '</span><span class="si__label">Jira</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
 // Notion
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon">' + notionIco + '</span><span class="si__label">Notion</span><button class="si__connect">Connect</button></div></div>';
+html += '<div class="si si--child" data-key="notion" data-name="Notion"><div class="si__inner"><span class="si__icon">' + notionIco + '</span><span class="si__label">Notion</span><button class="si__connect">Connect</button></div></div>';
 // Hubspot
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon">' + hubspotIco + '</span><span class="si__label">Hubspot</span><button class="si__connect">Connect</button></div></div>';
+html += '<div class="si si--child" data-key="hubspot" data-name="HubSpot"><div class="si__inner"><span class="si__icon">' + hubspotIco + '</span><span class="si__label">HubSpot</span><button class="si__connect">Connect</button></div></div>';
 html += '</div>';
 html += '</div>'; // end src-panel
 html += '</div>'; // end src-overlay
 
 html += '</div>'; // end main
+// Connect Dialog overlay
+html += '<div class="conn-overlay" id="connOverlay">';
+html += '<div class="conn-dlg">';
+html += '<div class="conn-dlg__banner"></div>';
+html += '<div class="conn-dlg__icons">';
+html += '<div class="conn-dlg__ico">' + copilotIco.replace('width="20"', 'width="48"').replace('height="20"', 'height="48"').replace('viewBox="0 0 20 20"', 'viewBox="0 0 20 20"') + '</div>';
+html += '<div class="conn-dlg__dots"><svg width="32" height="32" viewBox="0 0 20 20" fill="none"><path d="M6.25 10C6.25 10.6904 5.69036 11.25 5 11.25C4.30964 11.25 3.75 10.6904 3.75 10C3.75 9.30964 4.30964 8.75 5 8.75C5.69036 8.75 6.25 9.30964 6.25 10ZM11.25 10C11.25 10.6904 10.6904 11.25 10 11.25C9.30964 11.25 8.75 10.6904 8.75 10C8.75 9.30964 9.30964 8.75 10 8.75C10.6904 8.75 11.25 9.30964 11.25 10ZM15 11.25C15.6904 11.25 16.25 10.6904 16.25 10C16.25 9.30964 15.6904 8.75 15 8.75C14.3096 8.75 13.75 9.30964 13.75 10C13.75 10.6904 14.3096 11.25 15 11.25Z" fill="currentColor"/></svg></div>';
+html += '<div class="conn-dlg__ico" id="connDlgIco"></div>';
+html += '</div>';
+html += '<div class="conn-dlg__content">';
+html += '<div>';
+html += '<div class="conn-dlg__title" id="connDlgTitle"></div>';
+html += '<div class="conn-dlg__dev">Developed by Microsoft Corporation</div>';
+html += '</div>';
+html += '<div class="conn-dlg__body" id="connDlgBody"></div>';
+html += '<div class="conn-dlg__footer">';
+html += '<button class="conn-dlg__btn conn-dlg__btn--primary" id="connDlgConnect"></button>';
+html += '<button class="conn-dlg__btn conn-dlg__btn--secondary" id="connDlgCancel">Cancel</button>';
+html += '</div>';
+html += '</div>';
+html += '</div>';
+html += '</div>'; // end conn-overlay
+
 html += '</div>'; // end shell
 
 // ─── Script ─────────────────────────────────────────────────────────
@@ -1172,7 +1236,9 @@ html += '\n';
 html += 'var srcIconMap = {';
 html += '  m365: \'' + copilotIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\',';
 html += '  servicenow: \'' + serviceNowIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\',';
-html += '  jira: \'' + jiraIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\'';
+html += '  jira: \'' + jiraIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\',';
+html += '  notion: \'' + notionIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\',';
+html += '  hubspot: \'' + hubspotIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\'';
 html += '};';
 html += '\n';
 
@@ -1274,6 +1340,79 @@ html += 'document.querySelectorAll(".src-list .tgl-track:not(#workToggle)").forE
 html += '  el.addEventListener("click", function() { el.classList.toggle("tgl-track--on"); });';
 html += '});';
 html += '\n';
+// ─── Connect Dialog flow ───
+html += 'var connOverlay = document.getElementById("connOverlay");';
+html += 'var connDlgTitle = document.getElementById("connDlgTitle");';
+html += 'var connDlgBody = document.getElementById("connDlgBody");';
+html += 'var connDlgIco = document.getElementById("connDlgIco");';
+html += 'var connDlgConnect = document.getElementById("connDlgConnect");';
+html += 'var connDlgCancel = document.getElementById("connDlgCancel");';
+html += 'var _connActive = null;';
+html += '\n';
+
+// Open connect dialog when a Connect button is clicked
+html += 'document.querySelectorAll(".si__connect").forEach(function(btn) {';
+html += '  btn.addEventListener("click", function(e) {';
+html += '    e.stopPropagation();';
+html += '    var si = btn.closest(".si");';
+html += '    if (!si) return;';
+html += '    var name = si.getAttribute("data-name") || "Source";';
+html += '    var key = si.getAttribute("data-key") || "";';
+html += '    var iconEl = si.querySelector(".si__icon");';
+html += '    var iconHtml = iconEl ? iconEl.innerHTML : "";';
+// Populate dialog
+html += '    connDlgTitle.textContent = "Connect " + name;';
+html += '    connDlgBody.innerHTML = "Let Copilot securely read your content from " + name + ". You can manage sources in <a href=\'#\'>Settings</a>.";';
+html += '    connDlgIco.innerHTML = iconHtml;';
+html += '    connDlgConnect.textContent = "Continue to " + name;';
+html += '    _connActive = { si: si, key: key, name: name };';
+// Close sources overlay instantly, open connect dialog
+html += '    srcOverlay.style.transition = "none";';
+html += '    srcOverlay.classList.remove("src-overlay--open");';
+html += '    void srcOverlay.offsetHeight;';
+html += '    srcOverlay.style.transition = "";';
+html += '    connOverlay.classList.add("conn-overlay--open");';
+html += '  });';
+html += '});';
+html += '\n';
+
+// Cancel — close dialog, reopen sources
+html += 'connDlgCancel.addEventListener("click", function() {';
+html += '  connOverlay.classList.remove("conn-overlay--open");';
+html += '  openSources();';
+html += '  _connActive = null;';
+html += '});';
+html += '\n';
+
+// Connect — transform item, close dialog, reopen sources
+html += 'connDlgConnect.addEventListener("click", function() {';
+html += '  if (!_connActive) return;';
+html += '  var si = _connActive.si;';
+html += '  var key = _connActive.key;';
+// Replace Connect button with toggle
+html += '  var connectBtn = si.querySelector(".si__connect");';
+html += '  if (connectBtn) {';
+html += '    var toggleArea = document.createElement("div");';
+html += '    toggleArea.className = "si__toggle-area";';
+html += '    toggleArea.innerHTML = \'<div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div>\';';
+html += '    connectBtn.replaceWith(toggleArea);';
+// Add toggle click handler
+html += '    toggleArea.querySelector(".tgl-track").addEventListener("click", function() { this.classList.toggle("tgl-track--on"); });';
+html += '  }';
+// Set data-src for tracking
+html += '  si.setAttribute("data-src", key);';
+// Move item above unconnected items (find the first si with si__connect still)
+html += '  var srcList = si.closest(".src-list");';
+html += '  var firstConnect = srcList.querySelector(".si:not([data-src]):not(#siWork)");';
+html += '  if (firstConnect) { srcList.insertBefore(si, firstConnect); }';
+// Close dialog, reopen sources
+html += '  connOverlay.classList.remove("conn-overlay--open");';
+html += '  openSources();';
+html += '  _connActive = null;';
+html += '  updateSourcesTab();';
+html += '});';
+html += '\n';
+
 // ─── Send transition: greeting → response ───
 html += 'var shell = document.querySelector(".shell");';
 html += 'var sendBtn = document.getElementById("sendBtn");';
