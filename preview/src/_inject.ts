@@ -247,8 +247,8 @@ for (const file of files) {
   let html = fs.readFileSync(filePath, 'utf-8');
   const componentName = file.replace('.html', '');
 
-  // Shell: only inject hover back bar, no layout overrides
-  if (file === 'shell.html') {
+  // Shell + store experiments: only inject hover back bar, no layout overrides
+  if (file === 'shell.html' || file.startsWith('store')) {
     if (!html.includes('bebop-shell-backbar')) {
       const shellBarCSS = '\n/* Shell back bar */\n.bebop-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }\n.bebop-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }\n.bebop-shell-hover:hover ~ .bebop-shell-bar, .bebop-shell-bar:hover { transform: translateY(0); }\n.bebop-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: \'Segoe UI\', sans-serif; font-size: 14px; transition: background 0.1s; }\n.bebop-shell-bar a:hover { background: rgba(36,36,36,0.04); }\n.bebop-shell-bar a svg { width: 16px; height: 16px; }\n';
       const shellBarHTML = '<div class="bebop-shell-hover"></div><div class="bebop-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';

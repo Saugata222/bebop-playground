@@ -1,0 +1,644 @@
+/**
+ * Store Model 1 — All-in-One Store (Agents + Skills + Sources)
+ *
+ * Renders the Copilot shell with a unified store view containing three tabs:
+ *   - Agents: Personas with bundled capabilities
+ *   - Skills: Standalone capabilities (source-specific or generic)
+ *   - Sources: Data connectors
+ *
+ * Usage:  npx tsx preview/src/store1.ts
+ * Output: preview/dist/store1.html
+ */
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+// ─── Read icon files ────────────────────────────────────────
+const iconsDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'src', 'components', 'icons');
+function readIcon(name: string): string {
+  return fs.readFileSync(path.join(iconsDir, name), 'utf-8').replace(/\n/g, ' ').trim();
+}
+
+// ─── Icons ──────────────────────────────────────────────────
+const copilotIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.92704 2H12.1392C13.1927 2 14.1203 2.69397 14.4176 3.7046L14.8868 5.29901C15.0476 5.84546 15.5266 6.232 16.086 6.28068H16.3751C17.2627 6.28068 17.9479 6.53232 18.4023 7.04832C18.8449 7.55084 18.9913 8.21838 19.0009 8.88707C19.02 10.208 18.5033 11.849 18.0916 13.1554C17.7333 14.2924 17.273 15.4729 16.6552 16.3777C16.0399 17.2788 15.1999 18.0006 14.073 18.0006H7.87484L7.86695 18.0005H7.86063C6.80716 18.0005 5.87959 17.3066 5.58222 16.296L5.11309 14.7015C4.95237 14.1553 4.47368 13.7689 3.91456 13.7199H3.62488C2.73727 13.7199 2.05209 13.4683 1.59766 12.9523C1.15509 12.4498 1.00872 11.7822 0.999049 11.1135C0.979951 9.7926 1.49665 8.15165 1.90838 6.84517C2.26667 5.70826 2.72694 4.52772 3.34477 3.62288C3.96005 2.72178 4.80007 2 5.92704 2Z" fill="currentColor"/></svg>';
+const searchIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.7291 14.4362C12.5924 15.411 11.115 16 9.5 16C5.91015 16 3 13.0899 3 9.5C3 5.91015 5.91015 3 9.5 3C13.0899 3 16 5.91015 16 9.5C16 11.115 15.411 12.5924 14.4361 13.7292L17.8535 17.1465C18.0487 17.3417 18.0487 17.6583 17.8535 17.8536C17.6799 18.0271 17.4105 18.0464 17.2156 17.9114L17.1464 17.8536L13.7291 14.4362ZM15 9.5C15 6.46243 12.5376 4 9.5 4C6.46243 4 4 6.46243 4 9.5C4 12.5376 6.46243 15 9.5 15C10.8388 15 12.0658 14.5217 13.0196 13.7266Z" fill="currentColor"/></svg>';
+const composeIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 4.00003C10.7761 4.00003 11 4.22389 11 4.50003C10.9999 4.77614 10.7761 5.00003 10.5 5.00003H6C4.89543 5.00003 4 5.89546 4 7.00002V14C4.00004 15.1045 4.89545 16 6 16H13C14.1045 16 14.9999 15.1045 15 14V9.50002C15 9.22388 15.2238 9.00002 15.5 9.00002C15.7761 9.00002 16 9.22388 16 9.50002V14C15.9999 15.6568 14.6568 17 13 17H6C4.34317 17 3.00004 15.6568 3 14V7.00002C3 5.34318 4.34314 4.00003 6 4.00003H10.5ZM16.1465 3.14652C16.3417 2.95126 16.6582 2.95126 16.8535 3.14652C17.0487 3.34179 17.0487 3.65832 16.8535 3.85355L9.06054 11.6455L7.99999 12L8.35351 10.9395L16.1465 3.14652Z" fill="currentColor"/></svg>';
+const folderIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 3C3.11929 3 2 4.11929 2 5.5V14.5C2 15.8807 3.11929 17 4.5 17H15.5C16.8807 17 18 15.8807 18 14.5V7.5C18 6.11929 16.8807 5 15.5 5H9.70711L8.21967 3.51256C7.89148 3.18437 7.44636 3 6.98223 3H4.5Z" fill="currentColor"/></svg>';
+const gridDotsIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.25 4C5.25 4.69036 4.69036 5.25 4 5.25C3.30964 5.25 2.75 4.69036 2.75 4C2.75 3.30964 3.30964 2.75 4 2.75C4.69036 2.75 5.25 3.30964 5.25 4ZM17.25 16C17.25 16.6904 16.6904 17.25 16 17.25C15.3096 17.25 14.75 16.6904 14.75 16C14.75 15.3096 15.3096 14.75 16 14.75C16.6904 14.75 17.25 15.3096 17.25 16ZM16 11.25C16.6904 11.25 17.25 10.6904 17.25 10C17.25 9.30964 16.6904 8.75 16 8.75C15.3096 8.75 14.75 9.30964 14.75 10C14.75 10.6904 15.3096 11.25 16 11.25ZM17.25 4C17.25 4.69036 16.6904 5.25 16 5.25C15.3096 5.25 14.75 4.69036 14.75 4C14.75 3.30964 15.3096 2.75 16 2.75C16.6904 2.75 17.25 3.30964 17.25 4ZM10 17.25C10.6904 17.25 11.25 16.6904 11.25 16C11.25 15.3096 10.6904 14.75 10 14.75C9.30964 14.75 8.75 15.3096 8.75 16C8.75 16.6904 9.30964 17.25 10 17.25ZM11.25 10C11.25 10.6904 10.6904 11.25 10 11.25C9.30964 11.25 8.75 10.6904 8.75 10C8.75 9.30964 9.30964 8.75 10 8.75C10.6904 8.75 11.25 9.30964 11.25 10ZM10 5.25C10.6904 5.25 11.25 4.69036 11.25 4C11.25 3.30964 10.6904 2.75 10 2.75C9.30964 2.75 8.75 3.30964 8.75 4C8.75 4.69036 9.30964 5.25 10 5.25ZM5.25 16C5.25 16.6904 4.69036 17.25 4 17.25C3.30964 17.25 2.75 16.6904 2.75 16C2.75 15.3096 3.30964 14.75 4 14.75C4.69036 14.75 5.25 15.3096 5.25 16ZM4 11.25C4.69036 11.25 5.25 10.6904 5.25 10C5.25 9.30964 4.69036 8.75 4 8.75C3.30964 8.75 2.75 9.30964 2.75 10C2.75 10.6904 3.30964 11.25 4 11.25Z" fill="currentColor"/></svg>';
+const chatIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C8.72679 18 7.49591 17.7018 6.38669 17.1393L6.266 17.075L2.62109 17.9851C2.31127 18.0625 2.02622 17.8369 2.00131 17.5438L2.00114 17.4624L2.01493 17.3787L2.925 13.735L2.86169 13.6153C2.4066 12.7186 2.12433 11.7422 2.03275 10.7283L2.00738 10.3463L2 10C2 5.58172 5.58172 2 10 2Z" fill="currentColor"/></svg>';
+const alertIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.99766 2C13.1466 2 15.7416 4.33488 15.9821 7.3554L15.9955 7.57762L16 7.80214L15.999 11.398L16.9244 13.6202C16.947 13.6743 16.9647 13.7302 16.9774 13.7871L16.9926 13.8733L17.0013 14.0046C17.0013 14.4526 16.7048 14.8387 16.2521 14.9677L16.1358 14.9945L16.0013 15.0046L12.4996 15.004L12.4946 15.1653C12.4095 16.469 11.3252 17.5 10 17.5C8.67453 17.5 7.58998 16.4685 7.50533 15.1644L7.49962 15.004L3.99891 15.0046C3.91096 15.0046 3.82358 14.993 3.73902 14.9702L3.61456 14.9277C3.20378 14.7567 2.96181 14.3392 3.01221 13.8757L3.0333 13.7483L3.07572 13.6202L3.99902 11.401L4.0001 7.79281L4.0044 7.56824C4.12702 4.45115 6.77104 2 9.99766 2Z" fill="currentColor"/></svg>';
+const infoIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4921 8.91012C10.4497 8.67687 10.2456 8.49999 10.0001 8.49999C9.72397 8.49999 9.50011 8.72385 9.50011 8.99999V13.5021L9.50817 13.592C9.55051 13.8253 9.75465 14.0021 10.0001 14.0021C10.2763 14.0021 10.5001 13.7783 10.5001 13.5021V8.99999L10.4921 8.91012ZM10.7988 6.74999C10.7988 6.33578 10.463 5.99999 10.0488 5.99999C9.63461 5.99999 9.29883 6.33578 9.29883 6.74999C9.29883 7.16421 9.63461 7.49999 10.0488 7.49999C10.463 7.49999 10.7988 7.16421 10.7988 6.74999ZM18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10ZM3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10Z" fill="currentColor"/></svg>';
+const chevDn12 = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.14645 4.64645C2.34171 4.45118 2.65829 4.45118 2.85355 4.64645L6 7.79289L9.14645 4.64645C9.34171 4.45118 9.65829 4.45118 9.85355 4.64645C10.0488 4.84171 10.0488 5.15829 9.85355 5.35355L6.35355 8.85355C6.15829 9.04882 5.84171 9.04882 5.64645 8.85355L2.14645 5.35355C1.95118 5.15829 1.95118 4.84171 2.14645 4.64645Z" fill="currentColor"/></svg>';
+const pinIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.1221 3.13715C10.7326 1.91616 12.3599 1.65208 13.3251 2.61737L17.382 6.67419C18.3472 7.63947 18.0832 9.26676 16.8622 9.87726L13.4037 11.6065C13.0751 11.7708 12.8183 12.0499 12.6818 12.391L11.2459 15.981C10.9792 16.6476 10.1179 16.8244 9.61027 16.3167L7 13.7064L3.70711 16.9993H3V16.2922L6.29289 12.9993L3.68262 10.3891C3.17498 9.88142 3.35177 9.02011 4.01834 8.75348L7.60829 7.3175C7.94939 7.18106 8.22855 6.92419 8.39285 6.5956L10.1221 3.13715Z" fill="currentColor"/></svg>';
+const arrowSyncIco16 = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.14645 0.646447C7.34171 0.451184 7.65829 0.451184 7.85355 0.646447L9.35355 2.14645C9.54882 2.34171 9.54882 2.65829 9.35355 2.85355L7.85355 4.35355C7.65829 4.54882 7.34171 4.54882 7.14645 4.35355C6.95118 4.15829 6.95118 3.84171 7.14645 3.64645L7.7885 3.00439C5.12517 3.11522 3 5.30943 3 8C3 9.56799 3.72118 10.9672 4.85185 11.8847C5.06627 12.0587 5.09904 12.3736 4.92503 12.588C4.75103 12.8024 4.43615 12.8352 4.22172 12.6612C2.86712 11.5619 2 9.88205 2 8C2 4.75447 4.57689 2.1108 7.79629 2.00339L7.14645 1.35355C6.95118 1.15829 6.95118 0.841709 7.14645 0.646447Z" fill="currentColor"/></svg>';
+const dismissIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569Z" fill="currentColor"/></svg>';
+const moreHorizontalIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.25 10C6.25 10.6904 5.69036 11.25 5 11.25C4.30964 11.25 3.75 10.6904 3.75 10C3.75 9.30964 4.30964 8.75 5 8.75C5.69036 8.75 6.25 9.30964 6.25 10ZM11.25 10C11.25 10.6904 10.6904 11.25 10 11.25C9.30964 11.25 8.75 10.6904 8.75 10C8.75 9.30964 9.30964 8.75 10 8.75C10.6904 8.75 11.25 9.30964 11.25 10ZM15 11.25C15.6904 11.25 16.25 10.6904 16.25 10C16.25 9.30964 15.6904 8.75 15 8.75C14.3096 8.75 13.75 9.30964 13.75 10C13.75 10.6904 14.3096 11.25 15 11.25Z" fill="currentColor"/></svg>';
+const addIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.5C10.2761 2.5 10.5 2.72386 10.5 3V9.5H17C17.2761 9.5 17.5 9.72386 17.5 10C17.5 10.2761 17.2761 10.5 17 10.5H10.5V17C10.5 17.2761 10.2761 17.5 10 17.5C9.72386 17.5 9.5 17.2761 9.5 17V10.5H3C2.72386 10.5 2.5 10.2761 2.5 10C2.5 9.72386 2.72386 9.5 3 9.5H9.5V3C9.5 2.72386 9.72386 2.5 10 2.5Z" fill="currentColor"/></svg>';
+const agentIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.20949 2.81648C5.53001 2.30825 6.08885 2 6.6897 2H9.50021C9.77635 2 10.0002 2.22386 10.0002 2.5C10.0002 2.77614 9.77635 3 9.50021 3H6.6897C6.43219 3 6.19269 3.13211 6.05533 3.34992L2.11367 9.59992C1.95951 9.84436 1.95951 10.1556 2.11367 10.4001L5.97726 16.5263C6.16322 16.8212 6.48744 17 6.83604 17C7.29602 17 7.69854 16.6908 7.81706 16.2463L11.218 3.49284C11.4527 2.61252 12.25 2 13.1611 2C13.8557 2 14.5011 2.35842 14.8682 2.94804L18.7888 9.24456C19.0768 9.70702 19.0768 10.293 18.7888 10.7554L14.7916 17.175C14.4721 17.6881 13.9105 18 13.306 18H10.5002C10.2241 18 10.0002 17.7761 10.0002 17.5C10.0002 17.2239 10.2241 17 10.5002 17H13.306Z" fill="currentColor"/></svg>';
+const appsIco20 = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 17.0009C3.7203 17.0009 3.07955 16.406 3.00687 15.6454L3 15.5009V4.50092C3 3.72122 3.59489 3.08047 4.35554 3.00778L4.5 3.00092H9C9.7797 3.00092 10.4204 3.5958 10.4931 4.35646L10.5 4.50092V4.75534L12.6886 2.48609C13.2276 1.92691 14.0959 1.8766 14.6956 2.34798L14.8118 2.44922L17.5694 5.17386C18.1219 5.71976 18.1614 6.5886 17.68 7.18505L17.5767 7.30053L15.266 9.50034L15.5 9.50092C16.2797 9.50092 16.9204 10.0958 16.9931 10.8565L17 11.0009V15.5009C17 16.2806 16.4051 16.9214 15.6445 16.994L15.5 17.0009H4.5Z" fill="currentColor"/></svg>';
+const chevronRightIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.64582 4.14708C7.84073 3.95147 8.15731 3.95147 8.35292 4.14708L13.8374 9.6108C14.0531 9.82574 14.0531 10.1751 13.8374 10.39L8.35292 15.855C8.15731 16.0499 7.84073 16.0493 7.64582 15.8537C7.4509 15.6581 7.45147 15.3415 7.64708 15.1466L12.8117 10.0004L7.64708 4.85418C7.45147 4.65927 7.4509 4.34269 7.64582 4.14708Z" fill="currentColor"/></svg>';
+// Store/catalog icon
+const storeIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3.5C3 3.22386 3.22386 3 3.5 3H16.5C16.7761 3 17 3.22386 17 3.5V5.5C17 6.32843 16.3284 7 15.5 7H15V15.5C15 16.3284 14.3284 17 13.5 17H6.5C5.67157 17 5 16.3284 5 15.5V7H4.5C3.67157 7 3 6.32843 3 5.5V3.5ZM4 4V5.5C4 5.77614 4.22386 6 4.5 6H15.5C15.7761 6 16 5.77614 16 5.5V4H4ZM6 7V15.5C6 15.7761 6.22386 16 6.5 16H13.5C13.7761 16 14 15.7761 14 15.5V7H6ZM8 9C8 8.72386 8.22386 8.5 8.5 8.5H11.5C11.7761 8.5 12 8.72386 12 9C12 9.27614 11.7761 9.5 11.5 9.5H8.5C8.22386 9.5 8 9.27614 8 9Z" fill="currentColor"/></svg>';
+
+// Helper: colored icon circle
+function ico(color: string, letter: string): string {
+  return `<svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="${color}"/><text x="18" y="24" text-anchor="middle" font-size="14" font-weight="600" fill="#fff" font-family="Segoe UI, sans-serif">${letter}</text></svg>`;
+}
+function icoSm(color: string, letter: string): string {
+  return `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="${color}"/><text x="14" y="19" text-anchor="middle" font-size="11" font-weight="600" fill="#fff" font-family="Segoe UI, sans-serif">${letter}</text></svg>`;
+}
+
+// ─── CSS ────────────────────────────────────────────────────────────
+var css = '';
+css += '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }';
+css += '\n';
+css += "html, body { height: 100%; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #242424; background: #fff; }";
+css += '\n';
+
+// Shell layout
+css += '.shell { display: flex; height: 100vh; background: #fff; }';
+css += '\n';
+
+// Nav sidebar
+css += '.nav { width: 256px; min-width: 256px; background: #fff; display: flex; flex-direction: column; gap: 12px; padding: 8px 6px; overflow: hidden; flex-shrink: 0; border-right: 1px solid #dedede; }';
+css += '\n';
+css += '.nav__header { display: flex; align-items: center; justify-content: space-between; padding: 2px 0 0 0; }';
+css += '\n';
+css += '.nav__top { display: flex; flex-direction: column; flex-shrink: 0; }';
+css += '\n';
+css += '.nav__body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }';
+css += '\n';
+css += '.nav__section { display: flex; flex-direction: column; }';
+css += '\n';
+css += '.nav__footer { flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; }';
+css += '\n';
+css += '.nav__footer-row { display: flex; align-items: center; gap: 0; }';
+css += '\n';
+
+// Nav header button
+css += '.nhb { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 12px; border: none; cursor: pointer; background: transparent; color: #242424; transition: background 0.1s; outline: none; position: relative; }';
+css += '\n';
+css += '.nhb:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+css += '.nhb svg { display: block; width: 20px; height: 20px; }';
+css += '\n';
+css += '.nhb__badge { position: absolute; top: 4px; right: 4px; min-width: 16px; height: 16px; background: #242424; border-radius: 9999px; color: #fff; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 2px; }';
+css += '\n';
+
+// Nav item
+css += '.ni { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 10px 6px 12px; border-radius: 12px; width: 100%; border: none; cursor: pointer; background: transparent; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 1.4; color: #242424; text-align: left; transition: background 0.1s; outline: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; }';
+css += '\n';
+css += '.ni:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+css += '.ni.sel { background: #ebebeb; font-weight: 600; }';
+css += '\n';
+css += '.ni.sel:hover { background: #e1e1e1; }';
+css += '\n';
+css += '.ni svg { display: block; flex-shrink: 0; width: 20px; height: 20px; }';
+css += '\n';
+css += '.ni__title { flex: 1 0 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; }';
+css += '\n';
+css += '.ni__right { display: flex; align-items: center; flex-shrink: 0; }';
+css += '\n';
+css += '.ni__right-icon { display: flex; align-items: center; padding: 4px; }';
+css += '\n';
+css += '.ni__right-icon svg { width: 16px; height: 16px; }';
+css += '\n';
+css += '.ni-split { display: flex; align-items: center; width: 100%; border-radius: 12px; }';
+css += '\n';
+css += '.ni-split .ni { flex: 1 0 0; width: auto; }';
+css += '\n';
+css += '.ni-split__sec { display: flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 6px 12px; border-radius: 12px; border: none; cursor: pointer; background: transparent; color: #242424; transition: background 0.1s; }';
+css += '\n';
+css += '.ni-split__sec:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+css += '.ni-split__sec svg { display: block; width: 12px; height: 12px; }';
+css += '\n';
+css += '.nsh { width: 100%; padding: 6px; font-size: 12px; color: #6f6f6f; font-weight: 400; line-height: 16px; cursor: default; }';
+css += '\n';
+
+// Me control
+css += '.me { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 3px 10px; border-radius: 12px; flex: 1; min-width: 0; background: transparent; cursor: pointer; border: none; font-family: inherit; text-align: left; transition: background 0.1s; color: #242424; }';
+css += '\n';
+css += '.me:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+css += '.me__avatar { width: 28px; height: 28px; border-radius: 9999px; background: #d0d0d0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }';
+css += '\n';
+css += '.me__info { flex: 1 0 0; min-width: 0; display: flex; flex-direction: column; padding-bottom: 1px; }';
+css += '\n';
+css += '.me__name { font-size: 12px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }';
+css += '\n';
+css += '.me__license { font-size: 10px; color: #6f6f6f; line-height: 1.4; display: flex; align-items: center; gap: 4px; }';
+css += '\n';
+
+// Main area
+css += '.main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; overflow: hidden; }';
+css += '\n';
+
+// ─── Store-specific styles ─────────────────────────────────
+
+// Store header
+css += '.store-hdr { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 32px; flex-shrink: 0; border-bottom: 1px solid #f0f0f0; }';
+css += '\n';
+css += ".store-hdr__title { font-size: 20px; font-weight: 600; font-family: 'Segoe UI', sans-serif; }";
+css += '\n';
+css += '.store-hdr__actions { display: flex; align-items: center; gap: 8px; }';
+css += '\n';
+css += ".store-hdr__btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #dedede; background: #fff; cursor: pointer; font-family: inherit; font-size: 13px; color: #242424; transition: background 0.1s; }";
+css += '\n';
+css += '.store-hdr__btn:hover { background: #f5f5f5; }';
+css += '\n';
+css += '.store-hdr__btn svg { width: 16px; height: 16px; }';
+css += '\n';
+
+// Tabs
+css += '.store-tabs { display: flex; gap: 0; padding: 0 32px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }';
+css += '\n';
+css += ".store-tab { padding: 10px 16px; font-size: 14px; font-weight: 400; color: #5d5d5d; cursor: pointer; border: none; background: none; font-family: inherit; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; }";
+css += '\n';
+css += '.store-tab:hover { color: #242424; }';
+css += '\n';
+css += '.store-tab--active { color: #242424; font-weight: 600; border-bottom-color: #242424; }';
+css += '\n';
+
+// Search
+css += ".store-search { margin: 24px 32px 0; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #dedede; background: #fff; transition: border-color 0.15s; }";
+css += '\n';
+css += '.store-search:focus-within { border-color: #242424; }';
+css += '\n';
+css += '.store-search svg { width: 16px; height: 16px; color: #6f6f6f; flex-shrink: 0; }';
+css += '\n';
+css += ".store-search input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 14px; background: transparent; color: #242424; }";
+css += '\n';
+css += '.store-search input::placeholder { color: #6f6f6f; }';
+css += '\n';
+
+// Content
+css += '.store-content { flex: 1; overflow-y: auto; padding: 0 32px 32px; }';
+css += '\n';
+
+// Section
+css += '.store-section { margin-top: 28px; }';
+css += '\n';
+css += ".store-section__title { font-size: 16px; font-weight: 600; margin-bottom: 16px; font-family: 'Segoe UI', sans-serif; }";
+css += '\n';
+
+// Card grid — compact (My extensions)
+css += '.card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }';
+css += '\n';
+css += ".card-compact { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; border: 1px solid #f0f0f0; background: #fff; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; position: relative; min-width: 0; }";
+css += '\n';
+css += '.card-compact:hover { background: #fafafa; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }';
+css += '\n';
+css += '.card-compact__icon { width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; }';
+css += '\n';
+css += '.card-compact__icon svg { display: block; }';
+css += '\n';
+css += '.card-compact__name { font-size: 13px; font-weight: 400; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }';
+css += '\n';
+css += '.card-compact__badge { position: absolute; top: 6px; right: 6px; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 4px; line-height: 14px; text-transform: uppercase; letter-spacing: 0.3px; }';
+css += '\n';
+css += '.card-compact__badge--agent { background: #E8DEF8; color: #6B4FBB; }';
+css += '\n';
+css += '.card-compact__badge--skill { background: #D1ECF9; color: #0078D4; }';
+css += '\n';
+css += '.card-compact__badge--source { background: #D4EDDA; color: #0F7B3F; }';
+css += '\n';
+css += '.card-compact__more { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 6px; border: none; background: rgba(255,255,255,0.9); cursor: pointer; display: none; align-items: center; justify-content: center; color: #5d5d5d; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }';
+css += '\n';
+css += '.card-compact:hover .card-compact__more { display: flex; }';
+css += '\n';
+css += '.card-compact:hover .card-compact__badge { display: none; }';
+css += '\n';
+css += '.card-compact__more svg { width: 16px; height: 16px; }';
+css += '\n';
+
+// Card grid — large (Built by Microsoft)
+css += '.card-grid--lg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }';
+css += '\n';
+css += ".card-lg { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; border-radius: 16px; border: 1px solid #f0f0f0; background: #fff; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }";
+css += '\n';
+css += '.card-lg:hover { background: #fafafa; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }';
+css += '\n';
+css += '.card-lg__icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; }';
+css += '\n';
+css += '.card-lg__icon svg { display: block; }';
+css += '\n';
+css += '.card-lg__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }';
+css += '\n';
+css += '.card-lg__name { font-size: 14px; font-weight: 600; line-height: 1.3; display: flex; align-items: center; gap: 6px; }';
+css += '\n';
+css += '.card-lg__desc { font-size: 13px; color: #5d5d5d; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }';
+css += '\n';
+css += '.card-lg__type { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px; display: inline-flex; align-self: flex-start; }';
+css += '\n';
+
+// See more
+css += '.store-seemore { display: flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 13px; color: #5d5d5d; cursor: pointer; background: none; border: none; font-family: inherit; padding: 4px 0; }';
+css += '\n';
+css += '.store-seemore:hover { color: #242424; }';
+css += '\n';
+css += '.store-seemore svg { width: 16px; height: 16px; }';
+css += '\n';
+
+// ─── Detail modal ───
+css += '.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }';
+css += '\n';
+css += '.modal-overlay--open { display: flex; }';
+css += '\n';
+css += '.modal { width: 560px; max-height: 80vh; background: #fff; border-radius: 20px; box-shadow: 0 16px 48px rgba(0,0,0,0.16); display: flex; flex-direction: column; overflow: hidden; }';
+css += '\n';
+css += '.modal__header { padding: 24px 24px 16px; display: flex; align-items: flex-start; gap: 16px; }';
+css += '\n';
+css += '.modal__icon { width: 48px; height: 48px; flex-shrink: 0; border-radius: 14px; display: flex; align-items: center; justify-content: center; }';
+css += '\n';
+css += '.modal__icon svg { display: block; width: 48px; height: 48px; }';
+css += '\n';
+css += '.modal__info { flex: 1; }';
+css += '\n';
+css += ".modal__name { font-size: 20px; font-weight: 600; line-height: 1.3; }";
+css += '\n';
+css += '.modal__creator { font-size: 13px; color: #5d5d5d; margin-top: 2px; }';
+css += '\n';
+css += '.modal__close { width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #5d5d5d; transition: background 0.1s; flex-shrink: 0; }';
+css += '\n';
+css += '.modal__close:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+css += '.modal__close svg { width: 20px; height: 20px; }';
+css += '\n';
+css += ".modal__cta { margin: 0 24px; height: 36px; border-radius: 8px; border: none; background: #242424; color: #fff; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }";
+css += '\n';
+css += '.modal__cta:hover { background: #3b3b3b; }';
+css += '\n';
+css += '.modal__cta--connect { background: #0078D4; }';
+css += '\n';
+css += '.modal__cta--connect:hover { background: #106EBE; }';
+css += '\n';
+css += '.modal__stats { display: flex; align-items: center; gap: 0; padding: 16px 24px; margin-top: 8px; border-top: 1px solid #f0f0f0; }';
+css += '\n';
+css += '.modal__stat { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }';
+css += '\n';
+css += '.modal__stat-val { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 4px; }';
+css += '\n';
+css += '.modal__stat-label { font-size: 11px; color: #6f6f6f; }';
+css += '\n';
+css += '.modal__stat + .modal__stat { border-left: 1px solid #f0f0f0; }';
+css += '\n';
+css += '.modal__body { flex: 1; overflow-y: auto; padding: 16px 24px 24px; }';
+css += '\n';
+css += '.modal__preview { width: 100%; height: 180px; border-radius: 12px; background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; color: #929292; font-size: 14px; overflow: hidden; }';
+css += '\n';
+css += '.modal__desc { font-size: 14px; line-height: 1.6; color: #424242; }';
+css += '\n';
+css += '.modal__tag { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }';
+css += '\n';
+
+// Context menu
+css += '.ctx-menu { display: none; position: absolute; top: 100%; right: 0; width: 160px; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 6px; z-index: 200; flex-direction: column; }';
+css += '\n';
+css += '.ctx-menu--open { display: flex; }';
+css += '\n';
+css += '.ctx-menu__item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; border: none; background: transparent; cursor: pointer; font-family: inherit; font-size: 13px; color: #242424; text-align: left; transition: background 0.1s; width: 100%; }';
+css += '\n';
+css += '.ctx-menu__item:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+
+// Model label banner
+css += '.model-banner { background: linear-gradient(135deg, #E8DEF8 0%, #D1ECF9 50%, #D4EDDA 100%); padding: 12px 32px; font-size: 13px; font-weight: 600; color: #424242; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }';
+css += '\n';
+css += '.model-banner__label { background: #fff; padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }';
+css += '\n';
+
+// Scrollbar
+css += '::-webkit-scrollbar { width: 6px; background: transparent; }';
+css += '\n';
+css += '::-webkit-scrollbar-thumb { background: #c0c0c0; border-radius: 9999px; }';
+css += '\n';
+css += '::-webkit-scrollbar-thumb:hover { background: #999; }';
+css += '\n';
+
+// ─── HTML ───────────────────────────────────────────────────────────
+var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>';
+html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
+html += '<title>Store Model 1 \u2014 All-in-One Store</title>';
+html += '<style>' + css + '</style></head><body>';
+html += '<div class="shell">';
+
+// ─── Nav sidebar ───
+html += '<div class="nav">';
+html += '<div class="nav__header">';
+html += '<button class="nhb" title="Copilot">' + copilotIco + '</button>';
+html += '<div style="flex:1"></div>';
+html += '<button class="nhb" title="App menu">' + gridDotsIco + '</button>';
+html += '</div>';
+html += '<div class="nav__top">';
+html += '<a class="ni" href="shell.html">' + composeIco + '<span class="ni__title">New chat</span></a>';
+html += '<button class="ni">' + searchIco + '<span class="ni__title">Search</span></button>';
+html += '<a class="ni sel" href="store1.html">' + storeIco + '<span class="ni__title">Store 1: Unified</span></a>';
+html += '<a class="ni" href="store2.html">' + storeIco + '<span class="ni__title">Store 2: Split</span></a>';
+html += '<a class="ni" href="store3.html">' + storeIco + '<span class="ni__title">Store 3: Agents</span></a>';
+html += '<div class="ni-split">';
+html += '<button class="ni">' + folderIco + '<span class="ni__title">Workspaces</span></button>';
+html += '<button class="ni-split__sec">' + chevDn12 + '</button>';
+html += '</div>';
+html += '</div>';
+
+// Pinned + Chats
+html += '<div class="nav__body">';
+html += '<div class="nav__section">';
+html += '<div class="nsh">Pinned</div>';
+html += '<button class="ni">' + chatIco + '<span class="ni__title">Escalation root cause</span></button>';
+html += '<button class="ni">' + chatIco + '<span class="ni__title">Market Analysis</span></button>';
+html += '</div>';
+html += '<div class="nav__section">';
+html += '<div class="nsh">Chats</div>';
+html += '<button class="ni"><span class="ni__title">Relocation benefits</span><span class="ni__right"><span class="ni__right-icon">' + arrowSyncIco16 + '</span></span></button>';
+html += '<button class="ni"><span class="ni__title">Sales Forecast FY25</span></button>';
+html += '<button class="ni"><span class="ni__title">New capabilities in Copilot</span></button>';
+html += '</div>';
+html += '</div>';
+
+// Footer
+html += '<div class="nav__footer"><div class="nav__footer-row">';
+html += '<button class="me"><span class="me__avatar"><img src="../../src/components/icons/avatar-mona-kane.png" alt="MK" style="width:100%;height:100%;border-radius:9999px;object-fit:cover;" /></span>';
+html += '<div class="me__info"><span class="me__name">Mona Kane</span><span class="me__license">M365 Copilot (Premium)</span></div></button>';
+html += '<button class="nhb" title="Notifications" style="position:relative">' + alertIco + '<span class="nhb__badge">4</span></button>';
+html += '</div></div>';
+html += '</div>';
+
+// ─── Main content ───
+html += '<div class="main">';
+
+// Model banner
+html += '<div class="model-banner"><span class="model-banner__label">MODEL 1</span> All-in-One Store \u2014 Agents, Skills & Sources in one browsable catalog with 3 tabs</div>';
+
+// Store header
+html += '<div class="store-hdr">';
+html += '<span class="store-hdr__title">Agents, Skills & Sources</span>';
+html += '<div class="store-hdr__actions">';
+html += '<button class="store-hdr__btn">' + agentIco + ' Agents activity</button>';
+html += '<button class="store-hdr__btn" style="background:#242424;color:#fff;border-color:#242424;">' + addIco + ' Create agent or skill</button>';
+html += '</div>';
+html += '</div>';
+
+// Tabs
+html += '<div class="store-tabs">';
+html += '<button class="store-tab store-tab--active" data-tab="all">All</button>';
+html += '<button class="store-tab" data-tab="agents">Agents</button>';
+html += '<button class="store-tab" data-tab="skills">Skills</button>';
+html += '<button class="store-tab" data-tab="sources">Sources</button>';
+html += '</div>';
+
+// Search
+html += '<div class="store-content">';
+html += '<div class="store-search"><span>' + searchIco + '</span><input type="text" placeholder="Search for an agent, skill or source" /></div>';
+
+// ─── My extensions ───
+html += '<div class="store-section">';
+html += '<div class="store-section__title">My extensions</div>';
+html += '<div class="card-grid">';
+
+// Agents (installed)
+html += '<div class="card-compact" data-type="agent" data-name="Sales" data-desc="Drive deals forward with clear insights and ready-to-use actions." data-creator="Microsoft" data-color="#0078D4">';
+html += '<span class="card-compact__icon">' + ico('#0078D4', 'Sa') + '</span>';
+html += '<span class="card-compact__name">Sales</span>';
+html += '<span class="card-compact__badge card-compact__badge--agent">Agent</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="agent" data-name="Idea Coach" data-desc="Creative brainstorming and idea generation partner." data-creator="Microsoft" data-color="#FFB800">';
+html += '<span class="card-compact__icon">' + ico('#FFB800', 'IC') + '</span>';
+html += '<span class="card-compact__name">Idea Coach</span>';
+html += '<span class="card-compact__badge card-compact__badge--agent">Agent</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="agent" data-name="Analyst" data-desc="Turn complex data into quick, easy-to-read answers." data-creator="Microsoft" data-color="#F2994A">';
+html += '<span class="card-compact__icon">' + ico('#F2994A', 'An') + '</span>';
+html += '<span class="card-compact__name">Analyst</span>';
+html += '<span class="card-compact__badge card-compact__badge--agent">Agent</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="agent" data-name="Visual Creator" data-desc="Create stunning visuals with Microsoft 365 Copilot." data-creator="Microsoft" data-color="#E040A0">';
+html += '<span class="card-compact__icon">' + ico('#E040A0', 'VC') + '</span>';
+html += '<span class="card-compact__name">Visual Creator</span>';
+html += '<span class="card-compact__badge card-compact__badge--agent">Agent</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+// Skills (installed)
+html += '<div class="card-compact" data-type="skill" data-name="Summarize" data-desc="Condense documents and threads into key points." data-creator="Microsoft" data-color="#0078D4">';
+html += '<span class="card-compact__icon">' + ico('#00A651', 'Su') + '</span>';
+html += '<span class="card-compact__name">Summarize</span>';
+html += '<span class="card-compact__badge card-compact__badge--skill">Skill</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="skill" data-name="Figma Design" data-desc="Extract and implement designs from Figma files." data-creator="Figma" data-color="#A259FF">';
+html += '<span class="card-compact__icon">' + ico('#A259FF', 'Fi') + '</span>';
+html += '<span class="card-compact__name">Figma Design</span>';
+html += '<span class="card-compact__badge card-compact__badge--skill">Skill</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+// Sources (installed)
+html += '<div class="card-compact" data-type="source" data-name="Salesforce" data-desc="CRM data: leads, opportunities, contacts, and pipeline." data-creator="Salesforce" data-color="#00A1E0">';
+html += '<span class="card-compact__icon">' + ico('#00A1E0', 'SF') + '</span>';
+html += '<span class="card-compact__name">Salesforce</span>';
+html += '<span class="card-compact__badge card-compact__badge--source">Source</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="source" data-name="Jira" data-desc="Project tracking: tickets, sprints, and backlogs." data-creator="Atlassian" data-color="#0052CC">';
+html += '<span class="card-compact__icon">' + ico('#0052CC', 'Ji') + '</span>';
+html += '<span class="card-compact__name">Jira</span>';
+html += '<span class="card-compact__badge card-compact__badge--source">Source</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="source" data-name="GitHub" data-desc="Code repositories, pull requests, and issues." data-creator="GitHub" data-color="#24292E">';
+html += '<span class="card-compact__icon">' + ico('#24292E', 'GH') + '</span>';
+html += '<span class="card-compact__name">GitHub</span>';
+html += '<span class="card-compact__badge card-compact__badge--source">Source</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="skill" data-name="Generate Report" data-desc="Create polished reports from your data and insights." data-creator="Microsoft" data-color="#0F7B3F">';
+html += '<span class="card-compact__icon">' + ico('#0F7B3F', 'GR') + '</span>';
+html += '<span class="card-compact__name">Generate Report</span>';
+html += '<span class="card-compact__badge card-compact__badge--skill">Skill</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="agent" data-name="Researcher" data-desc="Fast insights to prep for your next meeting." data-creator="Microsoft" data-color="#6B4FBB">';
+html += '<span class="card-compact__icon">' + ico('#6B4FBB', 'Re') + '</span>';
+html += '<span class="card-compact__name">Researcher</span>';
+html += '<span class="card-compact__badge card-compact__badge--agent">Agent</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '<div class="card-compact" data-type="agent" data-name="Power BI" data-desc="Interactive data dashboards and business analytics." data-creator="Microsoft" data-color="#F2C800">';
+html += '<span class="card-compact__icon">' + ico('#F2C800', 'PB') + '</span>';
+html += '<span class="card-compact__name">Power BI</span>';
+html += '<span class="card-compact__badge card-compact__badge--agent">Agent</span>';
+html += '<button class="card-compact__more">' + moreHorizontalIco + '</button>';
+html += '</div>';
+
+html += '</div>';
+html += '<button class="store-seemore">See more ' + chevronRightIco + '</button>';
+html += '</div>';
+
+// ─── Built by Microsoft ───
+html += '<div class="store-section">';
+html += '<div class="store-section__title">Built by Microsoft</div>';
+html += '<div class="card-grid--lg">';
+
+const msCards = [
+  { name: 'Sales', desc: 'Drive deals forward with clear insights and ready-to-use actions.', color: '#0078D4', letter: 'Sa', type: 'agent' },
+  { name: 'Planner', desc: 'All your tasks and projects in one simple, familiar experience.', color: '#00A651', letter: 'Pl', type: 'agent' },
+  { name: 'Researcher', desc: 'Fast insights to prep for your next meeting.', color: '#6B4FBB', letter: 'Re', type: 'agent' },
+  { name: 'Visual Creator', desc: 'Create stunning visuals with Microsoft 365 Copilot.', color: '#E040A0', letter: 'VC', type: 'agent' },
+  { name: 'Analyst', desc: 'Turn complex data into quick, easy-to-read answers.', color: '#F2994A', letter: 'An', type: 'agent' },
+  { name: 'Summarize', desc: 'Condense documents and threads into key points.', color: '#00A651', letter: 'Su', type: 'skill' },
+  { name: 'Employee Self Service', desc: 'Assists employees by providing responses based on official policies.', color: '#0078D4', letter: 'ES', type: 'agent' },
+  { name: 'Web Search', desc: 'Deep web search with citations and source verification.', color: '#4A90D9', letter: 'WS', type: 'skill' },
+  { name: 'RFP Generator', desc: 'Build an RFP like a Microsoft Pro and turn existing notes into a submission.', color: '#FF5733', letter: 'RG', type: 'agent' },
+];
+
+for (const c of msCards) {
+  const badgeClass = c.type === 'agent' ? 'card-compact__badge--agent' : c.type === 'skill' ? 'card-compact__badge--skill' : 'card-compact__badge--source';
+  const badgeLabel = c.type.charAt(0).toUpperCase() + c.type.slice(1);
+  html += `<div class="card-lg" data-type="${c.type}" data-name="${c.name}" data-desc="${c.desc}" data-creator="Microsoft" data-color="${c.color}">`;
+  html += `<span class="card-lg__icon">${ico(c.color, c.letter)}</span>`;
+  html += `<div class="card-lg__text"><span class="card-lg__name">${c.name} <span class="card-lg__type ${badgeClass}">${badgeLabel}</span></span>`;
+  html += `<span class="card-lg__desc">${c.desc}</span></div></div>`;
+}
+html += '</div>';
+html += '<button class="store-seemore">See more ' + chevronRightIco + '</button>';
+html += '</div>';
+
+// ─── Connected Sources ───
+html += '<div class="store-section">';
+html += '<div class="store-section__title">Available Sources</div>';
+html += '<div class="card-grid--lg">';
+
+const srcCards = [
+  { name: 'ServiceNow', desc: 'IT service management, tickets, and knowledge base.', color: '#81B5A1', letter: 'SN' },
+  { name: 'Confluence', desc: 'Wiki pages and team documentation from Atlassian.', color: '#0052CC', letter: 'Co' },
+  { name: 'Google Drive', desc: 'Files and documents from Google Workspace.', color: '#4285F4', letter: 'GD' },
+  { name: 'HubSpot', desc: 'Marketing automation, CRM, and sales pipeline.', color: '#FF7A59', letter: 'HS' },
+  { name: 'Notion', desc: 'Notes, docs, and project management workspace.', color: '#000000', letter: 'No' },
+  { name: 'Slack', desc: 'Team messages, channels, and shared files.', color: '#4A154B', letter: 'Sl' },
+];
+
+for (const s of srcCards) {
+  html += `<div class="card-lg" data-type="source" data-name="${s.name}" data-desc="${s.desc}" data-creator="${s.name}" data-color="${s.color}">`;
+  html += `<span class="card-lg__icon">${ico(s.color, s.letter)}</span>`;
+  html += `<div class="card-lg__text"><span class="card-lg__name">${s.name} <span class="card-lg__type card-compact__badge--source">Source</span></span>`;
+  html += `<span class="card-lg__desc">${s.desc}</span></div></div>`;
+}
+html += '</div>';
+html += '</div>';
+
+html += '</div>'; // end store-content
+html += '</div>'; // end main
+
+// ─── Detail Modal ───
+html += '<div class="modal-overlay" id="modalOverlay">';
+html += '<div class="modal">';
+html += '<div class="modal__header">';
+html += '<span class="modal__icon" id="modalIcon"></span>';
+html += '<div class="modal__info"><div class="modal__name" id="modalName"></div><div class="modal__creator" id="modalCreator"></div></div>';
+html += '<button class="modal__close" id="modalClose">' + dismissIco + '</button>';
+html += '</div>';
+html += '<div class="modal__tag" id="modalTag"></div>';
+html += '<button class="modal__cta" id="modalCta">Add</button>';
+html += '<div class="modal__stats">';
+html += '<div class="modal__stat"><span class="modal__stat-val">4.8 \u2605</span><span class="modal__stat-label">3K ratings, 247 reviews</span></div>';
+html += '<div class="modal__stat"><span class="modal__stat-val">2.6K</span><span class="modal__stat-label">Installs in the last month</span></div>';
+html += '<div class="modal__stat"><span class="modal__stat-val">Free</span><span class="modal__stat-label">Premium subscription available</span></div>';
+html += '</div>';
+html += '<div class="modal__body">';
+html += '<div class="modal__preview" id="modalPreview">Preview</div>';
+html += '<div class="modal__desc" id="modalDesc"></div>';
+html += '</div>';
+html += '</div>';
+html += '</div>';
+
+html += '</div>'; // end shell
+
+// ─── Script ─────────────────────────────────────────────────
+html += '<script>';
+html += '\n';
+
+// Tab switching
+html += 'document.querySelectorAll(".store-tab").forEach(function(tab) {';
+html += '  tab.addEventListener("click", function() {';
+html += '    document.querySelectorAll(".store-tab").forEach(function(t) { t.classList.remove("store-tab--active"); });';
+html += '    tab.classList.add("store-tab--active");';
+html += '    var filter = tab.getAttribute("data-tab");';
+html += '    document.querySelectorAll(".card-compact, .card-lg").forEach(function(card) {';
+html += '      var type = card.getAttribute("data-type");';
+html += '      if (filter === "all" || type === filter || (filter === "agents" && type === "agent") || (filter === "skills" && type === "skill") || (filter === "sources" && type === "source")) {';
+html += '        card.style.display = "";';
+html += '      } else {';
+html += '        card.style.display = "none";';
+html += '      }';
+html += '    });';
+html += '  });';
+html += '});';
+html += '\n';
+
+// Card click → modal
+html += 'function openModal(card) {';
+html += '  var name = card.getAttribute("data-name");';
+html += '  var desc = card.getAttribute("data-desc");';
+html += '  var creator = card.getAttribute("data-creator");';
+html += '  var type = card.getAttribute("data-type");';
+html += '  var color = card.getAttribute("data-color");';
+html += '  document.getElementById("modalName").textContent = name;';
+html += '  document.getElementById("modalCreator").textContent = "Created by " + creator;';
+html += '  document.getElementById("modalDesc").innerHTML = "<p>" + desc + "</p><p>This extension helps teams work more efficiently by providing specialized capabilities directly within Copilot. It integrates seamlessly with your existing workflow and can be configured to match your team\'s specific needs.</p>";';
+html += '  var tag = document.getElementById("modalTag");';
+html += '  tag.textContent = type.charAt(0).toUpperCase() + type.slice(1);';
+html += '  tag.className = "modal__tag";';
+html += '  if (type === "agent") { tag.style.background = "#E8DEF8"; tag.style.color = "#6B4FBB"; }';
+html += '  else if (type === "skill") { tag.style.background = "#D1ECF9"; tag.style.color = "#0078D4"; }';
+html += '  else { tag.style.background = "#D4EDDA"; tag.style.color = "#0F7B3F"; }';
+html += '  tag.style.marginLeft = "24px";';
+html += '  var cta = document.getElementById("modalCta");';
+html += '  if (type === "source") { cta.textContent = "Connect"; cta.className = "modal__cta modal__cta--connect"; }';
+html += '  else { cta.textContent = "Add"; cta.className = "modal__cta"; }';
+html += '  var icoSvg = \'<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="14" fill="\' + color + \'"/><text x="24" y="31" text-anchor="middle" font-size="18" font-weight="600" fill="#fff" font-family="Segoe UI">\' + name.substring(0,2) + \'</text></svg>\';';
+html += '  document.getElementById("modalIcon").innerHTML = icoSvg;';
+html += '  document.getElementById("modalOverlay").classList.add("modal-overlay--open");';
+html += '}';
+html += '\n';
+
+html += 'document.querySelectorAll(".card-compact, .card-lg").forEach(function(card) {';
+html += '  card.addEventListener("click", function(e) {';
+html += '    if (e.target.closest(".card-compact__more")) return;';
+html += '    openModal(card);';
+html += '  });';
+html += '});';
+html += '\n';
+
+// Close modal
+html += 'document.getElementById("modalClose").addEventListener("click", function() {';
+html += '  document.getElementById("modalOverlay").classList.remove("modal-overlay--open");';
+html += '});';
+html += '\n';
+html += 'document.getElementById("modalOverlay").addEventListener("click", function(e) {';
+html += '  if (e.target === this) this.classList.remove("modal-overlay--open");';
+html += '});';
+html += '\n';
+
+html += '</script>';
+html += '</body></html>';
+
+// ─── Write ──────────────────────────────────────────────────
+const outDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'dist');
+if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+fs.writeFileSync(path.join(outDir, 'store1.html'), html, 'utf-8');
+console.log('Done: preview/dist/store1.html');
