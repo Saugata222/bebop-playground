@@ -1,5 +1,7 @@
 # Contributing to Bebop Playground
 
+**Repository:** https://github.com/Saugata222/bebop-playground
+
 ## Prerequisites
 
 You've followed the [Start Experimenting](preview/getting-started.html) guide and have the project running locally with an AI assistant.
@@ -17,7 +19,13 @@ Ask the AI to submit your work:
 > "Commit my changes and open a pull request to the main repo. Describe what I've added."
 
 The AI handles branching, committing, and PR creation.
+## Reporting issues
 
+If something isn't working, ask the AI:
+
+> "Create a GitHub issue describing this bug: [describe what's broken]."
+
+Or raise an issue directly at https://github.com/Saugata222/bebop-playground/issues
 ## Guidelines
 
 - **One contribution per PR** — keep each pull request focused on a single addition
