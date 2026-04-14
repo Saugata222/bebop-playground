@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-You've followed the [Start Experimenting](preview/getting-started.html) guide and have the project running locally with an AI assistant.
+You've followed the [Start Experimenting](preview/start-experimenting.html) guide and have the project running locally with an AI assistant.
 
 ## What you can contribute
 

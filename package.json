@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "npx tsx preview/src/shell.ts",
-    "build:all": "for f in preview/src/*.ts; do case \"$f\" in *_inject*) ;; *) npx tsx \"$f\";; esac; done && npx tsx preview/src/_inject.ts",
+    "build": "npx tsx preview/src/shell.ts && npx tsx preview/src/patch-shell-store.ts",
+    "build:all": "for f in preview/src/*.ts; do case \"$f\" in *_inject*|*patch-*) ;; *) npx tsx \"$f\";; esac; done && npx tsx preview/src/patch-shell-store.ts && npx tsx preview/src/_inject.ts",
     "serve": "python3 -m http.server 8765",
     "dev": "npm run build && npm run serve"
   },

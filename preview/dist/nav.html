@@ -84,62 +84,7 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 .me__info { flex: 1 0 0; min-width: 0; display: flex; flex-direction: column; padding-bottom: 1px; }
 .me__name { font-size: 12px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .me__license { font-size: 10px; color: #6f6f6f; line-height: 1.4; display: flex; align-items: center; gap: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* ─── Bebop page overrides (injected by _inject.ts) ─── */
-body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
-
-/* Page wrapper */
-.bp-header { max-width: 900px; margin: 0 auto; padding: 60px 48px 0; }
-.bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-.bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
-.bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
-.bp-header__tag--compound { background: #ebebeb; color: #242424; }
-.bp-header__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
-.bp-header__desc { font-size: 15px; color: #6f6f6f; line-height: 1.6; max-width: 600px; margin-bottom: 20px; }
-.bp-header__states { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
-.bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
-
-/* Content area — override all wrapper variants */
-.wrap, .page, .section { max-width: 900px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
-
-/* Headings */
-h1 { display: none !important; }
-.hint, p.hint { display: none !important; }
-h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
-h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
-
-/* Rows and cells */
-.row { gap: 24px !important; margin-bottom: 20px !important; }
-.cell { gap: 8px !important; }
-.rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
-
-/* ─── Related components ─── */
-.bp-related { max-width: 900px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
-.bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
-.bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
-.bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
-.bp-related__card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.bp-related__card-top { display: flex; align-items: center; gap: 8px; }
-.bp-related__card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
-.bp-related__card-arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
-.bp-related__card:hover .bp-related__card-arrow { color: #242424; transform: translateX(2px); }
-.bp-related__card-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
-.bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
-
-/* ─── Back bar (sticky, frosted) ─── */
-.bebop-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
-.bebop-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
-.bebop-backbar a:hover { background: rgba(36,36,36,0.04); }
-.bebop-backbar a svg { width: 16px; height: 16px; }
-
-/* ─── Scrollbar ─── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
-::-webkit-scrollbar-thumb:hover { border: 0; }
-* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
-
-</style></head><body><!-- INJECT:BACKBAR --><div class="bebop-backbar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Nav</span><span class="bp-header__tag bp-header__tag--compound">Compound</span></div><p class="bp-header__desc">Sidebar navigation with expand and collapse toggle, nav items, pinned and chat sections, split items, me control, and notification badge.</p><div class="bp-header__states"><span class="bp-header__state">Expanded</span><span class="bp-header__state">Collapsed</span><span class="bp-header__state">Rest</span><span class="bp-header__state">Hover</span><span class="bp-header__state">Selected</span></div></div><!-- /INJECT:HEADER --><div class="wrap">
+</style></head><body><div class="wrap">
 <h1>Nav — Component Preview</h1>
 <p class="hint">Click the Copilot icon to toggle expanded/collapsed. Click nav items to toggle selected. Hover for hover state.</p>
 <h2>Interactive Nav Shell</h2>
@@ -215,4 +160,4 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
       el.classList.add("sel");
     });
   });
-</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="menu.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Menu</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Dropdown menu surface with list items, section headers, secondary content positi...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a><a class="bp-related__card" href="header.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Header</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Top header bar with model picker dropdown and action buttons for temporary chat,...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a></div></div><!-- /INJECT:RELATED --></body></html>
+</script></body></html>

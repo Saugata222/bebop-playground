@@ -37,23 +37,27 @@ src/
       focusRing.ts         2px black outer + 1px white inner
       disabledState.ts     #929292 text, #ebebeb bg, not-allowed cursor
       selectedAffordance.ts  Semibold text, filled icons, #ebebeb backplate
-    primitives/            10 atomic components: button, tag, tab, tabList, toggle, divider, scrollbar, suggestionChips, sourceCard
-    compound/              12 composed components: toolbar, chatInput, canvasChat, dialog, menu, nav, header, addMenu, sourcesMenu, responseFooter, connectDialog
-    icons/                 64 Fluent UI System Icon assets (SVG + PNG + GIF)
+    primitives/            9 atomic components: button, tag, tab, tabList, toggle, divider, scrollbar, suggestionChips, sourceCard
+    compound/              12 composed components: toolbar, chatInput, canvasChat, dialog, menu, nav, header, addMenu, sourcesMenu, responseFooter, connectDialog, banner
+    icons/                 ~95 Fluent UI System Icon assets + third-party logos (SVG + PNG + GIF)
     index.ts               Barrel: shared + primitives + compound
 
   patterns/                Future page compositions
   utils/                   Future shared helpers
 
 preview/
-  index.html               Component catalog with frosted-glass topbar, card grid, iframe viewer
-  getting-started.html     Onboarding guide (Terminal / Claude Code / Copilot Chat tabs)
+  playground.html          Component catalog with frosted-glass topbar, card grid, iframe viewer
+  start-experimenting.html Onboarding guide (Terminal / Claude Code / Copilot Chat tabs)
+  prototypes.html          Flow explorations showcase (My Prototypes + Community Prototypes)
+  tokens.html              Design System Tokens reference page
   src/
     _icons.ts              ~50 shared SVG icon string constants (all use fill="currentColor")
-    _inject.ts             Injects catalog topbar into all preview HTML files
-    shell.ts               1185-line interactive Copilot prototype generator
+    _inject.ts             Injects catalog topbar into all preview HTML files (18 component entries)
+    shell.ts               ~1357-line interactive Copilot prototype generator
+    store1/2/3.ts          Store view variants (agent/connector catalog within shell)
+    patch-shell-store.ts   Patches store view into shell.html post-build
     {component}.ts         One generator per component → writes to preview/dist/{component}.html
-  dist/                    Generated HTML files (gitignored) — component previews + flow explorations
+  dist/                    24 generated HTML files (tracked in git) — component previews + flow explorations
 ```
 
 ## Code Style
@@ -148,7 +152,7 @@ npm run dev                 # build + serve
 
 **First run**: If `node_modules/` doesn't exist, run `npm install` before any build command.
 
-View at: `http://localhost:8765/preview/dist/shell.html` (or `preview/index.html` for the catalog)
+View at: `http://localhost:8765/preview/dist/shell.html` (or `preview/playground.html` for the catalog)
 
 ## TypeScript Strictness
 
@@ -182,7 +186,7 @@ These read icons directly via `fs.readFileSync` from `src/components/icons/` rat
 
 ## Shell Preview — How to Modify
 
-`preview/src/shell.ts` (1185 lines) → `preview/dist/shell.html`
+`preview/src/shell.ts` (~1357 lines) → `preview/dist/shell.html`
 
 **Structure**: Icon SVG constants → CSS concatenation → HTML concatenation → `<script>` JS → file write
 
@@ -218,4 +222,4 @@ import { webLightTheme } from '@fluentui/tokens';
 setTheme(webLightTheme);
 ```
 
-Icons: `src/components/icons/` (64 assets). Naming: `{name}-{size}-{variant}.svg` (e.g., `dismiss-20-regular.svg`, `stop-16-filled.svg`).
+Icons: `src/components/icons/` (~95 assets). Naming: `{name}-{size}-{variant}.svg` (e.g., `dismiss-20-regular.svg`, `stop-16-filled.svg`).

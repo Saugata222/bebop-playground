@@ -55,7 +55,7 @@ export const component = {
 npx tsc --noEmit            # Type-check (strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes)
 npx tsx preview/src/X.ts    # Generate single component preview
 npm run build               # Shell preview only
-npm run build:all           # All 16 previews + inject catalog topbar
+npm run build:all           # All 24 previews + inject catalog topbar
 npm run serve               # python3 -m http.server 8765
 ```
 
@@ -67,15 +67,19 @@ npm run serve               # python3 -m http.server 8765
 
 Each `preview/src/{component}.ts` builds CSS + HTML as strings → writes self-contained HTML to `preview/dist/`. Icons from `preview/src/_icons.ts` (~50 SVG constants) or read directly from `src/components/icons/` via `fs.readFileSync`.
 
+**Catalog pages**: `preview/playground.html` (component catalog), `preview/start-experimenting.html` (onboarding guide), `preview/prototypes.html` (flow explorations showcase), `preview/tokens.html` (design system tokens reference).
+
 **String escaping in preview generators**: Three nesting layers (TS string → HTML → browser JS). In `html +=` lines, use single quotes for TS wrapper and escaped `\'` for JS strings. Reserve `"` for HTML attributes only. Browser JS errors are silent — always test in browser console after changes.
 
 **Shell** (`preview/src/shell.ts`): CSS/HTML/JS all via string concatenation. To modify: add `css += '...'`, `html += '...'`. JS newlines must use `'\n'` not `'\\n'`. Rebuild with `npx tsx preview/src/shell.ts`. Key CSS states: `.shell--sent`, `.shell--responded`, `.nav--collapsed`, `.am-overlay--open`, `.src-overlay--open`. Key DOM IDs: `#textarea`, `#sendBtn`, `#stopBtn`, `#addBtn`, `#skipThinking`, `#navToggle`, `#changeDsBtn`.
+
+**Store views** (`store1.ts`, `store2.ts`, `store3.ts`): Agent/connector catalog variants within the shell. `patch-shell-store.ts` patches the store view into `shell.html` post-build.
 
 **Flow explorations** (`connectorsGoldenFlow.ts`, `seamlessConnect.ts`): Full shell replicas with flow-specific state/UI layers on top. These read icons directly via `fs.readFileSync` from `src/components/icons/` rather than importing from `_icons.ts`.
 
 **When creating a new flow exploration**: Also add a card for it in the "My Prototypes" section of `preview/prototypes.html`. If the empty state is showing (the `<!-- EMPTY STATE -->` block), replace it with a featured card. Use the same card markup as the Community Prototypes cards.
 
-**Catalog injection**: `preview/src/_inject.ts` post-processes all preview HTML files using a `ComponentMeta` dictionary. When adding a new preview, add a metadata entry in `_inject.ts` (title, desc, type, states, related) or the catalog will be incomplete.
+**Catalog injection**: `preview/src/_inject.ts` post-processes all preview HTML files using a `ComponentMeta` dictionary (18 entries). When adding a new preview, add a metadata entry in `_inject.ts` (title, desc, type, states, related) or the catalog will be incomplete. Also add a card to `preview/playground.html` and update the component count.
 
 ## Adding a New Component
 
@@ -87,7 +91,7 @@ Each `preview/src/{component}.ts` builds CSS + HTML as strings → writes self-c
 
 ## Fluent UI
 
-Use `@fluentui/web-components` for runtime UI. 64 icons in `src/components/icons/`, naming: `{name}-{size}-{variant}.svg`.
+Use `@fluentui/web-components` for runtime UI. ~95 icons in `src/components/icons/`, naming: `{name}-{size}-{variant}.svg`.
 
 ## Figma-to-Token Workflow
 

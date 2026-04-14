@@ -260,7 +260,7 @@ modalHTML += '<div class="smodal__preview" id="sModalPreview">Preview</div>';
 modalHTML += '<div class="smodal__desc" id="sModalDesc"></div>';
 modalHTML += '</div></div></div>';
 
-html = html.replace('</body>', modalHTML + '</body>');
+html = html.replace('<script>', modalHTML + '<script>');
 
 // ─── 5. Store JavaScript (before </script>) ────────────────
 const storeJS = `
