@@ -146,6 +146,8 @@ npm run serve               # python3 -m http.server 8765
 npm run dev                 # build + serve
 ```
 
+**First run**: If `node_modules/` doesn't exist, run `npm install` before any build command.
+
 View at: `http://localhost:8765/preview/dist/shell.html` (or `preview/index.html` for the catalog)
 
 ## TypeScript Strictness

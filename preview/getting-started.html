@@ -3,71 +3,71 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Get Started — Bebop Design System</title>
+<title>Start Experimenting — Bebop Playground</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #fff; color: #242424; min-height: 100vh; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #1a1a1a; color: #e0e0e0; min-height: 100vh; }
 
-.topbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; display: flex; align-items: center; gap: 12px; padding: 0 48px; height: 56px; }
-.topbar__back { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-size: 14px; transition: background 0.1s; }
-.topbar__back:hover { background: rgba(36,36,36,0.04); }
+.topbar { position: sticky; top: 0; z-index: 50; background: rgba(26,26,26,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #333; display: flex; align-items: center; gap: 12px; padding: 0 48px; height: 56px; }
+.topbar__back { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #e0e0e0; font-size: 14px; transition: background 0.1s; }
+.topbar__back:hover { background: rgba(255,255,255,0.06); }
 .topbar__back svg { width: 16px; height: 16px; }
 
 .page { max-width: 708px; margin: 0 auto; padding: 60px 48px 100px; }
-.page h1 { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; line-height: 1.2; margin-bottom: 8px; }
+.page h1 { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; line-height: 1.2; margin-bottom: 8px; color: #fff; }
 .page h1 strong { font-weight: 400; }
-.page > .subtitle { font-size: 15px; color: #6f6f6f; line-height: 1.6; margin-bottom: 48px; }
+.page > .subtitle { font-size: 15px; color: #999; line-height: 1.6; margin-bottom: 48px; }
 
 .step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 36px; }
-.step__num { width: 32px; height: 32px; border-radius: 9999px; background: #242424; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+.step__num { width: 32px; height: 32px; border-radius: 9999px; background: #fff; color: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
 .step__body { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.step__title { font-size: 16px; font-weight: 600; }
-.step__text { font-size: 14px; color: #6f6f6f; line-height: 1.6; }
-.step__text a { color: #242424; text-decoration: underline; }
-.step__text code { background: #f5f5f5; padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: 'Cascadia Code', monospace; }
+.step__title { font-size: 16px; font-weight: 600; color: #fff; }
+.step__text { font-size: 14px; color: #999; line-height: 1.6; }
+.step__text a { color: #e0e0e0; text-decoration: underline; }
+.step__text code { background: #2a2a2a; padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: 'Cascadia Code', monospace; color: #ccc; }
 
-.code-block { display: flex; align-items: center; gap: 8px; background: #f5f5f5; padding: 10px 14px; border-radius: 10px; margin-top: 6px; }
-.code-block code { flex: 1; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 13px; color: #242424; white-space: pre-wrap; }
-.copy-btn { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; background: transparent; color: #929292; cursor: pointer; border-radius: 6px; transition: background 0.1s, color 0.1s; flex-shrink: 0; }
-.copy-btn:hover { background: #ebebeb; color: #242424; }
+.code-block { display: flex; align-items: center; gap: 8px; background: #2a2a2a; padding: 10px 14px; border-radius: 10px; margin-top: 6px; }
+.code-block code { flex: 1; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 13px; color: #e0e0e0; white-space: pre-wrap; }
+.copy-btn { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; background: transparent; color: #777; cursor: pointer; border-radius: 6px; transition: background 0.1s, color 0.1s; flex-shrink: 0; }
+.copy-btn:hover { background: #333; color: #e0e0e0; }
 .copy-btn svg { width: 16px; height: 16px; }
 
 .tabs { display: flex; gap: 4px; margin: 10px 0 0; }
-.tab-btn { display: inline-flex; align-items: center; height: 32px; padding: 6px 12px; border-radius: 12px; border: none; background: #f5f5f5; color: #242424; font-family: inherit; font-size: 13px; font-weight: 400; cursor: pointer; transition: background 0.1s; }
-.tab-btn:hover { background: #ebebeb; }
-.tab-btn--active { background: #242424; color: #fff; }
-.tab-btn--active:hover { background: #3b3b3b; }
+.tab-btn { display: inline-flex; align-items: center; height: 32px; padding: 6px 12px; border-radius: 12px; border: none; background: #2a2a2a; color: #ccc; font-family: inherit; font-size: 13px; font-weight: 400; cursor: pointer; transition: background 0.1s; }
+.tab-btn:hover { background: #333; }
+.tab-btn--active { background: #fff; color: #1a1a1a; }
+.tab-btn--active:hover { background: #e0e0e0; }
 .tab-panel { display: none; margin-top: 8px; }
 .tab-panel--active { display: block; }
 
-.prompt-box { background: #f5f5f5; padding: 14px 18px; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; }
+.prompt-box { background: #2a2a2a; padding: 14px 18px; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; }
 .prompt-item { display: flex; align-items: flex-start; gap: 8px; }
-.prompt-item__text { font-size: 13px; font-style: italic; color: #424242; line-height: 1.5; flex: 1; }
+.prompt-item__text { font-size: 13px; font-style: italic; color: #ccc; line-height: 1.5; flex: 1; }
 .prompt-item .copy-btn { width: 24px; height: 24px; margin-top: 1px; }
 .prompt-item .copy-btn svg { width: 14px; height: 14px; }
 
-.ref-card { padding: 20px 24px; background: #fcfcfc; border: 1px solid #f0f0f0; border-radius: 12px; margin-top: 48px; }
-.ref-card__title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: block; }
+.ref-card { padding: 20px 24px; background: #222; border: 1px solid #333; border-radius: 12px; margin-top: 48px; }
+.ref-card__title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: block; color: #fff; }
 .ref-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
-.ref-row code { background: #f5f5f5; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-family: 'Cascadia Code', monospace; }
-.ref-row span { font-size: 13px; color: #6f6f6f; }
+.ref-row code { background: #2a2a2a; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-family: 'Cascadia Code', monospace; color: #ccc; }
+.ref-row span { font-size: 13px; color: #999; }
 .ref-row .copy-btn { width: 22px; height: 22px; }
 .ref-row .copy-btn svg { width: 12px; height: 12px; }
 
-.divider { height: 1px; background: #f0f0f0; margin: 48px 0; }
+.divider { height: 1px; background: #333; margin: 48px 0; }
 
 .back-footer { text-align: center; padding: 20px 0; }
-.back-footer a { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 8px 16px; border-radius: 12px; background: #242424; color: #fff; font-size: 14px; text-decoration: none; transition: background 0.1s; }
-.back-footer a:hover { background: #3b3b3b; }
+.back-footer a { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 8px 16px; border-radius: 12px; background: #fff; color: #1a1a1a; font-size: 14px; text-decoration: none; transition: background 0.1s; }
+.back-footer a:hover { background: #e0e0e0; }
 .back-footer a svg { width: 16px; height: 16px; }
 
 /* ─── Bebop scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
 ::-webkit-scrollbar-thumb:hover { border: 0; }
-* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+* { scrollbar-width: thin; scrollbar-color: #555 transparent; }
 </style>
 </head>
 <body>
@@ -75,28 +75,52 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 <div class="topbar">
   <a class="topbar__back" href="index.html">
     <svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Back to catalog
+    Back to Playground
   </a>
 </div>
 
 <div class="page">
-  <h1><strong>Get Started</strong> with Bebop Shell</h1>
-  <p class="subtitle">Set up the project locally, give the AI full context, and create your own design experiments on top of the Copilot Shell prototype.</p>
+  <h1><strong>Start Experimenting</strong> with Bebop</h1>
+  <p class="subtitle">Clone the project, let your AI assistant set it up, and start creating your own design experiments on top of the Copilot Shell.</p>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- PART A: SETUP                               -->
+  <!-- PREREQUISITES                               -->
   <!-- ═══════════════════════════════════════════ -->
-  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#929292; margin-bottom:20px;">Setup</div>
+  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#666; margin-bottom:20px;">Prerequisites</div>
+
+  <div style="background:#2a2a2a; border-radius:12px; padding:20px 24px; display:flex; flex-direction:column; gap:12px; margin-bottom:48px;">
+    <div>
+      <span style="font-size:13px; font-weight:600; color:#fff;">Node.js</span>
+      <span style="font-size:13px; color:#999;"> &mdash; v18 or later. <a href="https://nodejs.org" target="_blank" style="color:#e0e0e0; text-decoration:underline;">Download here</a></span>
+    </div>
+    <div>
+      <span style="font-size:13px; font-weight:600; color:#fff;">A code editor with an AI assistant</span>
+      <span style="font-size:13px; color:#999;"> &mdash; e.g. <a href="https://code.visualstudio.com" target="_blank" style="color:#e0e0e0; text-decoration:underline;">VS Code</a> with <a href="https://github.com/features/copilot" target="_blank" style="color:#e0e0e0; text-decoration:underline;">GitHub Copilot</a>, or <a href="https://claude.ai/code" target="_blank" style="color:#e0e0e0; text-decoration:underline;">Claude Code</a></span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 1                                      -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#666; margin-bottom:20px;">Getting started</div>
 
   <!-- Step 1 -->
   <div class="step">
     <span class="step__num">1</span>
     <div class="step__body">
-      <span class="step__title">Install prerequisites</span>
-      <span class="step__text">Download and install these three things:</span>
-      <span class="step__text">&bull; <a href="https://nodejs.org" target="_blank">Node.js</a> (v18 or later) &mdash; runs the build scripts</span>
-      <span class="step__text">&bull; <a href="https://code.visualstudio.com" target="_blank">VS Code</a> &mdash; the code editor</span>
-      <span class="step__text">&bull; <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a> extension for VS Code &mdash; the AI assistant that will write code for you</span>
+      <span class="step__title">Get the project running</span>
+      <span class="step__text">Open the IDE and AI assistant of your choice &mdash; VS Code with Copilot, Claude Code, etc.</span>
+      <span class="step__text" style="margin-top:8px; font-weight:600; color:#fff;">Clone the project:</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"Clone this repository: https://github.com/Saugata222/bebop-playground.git"</span><button class="copy-btn" onclick="copy(this,'Clone this repository: https://github.com/Saugata222/bebop-playground.git')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Set up and preview:</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"Install dependencies, build all previews, start the local server, and open Bebop Playground in the browser."</span><button class="copy-btn" onclick="copy(this,'Install dependencies, build all previews, start the local server, and open Bebop Playground in the browser.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+      <span class="step__text" style="margin-top:12px;">This should open the Bebop Playground in your browser.</span>
+      <span class="step__text" style="margin-top:8px; font-weight:600; color:#fff;">Verify your setup:</span>
+      <span class="step__text">Explore and play around with the Shell and Design System Tokens to ensure your local environment has been set up correctly. You can verify interactions against the <a href="https://saugata222.github.io/bebop-playground/preview/index.html" target="_blank">GitHub Pages link</a>.</span>
     </div>
   </div>
 
@@ -104,24 +128,15 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
   <div class="step">
     <span class="step__num">2</span>
     <div class="step__body">
-      <span class="step__title">Get the project</span>
-      <span class="step__text">If you already have a <code>bebop-design-system.zip</code> or <code>bebop-playground</code> folder from a previous download, you can use that &mdash; just make sure it's the latest version. Otherwise, download or clone:</span>
-      <div class="tabs">
-        <button class="tab-btn tab-btn--active" onclick="tab(this,'s2','onedrive')">OneDrive</button>
-        <button class="tab-btn" onclick="tab(this,'s2','github')">GitHub</button>
+      <span class="step__title">Create your first experiment</span>
+      <span class="step__text">Every experiment starts as a copy of the Copilot Shell, so you get the prototype as your starting point. Your changes layer on top without affecting the original.</span>
+      <span class="step__text" style="margin-top:8px; font-weight:600; color:#fff;">Ask the AI:</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"Create a new flow exploration called 'myExperiment' based on the shell. Build it and open it in the browser."</span><button class="copy-btn" onclick="copy(this,'Create a new flow exploration called myExperiment based on the shell. Build it and open it in the browser.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
       </div>
-      <div class="tab-panel tab-panel--active" data-tab="s2-onedrive">
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <span style="color:#5d5d5d; font-size:13px;">Download the zip and extract it into a folder:</span>
-          <a href="https://microsoft-my.sharepoint-df.com/:u:/r/personal/sapramanik_microsoft_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fsapramanik%5Fmicrosoft%5Fcom%2FDocuments%2FHackathon%2Fbebop%2Dplayground%2Ezip&parent=%2Fpersonal%2Fsapramanik%5Fmicrosoft%5Fcom%2FDocuments%2FHackathon&share=cQrgXnVzlBsdQYCvL16UGjFYEgUCCWtB29H4YeYEfrcmESA8dQ" target="_blank" style="display:inline-flex; align-items:center; gap:6px; height:36px; padding:8px 16px; border-radius:8px; background:#242424; color:#fff; font-size:14px; text-decoration:none; transition:background 0.1s; width:fit-content;">Download from OneDrive</a>
-        </div>
-      </div>
-      <div class="tab-panel" data-tab="s2-github">
-        <div class="code-block">
-          <code>git clone https://github.com/Saugata222/bebop-playground.git</code>
-          <button class="copy-btn" onclick="copy(this,'git clone https://github.com/Saugata222/bebop-playground.git')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button>
-        </div>
-      </div>
+      <span class="step__text" style="margin-top:12px;">You can open your experiment directly from the link the AI gives you, or find it on the Prototypes page in the catalog.</span>
+      <span class="step__text" style="margin-top:8px; font-weight:600; color:#fff;">Verify:</span>
+      <span class="step__text">Your experiment should look identical to the Copilot Shell &mdash; that's expected. It loads and works independently from the original.</span>
     </div>
   </div>
 
@@ -129,199 +144,90 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
   <div class="step">
     <span class="step__num">3</span>
     <div class="step__body">
-      <span class="step__title">Open in VS Code and install dependencies</span>
-      <span class="step__text">Open the extracted folder in VS Code (<strong>File → Open Folder</strong>), then open the terminal (<code>Ctrl+`</code> or <code>Cmd+`</code>) and run:</span>
-      <div class="code-block">
-        <code>npm install</code>
-        <button class="copy-btn" onclick="copy(this,'npm install')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button>
+      <span class="step__title">Make your first change</span>
+      <span class="step__text">Start with something small to confirm the AI is editing the right file.</span>
+      <span class="step__text" style="margin-top:8px; font-weight:600; color:#fff;">Ask the AI:</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"In myExperiment, change the greeting heading to 'Hello World'. Rebuild and open it in the browser."</span><button class="copy-btn" onclick="copy(this,'In myExperiment, change the greeting heading to Hello World. Rebuild and open it in the browser.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
       </div>
-      <span class="step__text" style="margin-top:4px;">This installs TypeScript and Fluent UI components. Takes about 30 seconds.</span>
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Verify:</span>
+      <span class="step__text">You should see your new heading. If it doesn't appear, ask the AI which file it edited &mdash; make sure it's your experiment file.</span>
     </div>
   </div>
+
+  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#666; margin-bottom:20px;">Building your design</div>
 
   <!-- Step 4 -->
   <div class="step">
     <span class="step__num">4</span>
     <div class="step__body">
-      <span class="step__title">Verify it works</span>
-      <span class="step__text">Build all previews and start the local server:</span>
-      <div class="code-block">
-        <code>npm run dev</code>
-        <button class="copy-btn" onclick="copy(this,'npm run dev')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button>
+      <span class="step__title">Build your design</span>
+      <span class="step__text">Now you can start making real changes. Describe what you want in plain language &mdash; the AI will edit your experiment file, rebuild, and show you the result.</span>
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Using existing components:</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"Add a banner below the chat input showing connected app icons for M365, Jira, and GitHub."</span><button class="copy-btn" onclick="copy(this,'Add a banner below the chat input showing connected app icons for M365, Jira, and GitHub.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
       </div>
-      <span class="step__text" style="margin-top:4px;">Open <a href="http://localhost:8765/preview/dist/shell.html" target="_blank">localhost:8765/preview/dist/shell.html</a> in your browser. You should see the interactive Copilot shell.</span>
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Using Figma designs:</span>
+      <span class="step__text">Paste a Figma link directly into chat. The AI extracts colors, spacing, and layout from the design.</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"Here's my Figma design: [paste URL]. Implement this as a new overlay in myExperiment."</span><button class="copy-btn" onclick="copy(this,'Here is my Figma design: [paste URL]. Implement this as a new overlay in myExperiment.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Iterating:</span>
+      <span class="step__text">Describe what's wrong or what to change next. The AI edits and rebuilds &mdash; you just refresh.</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"The modal is too wide, make it 480px max. Also add more padding around the close button."</span><button class="copy-btn" onclick="copy(this,'The modal is too wide, make it 480px max. Also add more padding around the close button.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
     </div>
   </div>
 
-  <div class="divider"></div>
+  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#666; margin-bottom:20px;">Getting better results</div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- PART B: GIVING AI CONTEXT                   -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#929292; margin-bottom:20px;">Giving AI full context</div>
-
+  <!-- Step 5 -->
   <div class="step">
     <span class="step__num">5</span>
     <div class="step__body">
-      <span class="step__title">Give the AI full project context</span>
-      <span class="step__text">The project includes documentation files that tell the AI everything about the architecture, conventions, and how to build. <strong>Start every new chat session</strong> by asking the AI to read them:</span>
-      <div class="prompt-box" style="margin-top:10px">
-        <div class="prompt-item"><span class="prompt-item__text">"Read the CLAUDE.md file and the .github/copilot-instructions.md file. Understand the full project architecture before we start."</span><button class="copy-btn" onclick="copy(this,'Read the CLAUDE.md file and the .github/copilot-instructions.md file. Understand the full project architecture before we start.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-      </div>
-      <span class="step__text" style="margin-top:8px;">This is the most important step. These files contain:</span>
-      <div style="background:#f5f5f5; border-radius:10px; padding:14px 18px; margin-top:8px; display:flex; flex-direction:column; gap:12px;">
-        <div>
-          <span style="font-size:13px; font-weight:600; color:#242424;">CLAUDE.md</span>
-          <span style="font-size:13px; color:#6f6f6f;"> — Complete architecture guide: file structure, token system, CSS variable pipeline, how preview generators work, every CSS class state and DOM element.</span>
-        </div>
-        <div>
-          <span style="font-size:13px; font-weight:600; color:#242424;">.github/copilot-instructions.md</span>
-          <span style="font-size:13px; color:#6f6f6f;"> — Condensed version of the same info. Copilot may auto-read this, but it's good to be explicit.</span>
-        </div>
-      </div>
-      <span class="step__text" style="margin-top:8px;">Once the AI confirms it has read them, it will know every file, every convention, and how to build. You won't need to explain the project yourself.</span>
-    </div>
-  </div>
+      <span class="step__title">Tips for better outputs</span>
+      <span class="step__text">A few habits that help the AI give you better results, faster.</span>
 
-  <div class="step">
-    <span class="step__num">6</span>
-    <div class="step__body">
-      <span class="step__title">Orient yourself</span>
-      <span class="step__text">Before making changes, ask the AI to explain what you're looking at. Try these prompts:</span>
-      <div class="prompt-box" style="margin-top:10px">
-        <div class="prompt-item"><span class="prompt-item__text">"Explain the file structure of this project. What does each folder do?"</span><button class="copy-btn" onclick="copy(this,'Explain the file structure of this project. What does each folder do?')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-        <div class="prompt-item"><span class="prompt-item__text">"Walk me through preview/src/shell.ts. What are the key sections and how does it generate the HTML?"</span><button class="copy-btn" onclick="copy(this,'Walk me through preview/src/shell.ts. What are the key sections and how does it generate the HTML?')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-        <div class="prompt-item"><span class="prompt-item__text">"What are the existing flow explorations? What does seamlessConnect.ts build vs connectorsGoldenFlow.ts?"</span><button class="copy-btn" onclick="copy(this,'What are the existing flow explorations? What does seamlessConnect.ts build vs connectorsGoldenFlow.ts?')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      <span class="step__text" style="margin-top:8px; font-weight:600; color:#fff;">Scope your changes to an experiment</span>
+      <span class="step__text">When starting a new experiment, ask the AI to only make changes to that file. You only need to say this once &mdash; the AI will respect it unless you ask otherwise.</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"Only make changes to myExperiment.ts &mdash; don't touch any other files."</span><button class="copy-btn" onclick="copy(this,&quot;Only make changes to myExperiment.ts — don't touch any other files.&quot;)" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
       </div>
-    </div>
-  </div>
 
-  <div class="step">
-    <span class="step__num">7</span>
-    <div class="step__body">
-      <span class="step__title">Reference Figma designs in your prompts</span>
-      <span class="step__text">If you have a Figma design to implement, paste the Figma link directly into Copilot Chat. The AI can read Figma nodes and extract colors, spacing, and layout:</span>
-      <div class="prompt-box" style="margin-top:10px">
-        <div class="prompt-item"><span class="prompt-item__text">"Here's my Figma design: [paste Figma URL]. Implement this as a new feature in the shell."</span><button class="copy-btn" onclick="copy(this,'Here is my Figma design: [paste Figma URL]. Implement this as a new feature in the shell.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Be specific and reference existing components</span>
+      <span class="step__text">The more detail you give, the closer the first result. Browse the Design System Tokens page to see what's already built, then reference them by name.</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"Use the same card style from the connectors flow for my source picker."</span><button class="copy-btn" onclick="copy(this,'Use the same card style from the connectors flow for my source picker.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
       </div>
-      <span class="step__text" style="margin-top:4px;">No need to manually redline values &mdash; the AI extracts them from Figma directly.</span>
+
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Contribute new components back</span>
+      <span class="step__text">If you've created a useful primitive or component in your experiment, you can add it back to the design system so that the AI is able to reference it easily.</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"I've built a notification toast in myExperiment. Add it as a new component to the design system with a token file, preview, and catalog entry."</span><button class="copy-btn" onclick="copy(this,&quot;I've built a notification toast in myExperiment. Add it as a new component to the design system with a token file, preview, and catalog entry.&quot;)" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Icons</span>
+      <span class="step__text">94 icons (Fluent UI + app logos) are included. You can also add new ones &mdash; download an icon and ask the AI to use it.</span>
+      <div class="prompt-box" style="margin-top:6px">
+        <div class="prompt-item"><span class="prompt-item__text">"What icons are available?"</span><button class="copy-btn" onclick="copy(this,'What icons are available?')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+
+      <span class="step__text" style="margin-top:12px; font-weight:600; color:#fff;">Check the browser console</span>
+      <span class="step__text">If something looks broken, open DevTools (F12) &rarr; Console. JS errors in preview generators fail silently. Paste any errors back into chat.</span>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- PART C: CREATING EXPERIMENTS                -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#929292; margin-bottom:20px;">Creating your own experiments</div>
-
-  <div class="step">
-    <span class="step__num">8</span>
-    <div class="step__body">
-      <span class="step__title">Option A — Modify the shell directly</span>
-      <span class="step__text">The simplest approach. Ask the AI to add or change things in the existing shell. The AI edits <code>preview/src/shell.ts</code> and rebuilds:</span>
-      <div class="prompt-box" style="margin-top:10px">
-        <div class="prompt-item"><span class="prompt-item__text">"Add a citations panel below the response text in the shell, showing 3 source cards with app icons"</span><button class="copy-btn" onclick="copy(this,'Add a citations panel below the response text in the shell, showing 3 source cards with app icons')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-        <div class="prompt-item"><span class="prompt-item__text">"Add a persistent banner below the input that shows 'Copilot can access M365, Jira, GitHub +3 more'"</span><button class="copy-btn" onclick="copy(this,'Add a persistent banner below the input that shows Copilot can access M365, Jira, GitHub +3 more')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-        <div class="prompt-item"><span class="prompt-item__text">"When I type a message containing 'tickets', show an inline suggestion to connect Jira"</span><button class="copy-btn" onclick="copy(this,'When I type a message containing tickets, show an inline suggestion to connect Jira')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <span class="step__num">9</span>
-    <div class="step__body">
-      <span class="step__title">Option B — Create a new flow exploration</span>
-      <span class="step__text">If you want a standalone prototype without modifying the main shell, ask the AI to create a new flow file. This copies the shell as a starting point and layers your experiment on top:</span>
-      <div class="prompt-box" style="margin-top:10px">
-        <div class="prompt-item"><span class="prompt-item__text">"Create a new flow exploration called 'myExperiment' based on the shell. It should start with [describe your flow]."</span><button class="copy-btn" onclick="copy(this,'Create a new flow exploration called myExperiment based on the shell. It should start with [describe your flow].')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-      </div>
-      <span class="step__text" style="margin-top:8px;">This creates <code>preview/src/myExperiment.ts</code> → builds to <code>preview/dist/myExperiment.html</code>. The main shell stays untouched.</span>
-      <span class="step__text" style="margin-top:4px;">See existing examples: <code>seamlessConnect.ts</code> (FRE + onboarding flow) and <code>connectorsGoldenFlow.ts</code> (connector setup flow).</span>
-    </div>
-  </div>
-
-  <div class="step">
-    <span class="step__num">10</span>
-    <div class="step__body">
-      <span class="step__title">Build, preview, iterate</span>
-      <span class="step__text">After any change, rebuild and check the result:</span>
-      <div class="tabs">
-        <button class="tab-btn tab-btn--active" onclick="tab(this,'s10','term')">Terminal</button>
-        <button class="tab-btn" onclick="tab(this,'s10','copilot')">Copilot Chat</button>
-      </div>
-      <div class="tab-panel tab-panel--active" data-tab="s10-term">
-        <div class="code-block">
-          <code>npx tsx preview/src/shell.ts</code>
-          <button class="copy-btn" onclick="copy(this,'npx tsx preview/src/shell.ts')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button>
-        </div>
-        <span class="step__text" style="margin-top:8px;">Then refresh the browser. Replace <code>shell.ts</code> with your file name if working on a custom flow.</span>
-      </div>
-      <div class="tab-panel" data-tab="s10-copilot">
-        <div class="prompt-box"><div class="prompt-item"><span class="prompt-item__text">"Build the shell preview and give me a preview"</span><button class="copy-btn" onclick="copy(this,'Build the shell preview and give me a preview')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div></div>
-      </div>
-      <span class="step__text" style="margin-top:12px;"><strong>Iterate fast:</strong> describe what's wrong or what to change next, and the AI will edit and rebuild. You don't need to touch the code yourself.</span>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- PART D: TIPS                                -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#929292; margin-bottom:20px;">Tips &amp; tricks</div>
-
-  <div style="background:#f5f5f5; border-radius:12px; padding:20px 24px; display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
-    <div>
-      <span style="font-size:13px; font-weight:600; color:#242424;">Be specific about what you want</span>
-      <span style="display:block; font-size:13px; color:#6f6f6f; margin-top:2px;">Instead of "add a banner", say "add a horizontal banner below the chat input, 40px tall, #f5f5f5 background, showing app icons for M365, Jira, GitHub with a '+3 more' link on the right".</span>
-    </div>
-    <div>
-      <span style="font-size:13px; font-weight:600; color:#242424;">Reference existing components</span>
-      <span style="display:block; font-size:13px; color:#6f6f6f; margin-top:2px;">"Make it look like the add menu overlay" or "use the same source card style from seamlessConnect" &mdash; the AI knows every component.</span>
-    </div>
-    <div>
-      <span style="font-size:13px; font-weight:600; color:#242424;">Check the browser console</span>
-      <span style="display:block; font-size:13px; color:#6f6f6f; margin-top:2px;">If something looks broken, open browser DevTools (F12) → Console. JS errors in preview generators fail silently. Paste any errors back into the chat.</span>
-    </div>
-    <div>
-      <span style="font-size:13px; font-weight:600; color:#242424;">Available icons</span>
-      <span style="display:block; font-size:13px; color:#6f6f6f; margin-top:2px;">64 Fluent icons + app logos in <code>src/components/icons/</code>. Ask the AI: "What icons are available?" and it will list them all.</span>
-    </div>
-    <div>
-      <span style="font-size:13px; font-weight:600; color:#242424;">Undo mistakes</span>
-      <span style="display:block; font-size:13px; color:#6f6f6f; margin-top:2px;">VS Code has unlimited undo (<code>Cmd+Z</code>). Or tell the AI: "Revert that last change".</span>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- Quick Reference -->
-  <div class="ref-card">
-    <span class="ref-card__title">Quick reference</span>
-    <div class="ref-row"><code>npm run build</code> <span>&mdash; rebuild shell only</span> <button class="copy-btn" onclick="copy(this,'npm run build')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-    <div class="ref-row"><code>npm run build:all</code> <span>&mdash; rebuild all previews</span> <button class="copy-btn" onclick="copy(this,'npm run build:all')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-    <div class="ref-row"><code>npm run serve</code> <span>&mdash; start server on port 8765</span> <button class="copy-btn" onclick="copy(this,'npm run serve')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-    <div class="ref-row"><code>npm run dev</code> <span>&mdash; build + start server</span> <button class="copy-btn" onclick="copy(this,'npm run dev')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-    <div class="ref-row"><code>npx tsc --noEmit</code> <span>&mdash; type-check</span> <button class="copy-btn" onclick="copy(this,'npx tsc --noEmit')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-    <div class="ref-row"><code>npx tsx preview/src/shell.ts</code> <span>&mdash; rebuild single file</span> <button class="copy-btn" onclick="copy(this,'npx tsx preview/src/shell.ts')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
-  </div>
-
-  <!-- Existing previews -->
-  <div class="ref-card" style="margin-top:16px;">
-    <span class="ref-card__title">Existing previews</span>
-    <div class="ref-row"><span style="font-size:13px;"><a href="dist/shell.html" style="color:#242424;">shell.html</a> &mdash; main Copilot prototype (nav, chat, thinking, response)</span></div>
-    <div class="ref-row"><span style="font-size:13px;"><a href="dist/seamlessConnect.html" style="color:#242424;">seamlessConnect.html</a> &mdash; first-run experience + source onboarding</span></div>
-    <div class="ref-row"><span style="font-size:13px;"><a href="dist/connectorsGoldenFlow.html" style="color:#242424;">connectorsGoldenFlow.html</a> &mdash; connector setup golden path</span></div>
-    <div class="ref-row"><span style="font-size:13px;"><a href="index.html" style="color:#242424;">index.html</a> &mdash; component catalog (all primitives + compounds)</span></div>
-  </div>
+  <div style="color:#555; font-size:13px; text-align:center; padding:20px 0;">Steps 6&ndash;7 coming soon &mdash; system architecture and contributing back.</div>
 
   <div class="divider"></div>
 
   <div class="back-footer">
     <a href="index.html">
       <svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Back to component catalog
+      Back to Playground
     </a>
   </div>
 </div>

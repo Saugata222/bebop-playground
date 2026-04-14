@@ -59,6 +59,8 @@ npm run build:all           # All 16 previews + inject catalog topbar
 npm run serve               # python3 -m http.server 8765
 ```
 
+**First run**: If `node_modules/` doesn't exist, run `npm install` before any build command.
+
 **Important**: `preview/` is excluded from tsconfig — preview scripts are not type-checked, only run via `tsx`. No test framework; validation is `tsc --noEmit` only.
 
 ## Preview System
