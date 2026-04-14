@@ -65,6 +65,17 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 .card--featured .card__cta:hover { background: #3b3b3b; }
 .card--featured .card__cta svg { width: 16px; height: 16px; }
 
+/* ─── 2-per-row featured grids ─── */
+#shell .grid, #explorations .grid { grid-template-columns: repeat(2, 1fr); }
+#shell .card--featured, #explorations .card--featured { grid-column: auto; padding: 24px 28px; }
+
+/* ─── Dark card variant ─── */
+.card--dark { background: #242424; border-color: #242424; color: #fff; }
+.card--dark:hover { background: #2b2b2b; border-color: #2b2b2b; }
+.card--dark .card__desc { color: rgba(255,255,255,0.7); }
+.card--dark .card__cta { background: #fff; color: #242424; }
+.card--dark .card__cta:hover { background: #f5f5f5; }
+
 /* ─── Footer ─── */
 .footer { border-top: 1px solid #f0f0f0; padding: 24px 48px; text-align: center; font-size: 12px; color: #929292; }
 
@@ -105,7 +116,7 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
   <p class="landing__sub">AI-native prototyping for the Copilot shell. Interactive components, live previews, and a fully working prototype &mdash; all built from design tokens.</p>
   <button class="landing__cta" id="landingCta">Explore Playground <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   <div class="landing__chips">
-    <span class="landing__chip landing__chip--count">16 components</span>
+    <span class="landing__chip landing__chip--count">17 components</span>
     <span class="landing__chip">TypeScript tokens</span>
     <span class="landing__chip">Fluent icons</span>
     <span class="landing__chip">Self-contained HTML</span>
@@ -122,8 +133,8 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
   </a>
   <div class="topbar__spacer"></div>
   <nav class="topbar__nav">
-    <a class="topbar__link" href="#explorations">Explorations</a>
     <a class="topbar__link topbar__link--active" href="#shell">Shell</a>
+    <a class="topbar__link" href="#explorations">Explorations</a>
     <a class="topbar__link" href="#compound">Compound</a>
     <a class="topbar__link" href="#primitives">Primitives</a>
   </nav>
@@ -137,6 +148,34 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 
 <!-- Main -->
 <div class="main">
+
+  <!-- Shell -->
+  <div class="section" id="shell">
+    <div class="section-head">
+      <span class="section-title">Interactive Shell</span>
+      <span class="section-count">2</span>
+    </div>
+    <div class="grid">
+      <div class="card card--featured" style="cursor:default">
+        <div class="card__info">
+          <span class="card__name">Copilot Shell</span>
+          <span class="card__desc">Full interactive prototype with nav sidebar, header, chat input, add menu, sources panel, send &#x2192; thinking &#x2192; skip &#x2192; streaming response flow</span>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+            <a class="card__cta" href="dist/shell.html">Open Shell <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="card card--featured card--dark" style="cursor:default">
+        <div class="card__info">
+          <span class="card__name">Getting Started Guide</span>
+          <span class="card__desc">Set up your environment, explore the token architecture, and start building with Bebop in minutes.</span>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+            <a class="card__cta" href="getting-started.html">Get Started <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Explorations -->
   <div class="section" id="explorations">
@@ -174,31 +213,11 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
     </div>
   </div>
 
-  <!-- Shell -->
-  <div class="section" id="shell">
-    <div class="section-head">
-      <span class="section-title">Interactive Shell</span>
-      <span class="section-count">1</span>
-    </div>
-    <div class="grid">
-      <div class="card card--featured" style="cursor:default">
-        <div class="card__info">
-          <span class="card__name">Copilot Shell</span>
-          <span class="card__desc">Full interactive prototype with nav sidebar, header, chat input, add menu, sources panel, send &#x2192; thinking &#x2192; skip &#x2192; streaming response flow</span>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
-            <a class="card__cta" href="dist/shell.html">Open Shell <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-            <a class="card__cta" href="getting-started.html" style="background:#f5f5f5; color:#242424;">Get Started &#x2192;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Compound -->
   <div class="section" id="compound">
     <div class="section-head">
       <span class="section-title">Compound Components</span>
-      <span class="section-count">10</span>
+      <span class="section-count">11</span>
     </div>
     <div class="grid">
       <a class="card" href="dist/nav.html"><div class="card__top"><span class="card__name">Nav</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Sidebar navigation with expand/collapse toggle, nav items, sections, and me control</span><span class="card__tag card__tag--compound">Compound</span></a>
@@ -211,6 +230,7 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
       <a class="card" href="dist/toolbar.html"><div class="card__top"><span class="card__name">Toolbar</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Formatting toolbar with icon buttons, dividers, and selected state toggling</span><span class="card__tag card__tag--compound">Compound</span></a>
       <a class="card" href="dist/canvasChat.html"><div class="card__top"><span class="card__name">Canvas Chat</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Floating inline AI card with output area, input field, and action buttons</span><span class="card__tag card__tag--compound">Compound</span></a>
       <a class="card" href="dist/responseFooter.html"><div class="card__top"><span class="card__name">Response Footer</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Post-response action bar with copy, like/dislike toggle, and sources button</span><span class="card__tag card__tag--compound">Compound</span></a>
+      <a class="card" href="dist/banner.html"><div class="card__top"><span class="card__name">Banner</span><svg class="card__arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="card__desc">Dismissible contextual banner with single source, multi source, and connected variants</span><span class="card__tag card__tag--compound">Compound</span></a>
     </div>
   </div>
 

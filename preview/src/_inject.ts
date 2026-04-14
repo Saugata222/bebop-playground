@@ -144,6 +144,13 @@ const meta: Record<string, ComponentMeta> = {
     states: ['Rest', 'Hover', 'Pressed'],
     related: ['button', 'toolbar', 'chatInput'],
   },
+  banner: {
+    title: 'Banner',
+    desc: 'Dismissible contextual banner for the chat thread. Three variants — single source connect prompt, multi source browse prompt, and connected source confirmation.',
+    type: 'Compound',
+    states: ['Single Source', 'Multi Source', 'Connected', 'Dismissed'],
+    related: ['button', 'sourceCard', 'connectDialog'],
+  },
 };
 
 // ─── Shared CSS ─────────────────────────────────────────────

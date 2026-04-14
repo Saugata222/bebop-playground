@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Banner — Bebop Design System Preview</title><style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; background: #f5f5f5; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+.page { padding: 40px; display: flex; flex-direction: column; gap: 48px; max-width: 800px; margin: 0 auto; }
+h2 { font-size: 14px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+.demo { background: #fff; border-radius: 16px; padding: 32px; border: 1px solid #e8e8e8; display: flex; flex-direction: column; gap: 24px; }
+.state-cell { display: flex; flex-direction: column; gap: 8px; }
+.state-label { font-size: 11px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.6px; }
+.bnr { display: flex; align-items: center; justify-content: center; padding: 16px; border: 1px solid #dedede; border-radius: 16px; background: #fff; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; transition: opacity 0.25s ease-out, max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out, border-width 0.3s ease-out; overflow: hidden; }
+.bnr--dismissed { opacity: 0; max-height: 0 !important; padding-block: 0; margin-block: 0; border-width: 0; pointer-events: none; }
+.bnr__row { display: flex; align-items: center; gap: 12px; width: 100%; }
+.bnr__img { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.bnr__img img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; display: block; }
+.bnr__img--multi { display: flex; flex-wrap: wrap; gap: 2px; width: 40px; height: 40px; flex-shrink: 0; align-content: flex-start; }
+.bnr__img--multi img { width: 19px; height: 19px; border-radius: 4px; object-fit: cover; display: block; }
+.bnr__img--multi .bnr__overflow { width: 19px; height: 19px; border-radius: 4px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 400; color: #242424; line-height: 1; }
+.bnr__img--connected { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.bnr__img--connected img { width: 40px; height: 40px; object-fit: contain; display: block; }
+.bnr__main { flex: 1; min-width: 0; overflow: hidden; }
+.bnr__content { display: flex; align-items: center; gap: 20px; width: 100%; }
+.bnr__text { flex: 1; min-width: 0; }
+.bnr__header { font-size: 14px; font-weight: 600; line-height: 20px; color: #242424; }
+.bnr__body { font-size: 14px; font-weight: 400; line-height: 1.4; color: #242424; }
+.bnr__buttons { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.bnr__btn { height: 32px; padding-inline: 10px; border-radius: 12px; border: none; background: #f5f5f5; color: #242424; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 20px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; transition: background 0.1s ease; outline: none; position: relative; }
+.bnr__btn:hover { background: #ebebeb; }
+.bnr__btn:focus-visible { outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 1px #fff inset; }
+.bnr__dismiss { width: 32px; height: 32px; border-radius: 9999px; border: none; background: transparent; color: #242424; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; transition: background 0.1s ease; outline: none; position: relative; }
+.bnr__dismiss:hover { background: rgba(36, 36, 36, 0.04); }
+.bnr__dismiss:focus-visible { outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 1px #fff inset; }
+.bnr__dismiss svg { width: 20px; height: 20px; display: block; }
+
+/* ─── Bebop page overrides (injected by _inject.ts) ─── */
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
+
+/* Page wrapper */
+.bp-header { max-width: 900px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
+.bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
+.bp-header__tag--compound { background: #ebebeb; color: #242424; }
+.bp-header__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
+.bp-header__desc { font-size: 15px; color: #6f6f6f; line-height: 1.6; max-width: 600px; margin-bottom: 20px; }
+.bp-header__states { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
+.bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
+
+/* Content area — override all wrapper variants */
+.wrap, .page, .section { max-width: 900px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+
+/* Headings */
+h1 { display: none !important; }
+.hint, p.hint { display: none !important; }
+h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
+h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+/* Rows and cells */
+.row { gap: 24px !important; margin-bottom: 20px !important; }
+.cell { gap: 8px !important; }
+.rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+
+/* ─── Related components ─── */
+.bp-related { max-width: 900px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+.bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
+.bp-related__card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.bp-related__card-top { display: flex; align-items: center; gap: 8px; }
+.bp-related__card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
+.bp-related__card-arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
+.bp-related__card:hover .bp-related__card-arrow { color: #242424; transform: translateX(2px); }
+.bp-related__card-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
+
+/* ─── Back bar (sticky, frosted) ─── */
+.bebop-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.bebop-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.bebop-backbar a:hover { background: rgba(36,36,36,0.04); }
+.bebop-backbar a svg { width: 16px; height: 16px; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+</style></head><body><!-- INJECT:BACKBAR --><div class="bebop-backbar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Banner</span><span class="bp-header__tag bp-header__tag--compound">Compound</span></div><p class="bp-header__desc">Dismissible contextual banner for the chat thread. Three variants — single source connect prompt, multi source browse prompt, and connected source confirmation.</p><div class="bp-header__states"><span class="bp-header__state">Single Source</span><span class="bp-header__state">Multi Source</span><span class="bp-header__state">Connected</span><span class="bp-header__state">Dismissed</span></div></div><!-- /INJECT:HEADER --><div class="page"><div><h2>Single Source</h2><div class="demo"><div class="state-cell"><span class="state-label">Connect Prompt</span><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global logo" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your S&amp;P Global data to Copilot</div><div class="bnr__body">Connect to S&amp;P Global to access verified, up-to-date financial data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button">Connect</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><div><h2>Multi Source</h2><div class="demo"><div class="state-cell"><span class="state-label">Browse Prompt</span><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--multi"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global" /><img src="../../src/components/icons/lseg-logo.png" alt="LSEG" /><img src="../../src/components/icons/moodys-logo.png" alt="Moody's" /><span class="bnr__overflow" aria-label="and 7 more">+7</span></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your data to get more from Copilot</div><div class="bnr__body">Connect to S&amp;P Global, Moody's, LSEG and more to ground responses in trusted data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button">Try now</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><div><h2>Connected Source</h2><div class="demo"><div class="state-cell"><span class="state-label">Confirmation</span><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--connected"><img src="../../src/components/icons/engineering-hub-logo.png" alt="Engineering Hub" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Your Engineering Hub is now connected to Copilot</div><div class="bnr__body">Access docs and team knowledge from Engineering Hub in your Copilot responses.</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button">Explore</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><div><h2>Interactive — Click Dismiss or Action</h2><div class="demo"><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global logo" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your S&amp;P Global data to Copilot</div><div class="bnr__body">Connect to S&amp;P Global to access verified, up-to-date financial data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button" data-action="connect">Connect</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--multi"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global" /><img src="../../src/components/icons/lseg-logo.png" alt="LSEG" /><img src="../../src/components/icons/moodys-logo.png" alt="Moody's" /><span class="bnr__overflow" aria-label="and 7 more">+7</span></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your data to get more from Copilot</div><div class="bnr__body">Connect to S&amp;P Global, Moody's, LSEG and more to ground responses in trusted data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button" data-action="connect">Try now</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--connected"><img src="../../src/components/icons/engineering-hub-logo.png" alt="Engineering Hub" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Your Engineering Hub is now connected to Copilot</div><div class="bnr__body">Access docs and team knowledge from Engineering Hub in your Copilot responses.</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button" data-action="connect">Explore</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><script>
+document.querySelectorAll('[data-action="dismiss"]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var bnr = btn.closest('.bnr');
+    bnr.style.maxHeight = bnr.offsetHeight + 'px';
+    requestAnimationFrame(function() {
+      bnr.classList.add('bnr--dismissed');
+    });
+  });
+});
+
+document.querySelectorAll('[data-action="connect"]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var bnr = btn.closest('.bnr');
+    bnr.style.maxHeight = bnr.offsetHeight + 'px';
+    btn.textContent = 'Connected!';
+    btn.style.background = '#dff6dd';
+    btn.style.color = '#107C10';
+    btn.style.pointerEvents = 'none';
+    setTimeout(function() {
+      requestAnimationFrame(function() {
+        bnr.classList.add('bnr--dismissed');
+      });
+    }, 1500);
+  });
+});
+</script>
+<!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="sourceCard.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Source Card</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Compact connector card for the Apps & Sources view. Shows a service icon, name, ...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a></div></div><!-- /INJECT:RELATED --></body></html>
