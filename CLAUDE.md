@@ -178,6 +178,8 @@ Beyond component previews, `preview/src/` also contains multi-step flow prototyp
 
 These read icons directly via `fs.readFileSync` from `src/components/icons/` rather than importing from `_icons.ts`. They are full shell replicas with flow-specific state and UI layers added on top.
 
+**When creating a new flow exploration**: Also add a card for it in the "My Prototypes" section of `preview/prototypes.html`. If the empty state is showing (the `<!-- EMPTY STATE -->` block), replace it with a featured card. Use the same card markup as the Community Prototypes cards.
+
 ## Shell Preview — How to Modify
 
 `preview/src/shell.ts` (1185 lines) → `preview/dist/shell.html`

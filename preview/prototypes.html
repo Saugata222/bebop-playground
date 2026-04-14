@@ -61,6 +61,14 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 /* ─── 2-per-row featured grid ─── */
 #prototypes .grid { grid-template-columns: repeat(2, 1fr); }
 
+/* ─── Empty state ─── */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px; border: 2px dashed #dedede; border-radius: 16px; gap: 12px; }
+.empty-state__title { font-size: 16px; font-weight: 600; color: #242424; }
+.empty-state__desc { font-size: 14px; color: #6f6f6f; line-height: 1.5; max-width: 400px; }
+.empty-state__cta { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 8px 16px; border-radius: 12px; background: #242424; color: #fff; font-size: 14px; font-weight: 400; text-decoration: none; transition: background 0.1s; margin-top: 8px; }
+.empty-state__cta:hover { background: #3b3b3b; }
+.empty-state__cta svg { width: 16px; height: 16px; }
+
 /* ─── Footer ─── */
 .footer { border-top: 1px solid #f0f0f0; padding: 24px 48px; text-align: center; font-size: 12px; color: #929292; }
 
@@ -97,10 +105,24 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 <!-- Main -->
 <div class="main">
 
-  <!-- Prototypes -->
+  <!-- My Prototypes -->
+  <div class="section" id="my-prototypes">
+    <div class="section-head">
+      <span class="section-title">My Prototypes</span>
+    </div>
+    <!-- EMPTY STATE -->
+    <div class="empty-state">
+      <span class="empty-state__title">No experiments yet</span>
+      <span class="empty-state__desc">Start your own experiment by forking the Copilot Shell. Your prototypes will appear here.</span>
+      <a class="empty-state__cta" href="getting-started.html">Start Experimenting <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <!-- /EMPTY STATE -->
+  </div>
+
+  <!-- Community Prototypes -->
   <div class="section" id="prototypes">
     <div class="section-head">
-      <span class="section-title">Explorations</span>
+      <span class="section-title">Community Prototypes</span>
       <span class="section-count">5</span>
     </div>
     <div class="grid">

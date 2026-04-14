@@ -73,6 +73,8 @@ Each `preview/src/{component}.ts` builds CSS + HTML as strings → writes self-c
 
 **Flow explorations** (`connectorsGoldenFlow.ts`, `seamlessConnect.ts`): Full shell replicas with flow-specific state/UI layers on top. These read icons directly via `fs.readFileSync` from `src/components/icons/` rather than importing from `_icons.ts`.
 
+**When creating a new flow exploration**: Also add a card for it in the "My Prototypes" section of `preview/prototypes.html`. If the empty state is showing (the `<!-- EMPTY STATE -->` block), replace it with a featured card. Use the same card markup as the Community Prototypes cards.
+
 **Catalog injection**: `preview/src/_inject.ts` post-processes all preview HTML files using a `ComponentMeta` dictionary. When adding a new preview, add a metadata entry in `_inject.ts` (title, desc, type, states, related) or the catalog will be incomplete.
 
 ## Adding a New Component
