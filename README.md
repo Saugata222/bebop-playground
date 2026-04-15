@@ -2,13 +2,13 @@
 
 AI-native prototyping for M365 Copilot in Bebop UI. Design tokens, interactive component previews, and a fully working Copilot shell prototype — all built to be modified with an AI assistant.
 
-**Live preview:** [saugata222.github.io/bebop-playground/preview/playground.html](https://saugata222.github.io/bebop-playground/preview/playground.html)
+**Live preview:** [m365-core/bebop-playground](https://github.com/m365-core/bebop-playground)
 
 ## Get Started
 
 Open your IDE with an AI assistant (VS Code + Copilot, Claude Code, etc.) and ask it:
 
-> "Clone this repository: https://github.com/Saugata222/bebop-playground.git"
+> "Clone this repository: https://github.com/m365-core/bebop-playground.git"
 
 > "Install dependencies, build all previews, start the local server, and open Bebop Playground in the browser."
 

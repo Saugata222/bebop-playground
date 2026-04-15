@@ -1,6 +1,6 @@
 # Contributing to Bebop Playground
 
-**Repository:** https://github.com/Saugata222/bebop-playground
+**Repository:** https://github.com/m365-core/bebop-playground
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ If something isn't working, ask the AI:
 
 > "Create a GitHub issue describing this bug: [describe what's broken]."
 
-Or raise an issue directly at https://github.com/Saugata222/bebop-playground/issues
+Or raise an issue directly at https://github.com/m365-core/bebop-playground/issues
 
 ## Guidelines
 

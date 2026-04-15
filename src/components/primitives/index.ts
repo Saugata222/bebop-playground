@@ -13,3 +13,4 @@ export { suggestionChips, suggestionChipsLayout, suggestionChipSize, suggestionC
 export { toggle, toggleTrack, toggleTrackChecked, toggleTrackUnchecked, toggleThumb, toggleThumbChecked, toggleThumbUnchecked, toggleLabel, toggleLayout, toggleStateDisabled, toggleTypography } from './toggle';
 export { scrollbar, scrollbarThumb, scrollbarTrack } from './scrollbar';
 export { sourceCard, sourceCardContainer, sourceCardIcon, sourceCardName, sourceCardAddButton, sourceCardCheck, sourceCardToggle, sourceCardDisabled } from './sourceCard';
+export { storeCard, storeCardContainer, storeCardIcon, storeCardText } from './storeCard';
