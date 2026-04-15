@@ -1,5 +1,5 @@
 {
-  "name": "bebop-design-system",
+  "name": "bebop-playground",
   "version": "1.0.0",
   "description": "Bebop Design System — TypeScript design token library",
   "main": "index.js",

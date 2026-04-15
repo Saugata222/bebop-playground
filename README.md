@@ -2,7 +2,7 @@
 
 AI-native prototyping for M365 Copilot in Bebop UI. Design tokens, interactive component previews, and a fully working Copilot shell prototype — all built to be modified with an AI assistant.
 
-**Live preview:** [m365-core/bebop-playground](https://github.com/m365-core/bebop-playground)
+**Live preview:** [Bebop Playground](https://crispy-adventure-6qlj8z3.pages.github.io/preview/playground.html) · [Shell](https://crispy-adventure-6qlj8z3.pages.github.io/preview/dist/shell.html) · [Start Experimenting](https://crispy-adventure-6qlj8z3.pages.github.io/preview/start-experimenting.html)
 
 ## Get Started
 
