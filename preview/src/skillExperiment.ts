@@ -802,7 +802,11 @@ css += '.ag-overlay--open .ag-panel { opacity: 1; transform: translateY(0); }';
 css += '\n';
 // Scroll container — Figma shows ~172px (3 rows). Native scrollbar to match
 // sources list behavior in this preview file.
-css += '.ag-list { display: flex; flex-direction: column; max-height: 172px; overflow-y: auto; padding: 0 0 4px; }';
+// Now that the list mixes agents + per-source skills, the unfiltered list is
+// considerably longer — bump the scroll window to ~5 rows so users can see
+// both the Agents section header and the first Skills below it without
+// scrolling, while still keeping the panel compact.
+css += '.ag-list { display: flex; flex-direction: column; max-height: 320px; overflow-y: auto; padding: 0 0 4px; }';
 css += '\n';
 // Agent / skill row — 20px square avatar + 2-line text.
 css += '.ag-item { display: flex; align-items: center; width: 100%; padding: 4px 0; background: transparent; border: none; cursor: pointer; font-family: inherit; text-align: left; }';
@@ -827,6 +831,15 @@ css += '\n';
 css += '.ag-item__avatar--teal { background: linear-gradient(189deg, #14b8a6 0%, #0d9488 50%, #0f766e 100%); border: 1px solid rgba(0,0,0,0.05); color: #ffffff; }';
 css += '\n';
 css += '.ag-item__avatar--gradient svg { width: 12px; height: 12px; }';
+css += '\n';
+// Source-skill avatar — uses the source\'s 20×20 logo on a neutral chrome.
+css += '.ag-item__avatar--source { background: #fff; border: 1px solid #ebebeb; }';
+css += '\n';
+css += '.ag-item__avatar--source img, .ag-item__avatar--source svg { width: 18px; height: 18px; object-fit: contain; }';
+css += '\n';
+// Section header for the @ picker — shown only when the list is unfiltered,
+// grouping Agents and Skills so the user can browse rather than scroll-only.
+css += ".ag-section { padding: 8px 12px 4px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 600; line-height: 16px; color: #424242; }";
 css += '\n';
 // Text block — name (14/20) over description (12/16, muted).
 css += '.ag-item__text { flex: 1 0 0; min-width: 1px; display: flex; flex-direction: column; gap: 0; }';
@@ -2547,31 +2560,78 @@ html += '  powerbi: \'<svg width="20" height="20" viewBox="0 0 20 20" fill="none
 html += '};';
 html += '\n';
 
-// Render — empty filter shows all; non-empty filters by name (case-insensitive).
-// First visible item carries the selected backplate.
+// Build skill entries from the per-source catalog. Each skill becomes an
+// agent-shaped row using the source\'s logo as the avatar. Encoded id is
+// `skill:<sourceKey>:<skillName>` so the click handler can re-attach the
+// skill via setAttachedSkill without a separate lookup.
+//
+// Surfacing rules for the @ picker (intentionally narrower than the L2 list,
+// which still shows the full per-source catalog):
+//   1. Only CONNECTED sources contribute skills — disconnected sources don\'t
+//      surface anything until the user connects them.
+//   2. At most 2 skills per source — keep the unfiltered list scannable and
+//      surface the most-used skills (catalog order = priority).
+html += 'function buildSkillEntries(){';
+html += '  var out = [];';
+html += '  for (var key in skillsBySource) {';
+html += '    if (!Object.prototype.hasOwnProperty.call(skillsBySource, key)) continue;';
+html += '    var src = null;';
+html += '    for (var i = 0; i < sources.length; i++) if (sources[i].key === key) { src = sources[i]; break; }';
+html += '    if (!src || !src.connected) continue;';
+html += '    skillsBySource[key].slice(0, 2).forEach(function(sk){';
+// Prefix the description with the source name so users can tell at a glance
+// which app the skill lives on now that the avatar is a generic receipt
+// (rather than the source\'s logo). Format: "{source} · {desc}".
+html += '      out.push({ id: "skill:" + key + ":" + sk.n, name: sk.n, desc: src.name + " \\u00b7 " + sk.d, avatar: "source", sourceKey: key, sourceName: src.name, sourceIco: src.icon });';
+html += '    });';
+html += '  }';
+html += '  return out;';
+html += '}';
+html += '\n';
+
+// Build the markup for one agent/skill row. Reused by both the sectioned
+// (unfiltered) and flat (filtered) render paths.
+html += 'function agItemHtml(a, selected){';
+html += '  var sel = selected ? " ag-item--selected" : "";';
+html += '  var avatarCls = "ag-item__avatar";';
+html += '  var inside = "";';
+html += '  if (a.avatar === "peach")        { avatarCls += " ag-item__avatar--peach ag-item__avatar--gradient";   inside = AG_GLYPHS[a.glyph] || ""; }';
+html += '  else if (a.avatar === "indigo")  { avatarCls += " ag-item__avatar--indigo ag-item__avatar--gradient"; inside = AG_GLYPHS[a.glyph] || ""; }';
+html += '  else if (a.avatar === "teal")    { avatarCls += " ag-item__avatar--teal ag-item__avatar--gradient";   inside = AG_GLYPHS[a.glyph] || ""; }';
+html += '  else if (a.avatar === "source")  { avatarCls += " ag-item__avatar--source";                              inside = \'' + receiptIco.replace(/'/g, "\\'") + '\'; }';
+html += '  else                              { inside = AG_GLYPHS[a.glyph] || ""; }';
+html += '  var h = "";';
+html += '  h += \'<button class="ag-item\' + sel + \'" type="button" data-ag-id="\' + a.id + \'">\';';
+html += '  h += \'<div class="ag-item__inner">\';';
+html += '  h += \'<span class="\' + avatarCls + \'">\' + inside + \'</span>\';';
+html += '  h += \'<div class="ag-item__text">\';';
+html += '  h += \'<span class="ag-item__name">\' + a.name + \'</span>\';';
+html += '  h += \'<span class="ag-item__desc">\' + a.desc + \'</span>\';';
+html += '  h += \'</div></div></button>\';';
+html += '  return h;';
+html += '}';
+html += '\n';
+
+// Render — a single mixed list of agents + per-source skills (no section
+// headers). Filter is a case-insensitive substring match across name +
+// source name + description so users can find a skill by what it does, the
+// app it lives on, or by its display name.
 html += 'function renderAgents(filter){';
 html += '  var list = document.getElementById("agList");';
 html += '  if (!list) return;';
 html += '  var q = (filter || "").trim().toLowerCase();';
-html += '  var items = q ? AGENTS_DATA.filter(function(a){ return a.name.toLowerCase().indexOf(q) !== -1; }) : AGENTS_DATA;';
+html += '  var all = AGENTS_DATA.concat(buildSkillEntries());';
+html += '  function matches(a){';
+html += '    if (!q) return true;';
+html += '    if (a.name && a.name.toLowerCase().indexOf(q) !== -1) return true;';
+html += '    if (a.sourceName && a.sourceName.toLowerCase().indexOf(q) !== -1) return true;';
+html += '    if (a.desc && a.desc.toLowerCase().indexOf(q) !== -1) return true;';
+html += '    return false;';
+html += '  }';
+html += '  var items = all.filter(matches);';
 html += '  if (items.length === 0) { list.innerHTML = \'<div class="ag-empty">No agents or skills match \\u201C\' + (filter || "") + \'\\u201D.</div>\'; return; }';
 html += '  var h = "";';
-html += '  items.forEach(function(a, i){';
-html += '    var sel = i === 0 ? " ag-item--selected" : "";';
-html += '    var avatarCls = "ag-item__avatar";';
-html += '    var inside = "";';
-html += '    if (a.avatar === "peach")        { avatarCls += " ag-item__avatar--peach ag-item__avatar--gradient";   inside = AG_GLYPHS[a.glyph] || ""; }';
-html += '    else if (a.avatar === "indigo")  { avatarCls += " ag-item__avatar--indigo ag-item__avatar--gradient"; inside = AG_GLYPHS[a.glyph] || ""; }';
-html += '    else if (a.avatar === "teal")    { avatarCls += " ag-item__avatar--teal ag-item__avatar--gradient";   inside = AG_GLYPHS[a.glyph] || ""; }';
-html += '    else                              { inside = AG_GLYPHS[a.glyph] || ""; }';
-html += '    h += \'<button class="ag-item\' + sel + \'" type="button" data-ag-id="\' + a.id + \'">\';';
-html += '    h += \'<div class="ag-item__inner">\';';
-html += '    h += \'<span class="\' + avatarCls + \'">\' + inside + \'</span>\';';
-html += '    h += \'<div class="ag-item__text">\';';
-html += '    h += \'<span class="ag-item__name">\' + a.name + \'</span>\';';
-html += '    h += \'<span class="ag-item__desc">\' + a.desc + \'</span>\';';
-html += '    h += \'</div></div></button>\';';
-html += '  });';
+html += '  items.forEach(function(a, i){ h += agItemHtml(a, i === 0); });';
 html += '  list.innerHTML = h;';
 html += '}';
 html += '\n';
@@ -2634,12 +2694,26 @@ html += '\n';
 html += 'if (agInput) agInput.addEventListener("input", function(){ renderAgents(agInput.value); });';
 html += '\n';
 
-// Select an agent — for now, just close and return focus to the chat input.
-// In production this would insert an @mention chip / route the conversation.
+// Select an entry — agents are a no-op for now (would insert an @mention chip
+// in production). Skills go through setAttachedSkill so picking from the @
+// menu has the same effect as picking from the L2 list. The trailing "@" the
+// user just typed is stripped so the input doesn\'t carry a stray sigil.
 html += 'if (agList) agList.addEventListener("click", function(e){';
 html += '  var item = e.target.closest("[data-ag-id]");';
 html += '  if (!item) return;';
+html += '  var id = item.getAttribute("data-ag-id") || "";';
 html += '  closeAgents();';
+// Strip the most recent trailing "@" (the one that opened the picker).
+html += '  if (ta.value.slice(-1) === "@") ta.value = ta.value.slice(0, -1);';
+html += '  if (id.indexOf("skill:") === 0) {';
+html += '    var rest = id.slice("skill:".length);';
+html += '    var sep = rest.indexOf(":");';
+html += '    if (sep !== -1) {';
+html += '      var srcKey = rest.slice(0, sep);';
+html += '      var skillName = rest.slice(sep + 1);';
+html += '      setAttachedSkill(srcKey, skillName);';
+html += '    }';
+html += '  }';
 html += '  ta.focus();';
 html += '});';
 html += '\n';
