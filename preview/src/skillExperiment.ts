@@ -2807,12 +2807,6 @@ html += '    var rows = "";';
 html += '    skills.forEach(function(sk){';
 html += '      rows += \'<div class="skl"><div class="skl__inner" role="button" tabindex="0"><span class="skl__icon">' + receiptIco.replace(/'/g, "\\'") + '</span><div class="skl__body"><span class="skl__label">\' + sk.n + \'</span><span class="skl__desc">\' + sk.d + \'</span></div></div></div>\';';
 html += '    });';
-// Trailing "Create {source} skill" — mirrors the L1 "Connect more sources"
-// pattern. Same .skl row, hover-only highlight, sits at the end of the
-// scroll list (NOT pinned) so it appears after the user scrolls through.
-// The icon uses a different inset than receipt (no p-3 / 14px glyph), so the
-// + sits at the full 20×20 like other "create/add more" affordances.
-html += '    rows += \'<div class="skl" id="srcL2Create" role="button" tabindex="0"><div class="skl__inner"><span class="skl__icon">' + addIco.replace(/'/g, "\\'") + '</span><span class="skl__label">Create \' + s.name + \' skill</span></div></div>\';';
 html += '    listEl.innerHTML = rows;';
 html += '    listEl.scrollTop = 0;';
 html += '  }';
@@ -2875,7 +2869,6 @@ html += '  if (!listEl) return;';
 html += '  listEl.addEventListener("click", function(e){';
 html += '    var row = e.target.closest(".skl");';
 html += '    if (!row) return;';
-html += '    if (row.id === "srcL2Create") { /* TODO: create flow */ return; }';
 html += '    var label = row.querySelector(".skl__label");';
 html += '    var name = label ? label.textContent : "";';
 html += '    var key = (attachedSkill && attachedSkill.sourceKey) || "";';
