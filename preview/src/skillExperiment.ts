@@ -30,7 +30,7 @@ const jiraIco = '<img src="../../src/components/icons/jira-logo.png" alt="Jira" 
 // Canonical connector logos — sourced from Figma 127:129366.
 const notionIco = '<img src="../../src/components/icons/notion-logo.png" alt="Notion" width="20" height="20" style="display:block;object-fit:contain" />';
 const hubspotIco = '<img src="../../src/components/icons/hubspot-logo.png" alt="HubSpot" width="20" height="20" style="display:block;object-fit:contain" />';
-const moodysIco = '<img src="../../src/components/icons/moodys-logo.png" alt="Moody&apos;s" width="20" height="20" style="display:block;object-fit:cover;border-radius:4px" />';
+const moodysIco = '<img src="../../src/components/icons/moodys-logo.png" alt="Moodys&apos;" width="20" height="20" style="display:block;object-fit:cover;border-radius:4px" />';
 const lsegIco = '<img src="../../src/components/icons/lseg-logo.png" alt="LSEG" width="20" height="20" style="display:block;object-fit:contain" />';
 const canvaIco = '<img src="../../src/components/icons/canva-logo.png" alt="Canva" width="20" height="20" style="display:block;object-fit:contain" />';
 const intercomIco = '<img src="../../src/components/icons/intercom-logo.png" alt="Intercom" width="20" height="20" style="display:block;object-fit:contain" />';
@@ -156,7 +156,7 @@ const smSpGlobalLogo = '../../src/components/icons/sp-global-logo.png';
 // is hydrated from localStorage at boot, not from this seed.
 interface SmConnector { id: string; name: string; desc: string; logo: string; connected: boolean }
 const smConnectors: SmConnector[] = [
-  { id: 'moodys', name: "Moody's", desc: 'Credit ratings and risk insights', logo: '<img src="' + smMoodysLogo + '" alt=""/>', connected: false },
+  { id: 'moodys', name: "Moodys’", desc: 'Credit ratings and risk insights', logo: '<img src="' + smMoodysLogo + '" alt=""/>', connected: false },
   { id: 'lseg', name: 'London Stock Exchange Group', desc: 'Market data and financial filings', logo: '<img src="' + smLsegLogo + '" alt=""/>', connected: false },
   { id: 'canva', name: 'Canva', desc: 'Search, create and edit designs', logo: '<img src="' + smCanvaLogo + '" alt=""/>', connected: false },
   { id: 'hubspot', name: 'HubSpot', desc: 'Connect sales and marketing data', logo: '<img src="' + smHubspotLogoPng + '" alt=""/>', connected: false },
@@ -2280,7 +2280,7 @@ html += 'var sources = [';
 html += '  { key: "m365", name: "Microsoft 365 apps", subtitle: "Chats, Emails, Meetings, Sharepoint and more", connected: true, active: true, pinned: true,';
 html += '    icon: \'' + copilotIco + '\',';
 html += '    icon16: \'' + copilotIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\' },';
-html += '  { key: "moodys", name: "Moody\\u2019s", connected: false, active: false,';
+html += '  { key: "moodys", name: "Moodys\\u2019", connected: false, active: false,';
 html += '    icon: \'' + moodysIco + '\',';
 html += '    icon16: \'' + moodysIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\' },';
 html += '  { key: "lseg", name: "London Stock Exchange Group", connected: false, active: false,';
