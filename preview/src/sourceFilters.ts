@@ -1364,11 +1364,14 @@ css += ".reset-chip:hover { background: #fafafa; }\n";
 css += ".reset-chip:focus-visible { outline: 2px solid #000; outline-offset: 1px; }\n";
 css += ".reset-chip svg { display: block; color: #5d5d5d; }\n";
 
-// Tenant variant toggle — a segmented chip mounted bottom-right of the
-// viewport. Visible at all times so the variant state is always one click
-// away. Dispatches bebop:variant-change so the existing listener handles
-// all downstream updates.
-css += ".tv-chip { position: fixed; bottom: 16px; right: 16px; z-index: 99999; display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #dedede; border-radius: 18px; padding: 4px 6px 4px 12px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 13px; color: #242424; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }\n";
+// Variant chips — segmented controls mounted bottom-right. Stacked from
+// right-to-left: Tenant (right-most), Source tab (left of it). Visible at
+// all times so variant state is one click away. Each chip dispatches a
+// bebop:variant-change CustomEvent so the corresponding listener handles
+// downstream updates.
+css += ".tv-chip { position: fixed; bottom: 16px; z-index: 99999; display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #dedede; border-radius: 18px; padding: 4px 6px 4px 12px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 13px; color: #242424; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }\n";
+css += "#tvChip { right: 16px; }\n";
+css += "#stChip { right: 200px; }\n";
 css += ".tv-chip__label { font-weight: 600; padding-right: 4px; color: #5d5d5d; }\n";
 css += ".tv-chip__seg { display: inline-flex; padding: 2px; background: #f5f5f5; border-radius: 12px; gap: 2px; }\n";
 css += ".tv-chip__btn { border: none; background: transparent; padding: 4px 10px; border-radius: 10px; font-family: inherit; font-size: 12px; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; }\n";
@@ -1924,9 +1927,19 @@ html += '</svg>';
 html += '<span>Reset sources</span>';
 html += '</button>';
 
-// ─── Tenant sources toggle (visible chip, bottom-right) ─────────────
-// Always-visible segmented chip. Dispatches bebop:variant-change so the
-// existing listener handles state sync. URL persistence via ?tenant=on.
+// ─── Variant toggles (visible chips, bottom-right) ──────────────────
+// Source tab chip — gates whether the disabled-source pill below the
+// chat input ever appears. Default: On (matches today\'s behavior).
+html += '<div class="tv-chip" id="stChip" role="group" aria-label="Source tab variant">';
+html += '<span class="tv-chip__label">Source tab</span>';
+html += '<div class="tv-chip__seg">';
+html += '<button type="button" class="tv-chip__btn" data-st="off" aria-pressed="false">Off</button>';
+html += '<button type="button" class="tv-chip__btn tv-chip__btn--active" data-st="on" aria-pressed="true">On</button>';
+html += '</div>';
+html += '</div>';
+
+// Tenant sources chip — gates whether tenant connectors appear in CSF
+// and Settings. Default: Off (matches today\'s baseline).
 html += '<div class="tv-chip" id="tvChip" role="group" aria-label="Tenant sources variant">';
 html += '<span class="tv-chip__label">Tenant</span>';
 html += '<div class="tv-chip__seg">';
@@ -2208,10 +2221,14 @@ html += '\n';
 // Shape: { "<key>": <active-boolean> } — presence of a key = CONNECTED.
 // Disconnect writes happen elsewhere (Settings); we listen for changes.
 html += 'var STORAGE_KEY = "bebop:connected-sources";\n';
-// Tenant variant flag (driven by the _variants.ts runtime). When false,
-// tenant sources are flipped to connected:false during sync so they\'re
-// effectively absent from every downstream surface.
+// Tenant variant flag. When false, tenant sources are flipped to
+// connected:false during sync so they\'re effectively absent from every
+// downstream surface.
 html += 'var _tenantVariant = false;\n';
+// Source tab variant flag. When false, updateSourcesTab unconditionally
+// hides the pill below the chat input — even if disabled sources exist.
+// Default true preserves current behavior (show when ≥1 source is off).
+html += 'var _sourceTabVariant = true;\n';
 html += 'function loadState(){ try { var v = JSON.parse(localStorage.getItem(STORAGE_KEY) || \'{"m365":true}\'); return (v && typeof v === "object" && !Array.isArray(v)) ? v : {"m365":true}; } catch(e) { return {"m365":true}; } }\n';
 html += 'function saveState(state){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }\n';
 html += 'function syncFromStorage(){\n';
@@ -2340,6 +2357,14 @@ html += '  var turnOff = document.getElementById("srcTurnOffAll");';
 html += '  if (turnOff) turnOff.style.visibility = activeCount > 0 ? "" : "hidden";';
 html += '  var tabs = [{t:srcTab,i:srcTabIcons,c:srcTabCount,w:srcTabWorkOff},{t:srcTab2,i:srcTabIcons2,c:srcTabCount2,w:srcTabWorkOff2}];';
 html += '  tabs.forEach(function(s){ s.w.style.display = "none"; });';
+// Source tab variant gate. When off, force the pill hidden regardless of
+// disabled-source count and restore the suggestion chips. The user reaches
+// the sources menu via the + → Change data sources flow in that mode.
+html += '  if (!_sourceTabVariant) {';
+html += '    tabs.forEach(function(s){ s.t.classList.remove("src-tab--visible"); });';
+html += '    if (scDiv) scDiv.style.display = "";';
+html += '    return;';
+html += '  }';
 // Sources tab is visible iff at least one source is DISABLED (connected but toggled off).
 // "Enabled" (connected + active) and unconnected (Connect CTA) do not qualify.
 // When hidden, the user reaches the sources menu via the + → + menu → sources flow.
@@ -2528,6 +2553,42 @@ html += '    var initial = new URL(location.href).searchParams.get("tenant");';
 html += '    if (initial === "on") setActive("on");';
 html += '  } catch(_e) {}';
 html += '})();';
+html += '\n';
+
+// Source tab chip — same pattern as Tenant. Default On (current behavior).
+// URL key: ?srcTab=off (omit when on, since on is the default).
+html += '(function(){';
+html += '  var chip = document.getElementById("stChip");';
+html += '  if (!chip) return;';
+html += '  var btns = chip.querySelectorAll(".tv-chip__btn");';
+html += '  function setActive(value){';
+html += '    btns.forEach(function(b){';
+html += '      var on = b.getAttribute("data-st") === value;';
+html += '      b.classList.toggle("tv-chip__btn--active", on);';
+html += '      b.setAttribute("aria-pressed", on ? "true" : "false");';
+html += '    });';
+html += '    try {';
+html += '      var u = new URL(location.href);';
+html += '      if (value === "off") u.searchParams.set("srcTab", "off"); else u.searchParams.delete("srcTab");';
+html += '      history.replaceState(null, "", u.toString());';
+html += '    } catch(_e) {}';
+html += '    document.dispatchEvent(new CustomEvent("bebop:variant-change", { detail: { group: "sourceTab", variant: value } }));';
+html += '  }';
+html += '  btns.forEach(function(b){ b.addEventListener("click", function(){ setActive(b.getAttribute("data-st")); }); });';
+html += '  try {';
+html += '    var initial = new URL(location.href).searchParams.get("srcTab");';
+html += '    if (initial === "off") setActive("off");';
+html += '  } catch(_e) {}';
+html += '})();';
+html += '\n';
+
+// Source tab variant listener — flips the flag and re-runs updateSourcesTab
+// so the pill\'s visibility recalculates immediately.
+html += 'document.addEventListener("bebop:variant-change", function(e){';
+html += '  if (!e || !e.detail || e.detail.group !== "sourceTab") return;';
+html += '  _sourceTabVariant = (e.detail.variant === "on");';
+html += '  if (typeof updateSourcesTab === "function") updateSourcesTab();';
+html += '});';
 html += '\n';
 
 // Sources Tab click → open sources overlay
@@ -3065,7 +3126,9 @@ html += '    t.setAttribute("aria-selected","true");\n';
 html += '    Object.keys(panels).forEach(function(k){ panels[k].style.display = (k === activeTab) ? "" : "none"; });\n';
 html += '  }\n';
 html += '  function applyTabVisibility(){\n';
-html += '    var hasConnected = connectedIds.size > 0;\n';
+// Tenant variant on → tenant rows live in the Connected tab even when the
+// user has zero personal connections. Keep the tab visible in that case.
+html += '    var hasConnected = connectedIds.size > 0 || _tenantVariant;\n';
 html += '    connectedTab.style.display = hasConnected ? "" : "none";\n';
 html += '    if (!hasConnected && activeTab === "connected") setActiveTab("explore");\n';
 html += '  }\n';
@@ -3100,8 +3163,8 @@ html += '  }\n';
 html += '  tabs.forEach(function(t){ t.addEventListener("click", function(){ setActiveTab(t.getAttribute("data-tab")); applyVisibility(); }); });\n';
 html += '  input.addEventListener("input", applyVisibility);\n';
 // Re-run when the tenant variant flips — tenant rows enter/leave the
-// Connected sub-tab.
-html += '  document.addEventListener("bebop:tenant-variant-change", applyVisibility);\n';
+// Connected sub-tab AND the Connected tab itself may need to (re)appear.
+html += '  document.addEventListener("bebop:tenant-variant-change", function(){ applyTabVisibility(); applyVisibility(); });\n';
 // Connect — route through the shared Connect dialog. On confirm, the dialog handler
 // calls setConnected(id, true) and re-opens settings on the Connected tab. On cancel,
 // it re-opens settings on the Explore tab (where the row still lives with its Connect CTA).
