@@ -2313,10 +2313,23 @@ html += '  if (!list) return;';
 html += '  var arr;';
 html += '  if (_srcQuery) {';
 html += '    var ql = _srcQuery.toLowerCase();';
-html += '    arr = sources.filter(function(s) {';
-html += '      if (s.tenant && !_tenantVariant) return false;';
-html += '      return s.name.toLowerCase().indexOf(ql) !== -1;';
-html += '    }).sort(function(a, b) { return a.name.localeCompare(b.name); });';
+// Group matches by connection status so connected sources stay above
+// unconnected ones; sort each bucket alphabetically. M365 (pinned) is
+// always first if it matches.
+html += '    var byName = function(a, b) { return a.name.localeCompare(b.name); };';
+html += '    var m365Match = null, connMatches = [], discMatches = [];';
+html += '    sources.forEach(function(s) {';
+html += '      if (s.tenant && !_tenantVariant) return;';
+html += '      if (s.name.toLowerCase().indexOf(ql) === -1) return;';
+html += '      if (s.pinned) m365Match = s;';
+html += '      else if (s.connected) connMatches.push(s);';
+html += '      else discMatches.push(s);';
+html += '    });';
+html += '    connMatches.sort(byName); discMatches.sort(byName);';
+html += '    arr = [];';
+html += '    if (m365Match) arr.push(m365Match);';
+html += '    for (var i = 0; i < connMatches.length; i++) arr.push(connMatches[i]);';
+html += '    for (var j = 0; j < discMatches.length; j++) arr.push(discMatches[j]);';
 html += '  } else {';
 html += '    arr = orderedSources();';
 html += '  }';
