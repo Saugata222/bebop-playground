@@ -59,6 +59,7 @@ const folderIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" x
 const chatIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C8.72679 18 7.49591 17.7018 6.38669 17.1393L6.266 17.075L2.62109 17.9851C2.31127 18.0625 2.02622 17.8369 2.00131 17.5438L2.00114 17.4624L2.01493 17.3787L2.925 13.735L2.86169 13.6153C2.4066 12.7186 2.12433 11.7422 2.03275 10.7283L2.00738 10.3463L2 10C2 5.58172 5.58172 2 10 2ZM10 3C6.13401 3 3 6.13401 3 10C3 11.217 3.31054 12.3878 3.89352 13.4249C3.94046 13.5084 3.9621 13.603 3.95692 13.6973L3.94274 13.7912L3.187 16.812L6.21104 16.0583C6.27294 16.0429 6.33662 16.0396 6.39873 16.0479L6.4903 16.0691L6.57701 16.1075C7.61362 16.6898 8.7837 17 10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3ZM10.5 11C10.7761 11 11 11.2239 11 11.5C11 11.7455 10.8231 11.9496 10.5899 11.9919L10.5 12H7.5C7.22386 12 7 11.7761 7 11.5C7 11.2545 7.17688 11.0504 7.41012 11.0081L7.5 11H10.5ZM12.5 8C12.7761 8 13 8.22386 13 8.5C13 8.74546 12.8231 8.94961 12.5899 8.99194L12.5 9H7.5C7.22386 9 7 8.77614 7 8.5C7 8.25454 7.17688 8.05039 7.41012 8.00806L7.5 8H12.5Z" fill="currentColor"/></svg>';
 
 const arrowSyncIco16 = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.14645 0.646447C7.34171 0.451184 7.65829 0.451184 7.85355 0.646447L9.35355 2.14645C9.54882 2.34171 9.54882 2.65829 9.35355 2.85355L7.85355 4.35355C7.65829 4.54882 7.34171 4.54882 7.14645 4.35355C6.95118 4.15829 6.95118 3.84171 7.14645 3.64645L7.7885 3.00439C5.12517 3.11522 3 5.30943 3 8C3 9.56799 3.72118 10.9672 4.85185 11.8847C5.06627 12.0587 5.09904 12.3736 4.92503 12.588C4.75103 12.8024 4.43615 12.8352 4.22172 12.6612C2.86712 11.5619 2 9.88205 2 8C2 4.75447 4.57689 2.1108 7.79629 2.00339L7.14645 1.35355C6.95118 1.15829 6.95118 0.841709 7.14645 0.646447ZM11.075 3.41199C11.249 3.19756 11.5639 3.1648 11.7783 3.3388C13.1329 4.43806 14 6.11795 14 8C14 11.2455 11.4231 13.8892 8.20371 13.9966L8.85355 14.6464C9.04882 14.8417 9.04882 15.1583 8.85355 15.3536C8.65829 15.5488 8.34171 15.5488 8.14645 15.3536L6.64645 13.8536C6.55268 13.7598 6.5 13.6326 6.5 13.5C6.5 13.3674 6.55268 13.2402 6.64645 13.1464L8.14645 11.6464C8.34171 11.4512 8.65829 11.4512 8.85355 11.6464C9.04882 11.8417 9.04882 12.1583 8.85355 12.3536L8.2115 12.9956C10.8748 12.8848 13 10.6906 13 8C13 6.43201 12.2788 5.03283 11.1482 4.1153C10.9337 3.94129 10.901 3.62641 11.075 3.41199Z" fill="currentColor"/></svg>';
+const arrowSyncIco20 = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.146 0.646a.5.5 0 0 1 .708 0L11.354 2.146a.5.5 0 0 1 0 .708L9.854 4.354a.5.5 0 0 1-.708-.708L9.788 3H9.5A6.5 6.5 0 1 0 16 9.5a.5.5 0 0 1 1 0A7.5 7.5 0 1 1 9.5 2h.288l-.642-.646a.5.5 0 0 1 0-.708Z" fill="currentColor"/></svg>';
 
 const alertIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.99766 2C13.1466 2 15.7416 4.33488 15.9821 7.3554L15.9955 7.57762L16 7.80214L15.999 11.398L16.9244 13.6202C16.947 13.6743 16.9647 13.7302 16.9774 13.7871L16.9926 13.8733L17.0013 14.0046C17.0013 14.4526 16.7048 14.8387 16.2521 14.9677L16.1358 14.9945L16.0013 15.0046L12.4996 15.004L12.4946 15.1653C12.4095 16.469 11.3252 17.5 10 17.5C8.67453 17.5 7.58998 16.4685 7.50533 15.1644L7.49962 15.004L3.99891 15.0046C3.91096 15.0046 3.82358 14.993 3.73902 14.9702L3.61456 14.9277C3.20378 14.7567 2.96181 14.3392 3.01221 13.8757L3.0333 13.7483L3.07572 13.6202L3.99902 11.401L4.0001 7.79281L4.0044 7.56824C4.12702 4.45115 6.77104 2 9.99766 2ZM11.4996 15.004H8.49962L8.50697 15.1454C8.57552 15.8581 9.14275 16.425 9.85556 16.4931L10 16.5C10.7797 16.5 11.4205 15.9051 11.4931 15.1445L11.4996 15.004ZM9.99766 3C7.37511 3 5.22717 4.92372 5.01715 7.38498L5.00393 7.59723L5.00002 7.80214V11.5L4.96161 11.6922L3.9989 14.0046L15.9566 14.0066L16.0019 14.0045L15.0384 11.6922L15 11.5L15.0001 7.81241L14.996 7.60831C14.8909 5.0349 12.6947 3 9.99766 3Z" fill="currentColor"/></svg>';
 
@@ -111,6 +112,7 @@ const settingsIco = readIcon('settings-20-regular.svg');
 const arrowDownloadIco = readIcon('arrow-download-20-regular.svg');
 const questionCircleIco = readIcon('question-circle-20-regular.svg');
 const personFeedbackIco = readIcon('person-feedback-20-regular.svg');
+const textQuoteIco16 = readIcon('text-quote-16-regular.svg');
 const globeIco = readIcon('globe-20-regular.svg');
 
 // Icons for the inlined Settings Modal (uses currentColor so they tint with text)
@@ -214,6 +216,37 @@ function smBuildRow(c: SmConnector, mode: 'explore' | 'connected'): string {
   row += '</div>';
   return row;
 }
+// ─── Citation pill helper (Bebop Citation primitive) ─────────────────
+// Builds an inline icon-only citation pill with an anchored hover popover.
+// Used inside the response body to attribute generated content to sources.
+interface CitOpts {
+  mark: string;       // HTML for the 16px leading mark (SVG or <img>)
+  plus?: string;      // optional "+N" overflow label
+  title: string;      // popover title (e.g. document/ticket name)
+  meta: string;       // popover metadata line (e.g. "Last modified 2 days ago · ServiceNow")
+  body?: string;      // optional excerpt for the expanded popover variant
+}
+function citation(opts: CitOpts): string {
+  const hasPlus = opts.plus ? ' has-plus' : '';
+  let out = '<span class="cit-anchor">';
+  out += '<button class="cit cit--iconOnly cit--subtle' + hasPlus + '" type="button">';
+  out += '<span class="cit__mark">' + opts.mark + '</span>';
+  if (opts.plus) out += '<span class="cit__plus">' + opts.plus + '</span>';
+  out += '</button>';
+  // Popover rendered as <span>s so the markup is valid inside <p>. CSS gives them block layout.
+  out += '<span class="cit-pop"><span class="cit-pop__inner">';
+  out += '<span class="cit-pop__entity">';
+  out += '<span class="cit-pop__mark">' + opts.mark + '</span>';
+  out += '<span class="cit-pop__title-wrap">';
+  out += '<span class="cit-pop__title">' + opts.title + '</span>';
+  out += '<span class="cit-pop__meta">' + opts.meta + '</span>';
+  out += '</span></span>';
+  if (opts.body) out += '<span class="cit-pop__body">“…' + opts.body + '…”</span>';
+  out += '<span class="cit-pop__ask-row"><span class="cit-pop__ask">' + textQuoteIco16 + '<span>Ask about this</span></span></span>';
+  out += '</span></span></span>';
+  return out;
+}
+
 interface SmNavItem { icon: string; label: string; selected?: boolean }
 // Figma node 330:17490 — single nav group; no Copilot/Privacy/Notifications, no "Chat" section title.
 const smNavGroupChat: SmNavItem[] = [
@@ -544,6 +577,37 @@ css += '\n';
 css += '.sc__overflow:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }';
 css += '\n';
 css += '.sc__overflow svg { display: block; width: 20px; height: 20px; }';
+css += '\n';
+// Source prompt chip (Figma 460:71282 default, 460:71219 active) — replaces a
+// generic chip slot with the most recently connected source. Light by default
+// (matches other outline chips); dark-filled when active (prompts list open).
+css += '.sc__chip--source { display: none; align-items: center; gap: 6px; padding: 0 12px 0 8px; }';
+css += '\n';
+css += '.sc__chip--source.sc__chip--visible { display: inline-flex; }';
+css += '\n';
+css += '.sc__chip--source.sc__chip--active { background: #242424; color: #ffffff; border-color: #242424; }';
+css += '\n';
+css += '.sc__chip--source.sc__chip--active:hover { background: #2b2b2b; border-color: #2b2b2b; }';
+css += '\n';
+css += '.sc__chip--source .sc__chip-logo { width: 20px; height: 20px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; overflow: hidden; }';
+css += '\n';
+css += '.sc__chip--source .sc__chip-logo img, .sc__chip--source .sc__chip-logo svg { width: 100%; height: 100%; object-fit: contain; display: block; }';
+css += '\n';
+// Source-prompt list (Figma 460:71232 / 523:23445) — vertical list of prompts.
+// 20px gap below the chip row (matches Figma\'s outer Frame gap). Same 56px
+// horizontal padding as `.sc` so prompts align with the chips and the input bar text.
+css += '.sc-prompts { display: none; flex-direction: column; gap: 4px; padding: 20px 56px 0 56px; width: 100%; box-sizing: border-box; }';
+css += '\n';
+css += '.sc-prompts--open { display: flex; }';
+css += '\n';
+// Each prompt row is a full-width clickable target with a subtle hover backplate
+// (Figma 523:23476). Hover uses the standard menu-item overlay rgba(36,36,36,0.04),
+// not the flat #f5f5f5 chip background.
+css += ".sc-prompts__item { background: transparent; border: none; padding: 8px 12px; text-align: left; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; cursor: pointer; transition: background 0.1s; width: 100%; border-radius: 12px; box-sizing: border-box; }";
+css += '\n';
+css += '.sc-prompts__item:hover { background: rgba(36,36,36,0.04); }';
+css += '\n';
+css += '.sc-prompts__item:focus-visible { outline: 2px solid #000; outline-offset: 1px; }';
 css += '\n';
 css += '.ci-area { display: flex; flex-direction: column; gap: 16px; width: 100%; }';
 css += '\n';
@@ -920,7 +984,7 @@ css += '.apps-view { display: none; flex-direction: column; gap: 32px; width: 10
 css += '\n';
 css += '.shell--apps .apps-view { display: flex; }';
 css += '\n';
-css += '.shell--apps .greeting, .shell--apps .ci-area, .shell--apps .sc { display: none; }';
+css += '.shell--apps .greeting, .shell--apps .ci-area, .shell--apps .sc, .shell--apps .sc-area { display: none; }';
 css += '\n';
 css += '.shell--apps .content__inner { padding: 0 !important; max-width: 100%; width: 100%; align-items: center; }';
 css += '\n';
@@ -1013,7 +1077,7 @@ css += '.response-view { display: none; flex-direction: column; gap: 8px; width:
 css += '\n';
 css += '.shell--sent .response-view { display: flex; }';
 css += '\n';
-css += '.shell--sent .greeting, .shell--sent .sc { display: none; }';
+css += '.shell--sent .greeting, .shell--sent .sc, .shell--sent .sc-area { display: none; }';
 css += '\n';
 css += '.shell--sent .content__inner { padding: 0; gap: 0; flex: 1; justify-content: flex-start; max-width: 852px; width: 100%; padding: 20px 40px; }';
 css += '\n';
@@ -1070,6 +1134,65 @@ css += '.skip-thinking--visible { display: inline-flex; }';
 css += '\n';
 
 // ─── Response content ───
+// Inline citation pill — Bebop Citation primitive (src/components/primitives/citation.ts).
+// Two variants (iconOnly | textOnly), two styles (subtle | selected), with hover popover.
+css += ".cit { display: inline-flex; align-items: center; height: 22px; border-radius: 9999px; cursor: pointer; transition: background 0.1s ease, color 0.1s ease; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 10px; line-height: 14px; font-weight: 400; letter-spacing: 0; white-space: nowrap; border: none; outline: none; user-select: none; vertical-align: middle; text-decoration: none; margin: 0 2px; }";
+css += '\n';
+css += '.cit__mark { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }';
+css += '\n';
+css += '.cit__mark svg, .cit__mark img { width: 16px; height: 16px; display: block; }';
+css += '\n';
+css += '.cit__mark--logo { background-color: #fff; background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 4px; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.08); }';
+css += '\n';
+css += '.cit__label { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }';
+css += '\n';
+css += '.cit__plus { opacity: 0.85; }';
+css += '\n';
+css += '.cit--iconOnly { padding: 4px 4px; gap: 2px; }';
+css += '\n';
+css += '.cit--iconOnly.has-plus { padding-right: 6px; }';
+css += '\n';
+css += '.cit--textOnly { padding: 4px 8px; gap: 4px; }';
+css += '\n';
+css += '.cit--subtle { background: #f2f2f2; color: #5d5d5d; }';
+css += '\n';
+css += '.cit--subtle:hover, .cit--subtle.is-hover { background: #242424; color: #ffffff; }';
+css += '\n';
+css += '.cit--subtle:active, .cit--subtle.is-pressed { background: #313131; color: #ffffff; }';
+css += '\n';
+css += '.cit--selected { background: #242424; color: #ffffff; }';
+css += '\n';
+// Anchored hover popover (Bebop citationPopover token).
+css += '.cit-anchor { position: relative; display: inline-block; vertical-align: middle; }';
+css += '\n';
+css += '.cit-pop { position: absolute; top: calc(100% + 8px); left: 0; z-index: 50; width: 320px; background: #ffffff; border-radius: 16px; box-shadow: 0 3px 12px 0 rgba(0,0,0,0.18); padding: 8px; box-sizing: border-box; opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.12s ease, transform 0.12s ease; }';
+css += '\n';
+css += '.cit-anchor:hover .cit-pop, .cit-anchor.is-open .cit-pop { opacity: 1; pointer-events: auto; transform: translateY(0); }';
+css += '\n';
+css += '.cit-pop__inner { padding: 8px; display: flex; flex-direction: column; gap: 8px; font-family: \'Segoe UI\', system-ui, -apple-system, sans-serif; }';
+css += '\n';
+css += '.cit-pop__entity { display: flex; gap: 8px; align-items: flex-start; }';
+css += '\n';
+css += '.cit-pop__mark { width: 16px; height: 16px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; padding-top: 6px; box-sizing: content-box; }';
+css += '\n';
+css += '.cit-pop__mark svg, .cit-pop__mark img { width: 16px; height: 16px; display: block; }';
+css += '\n';
+css += '.cit-pop__title-wrap { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding-top: 4px; }';
+css += '\n';
+css += '.cit-pop__title { display: block; font-size: 16px; line-height: 1.4; font-weight: 400; color: #242424; word-break: break-word; }';
+css += '\n';
+css += '.cit-pop__meta { display: block; font-size: 12px; line-height: 1.4; font-weight: 400; color: #5d5d5d; }';
+css += '\n';
+css += '.cit-pop__body { display: block; font-size: 12px; line-height: 1.4; font-weight: 400; color: #5d5d5d; padding-left: 24px; word-break: break-word; }';
+css += '\n';
+css += '.cit-pop__ask-row { display: flex; padding: 8px 0 0 24px; }';
+css += '\n';
+css += '.cit-pop__ask { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 9999px; background: #ffffff; color: #242424; border: 1px solid #dedede; font-family: inherit; font-size: 12px; font-weight: 400; line-height: 1; cursor: pointer; }';
+css += '\n';
+css += '.cit-pop__ask:hover { background: #f5f5f5; }';
+css += '\n';
+css += '.cit-pop__ask svg { width: 16px; height: 16px; display: block; color: #242424; flex-shrink: 0; }';
+css += '\n';
 css += ".response-text { display: none; font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #242424; max-width: 708px; width: 100%; }";
 css += '\n';
 css += '.response-text--visible { display: block; }';
@@ -1141,6 +1264,8 @@ css += '\n';
 css += '.rf__sources:hover { background: rgba(36, 36, 36, 0.04); }';
 css += '\n';
 css += '.rf__icons { display: flex; align-items: center; gap: 2px; }';
+css += '\n';
+css += ".rf__sources-label { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; padding-left: 4px; }";
 css += '\n';
 css += '.rf__icons svg { width: 20px; height: 20px; }';
 css += '\n';
@@ -1556,12 +1681,22 @@ html += '</div>'; // end ci__row
 html += '</div>'; // end ci__container
 html += '</div>'; // end ci
 
-// Suggestion chips
+// Suggestion chips. `srcPromptChip` is the recently-connected source slot \u2014
+// hidden until a connect event sets `_recentSource`. Position after the
+// generic chips, before the overflow.
+html += '<div class="sc-area">';
 html += '<div class="sc">';
 html += '<button class="sc__chip" data-text="Get to know Copilot better">Get to know Copilot</button>';
 html += '<button class="sc__chip" data-text="Prepare for what\u2019s ahead">Prepare for what\u2019s ahead</button>';
 html += '<button class="sc__chip" data-text="Create something inspiring">Create something inspiring</button>';
+html += '<button class="sc__chip sc__chip--source" id="srcPromptChip" type="button" aria-expanded="false" aria-controls="srcPromptList" aria-haspopup="true">';
+html += '<span class="sc__chip-logo" id="srcPromptChipLogo"></span>';
+html += '<span class="sc__chip-name" id="srcPromptChipName"></span>';
+html += '</button>';
 html += '<button class="sc__overflow" aria-label="More suggestions">' + moreHorizontalIco + '</button>';
+html += '</div>';
+// Source-prompt list \u2014 vertical, sits under the chip row, hidden until the chip is clicked.
+html += '<div class="sc-prompts" id="srcPromptList" role="region" aria-label="Suggested prompts"></div>';
 html += '</div>';
 
 // Sources Tab moved inside ci__content above
@@ -1574,16 +1709,16 @@ html += '<div class="user-msg" id="userMsg"><div class="user-msg__bubble" id="us
 html += '<div class="thinking" id="thinkingRow">' + thinkingGif + '<span class="thinking__text">Thinking</span></div>';
 html += '<button class="skip-thinking" id="skipThinking">Skip Thinking</button>';
 html += '<div class="response-text" id="responseText">';
-html += '<p>Based on the data from <strong>Product_Launch_Feedback_Summary</strong>, I\'ve identified a notable increase in escalations starting mid-May 2025, which aligns with the launch of the new product line: \"XStream Pro Series.\"</p>';
+html += '<p>Based on the data from <strong>Product_Launch_Feedback_Summary</strong>, I\'ve identified a notable increase in escalations starting mid-May 2025, which aligns with the launch of the new product line: \"XStream Pro Series.\" ' + citation({ mark: excelFileIco, title: 'Product_Launch_Feedback_Summary.xlsx', meta: 'SharePoint \u00b7 Last modified 2 days ago', body: 'Aggregated customer feedback across the May\u2013July XStream Pro Series rollout' }) + '</p>';
 html += '<h2>Key findings</h2>';
-html += '<p>Escalations related to XStream Pro increased by 47% from May to July, signaling a growing concern among enterprise clients.</p>';
-html += '<p>Escalations related to XStream Pro increased by 47% from May to July, signaling a growing concern among enterprise clients. The top three recurring issues\u2014connectivity dropouts (reported in 38% of XStream-related tickets), firmware update failures, and inconsistent performance under load\u2014have been particularly disruptive for users in high-availability environments. Internal diagnostics revealed that 62% of connectivity issues were linked to a recent patch (v4.3.2) that introduced a regression in the network handshake protocol.</p>';
-html += '<p>Firmware update failures were most prevalent in devices manufactured before Q4 2024, suggesting a hardware compatibility gap. Meanwhile, performance inconsistencies were traced to a memory leak in the load-balancing module, which has since been addressed in a hotfix.</p>';
-html += '<p>Severity Level 2 and 3 escalations doubled in June compared to April, with the majority originating from financial services and healthcare sectors, where system reliability is critical. A task force has been assembled to prioritize root cause analysis and accelerate resolution timelines.</p>';
+html += '<p>Escalations related to XStream Pro increased by 47% from May to July, signaling a growing concern among enterprise clients. ' + citation({ mark: serviceNowIco, plus: '+2', title: 'INC0042819: XStream Pro escalation cluster', meta: 'ServiceNow \u00b7 47 linked incidents \u00b7 Updated 1 day ago', body: 'P2 cluster opened mid-May. Enterprise customers reporting connectivity dropouts and firmware failures.' }) + '</p>';
+html += '<p>Escalations related to XStream Pro increased by 47% from May to July, signaling a growing concern among enterprise clients. The top three recurring issues\u2014connectivity dropouts (reported in 38% of XStream-related tickets), firmware update failures, and inconsistent performance under load\u2014have been particularly disruptive for users in high-availability environments. Internal diagnostics revealed that 62% of connectivity issues were linked to a recent patch (v4.3.2) that introduced a regression in the network handshake protocol. ' + citation({ mark: jiraIco, plus: '+4', title: 'PLAT-2103: Network handshake regression in v4.3.2', meta: 'Jira \u00b7 Engineering \u00b7 In progress', body: 'Patch v4.3.2 introduced a TCP-handshake regression affecting 62% of XStream Pro devices on the load path.' }) + '</p>';
+html += '<p>Firmware update failures were most prevalent in devices manufactured before Q4 2024, suggesting a hardware compatibility gap. Meanwhile, performance inconsistencies were traced to a memory leak in the load-balancing module, which has since been addressed in a hotfix. ' + citation({ mark: jiraIco, title: 'PLAT-2118: Firmware update failures on pre-Q4-2024 hardware', meta: 'Jira \u00b7 Engineering \u00b7 Fixed in hotfix 4.3.3', body: 'Repro on pre-Q4-2024 SKUs. Hardware SKU lookup table missing entries for legacy revisions; fixed in 4.3.3.' }) + '</p>';
+html += '<p>Severity Level 2 and 3 escalations doubled in June compared to April, with the majority originating from financial services and healthcare sectors, where system reliability is critical. A task force has been assembled to prioritize root cause analysis and accelerate resolution timelines. ' + citation({ mark: hubspotIco, title: 'XStream Pro \u2014 accounts at risk', meta: 'HubSpot \u00b7 Customer Success view \u00b7 Updated today', body: 'Enterprise accounts in FS + Healthcare verticals tagged "at risk" \u2014 23 accounts, combined ARR $4.1M.' }) + '</p>';
 html += '<h2>Supporting evidence</h2>';
-html += '<p>Escalation data shows a clear spike in incidents starting mid-May, aligning with the launch of the XStream Pro Series. Escalations tied to this product rose by 47% over two months, with common issues including connectivity dropouts, firmware update failures, and inconsistent performance.</p>';
+html += '<p>Escalation data shows a clear spike in incidents starting mid-May, aligning with the launch of the XStream Pro Series. Escalations tied to this product rose by 47% over two months, with common issues including connectivity dropouts, firmware update failures, and inconsistent performance. ' + citation({ mark: serviceNowIco, plus: '+2', title: 'XStream Pro escalation trend \u2014 May to July', meta: 'ServiceNow \u00b7 Incident report', body: 'Volume up 47% vs prior 90-day baseline; connectivity dropouts dominate root cause.' }) + '</p>';
 html += '<blockquote>XStream Pro has been unpredictable and disruptive. It\'s affecting our ability to deliver consistent service to our clients.</blockquote>';
-html += '<p>Feedback supports this trend\u2014over half of the customer quotes mention reliability concerns with XStream Pro. Several customers reported needing multiple support interactions, and internal notes highlight firmware as a recurring issue. Together, the data points to a strong correlation between the product launch and the rise in escalations.</p>';
+html += '<p>Feedback supports this trend\u2014over half of the customer quotes mention reliability concerns with XStream Pro. Several customers reported needing multiple support interactions, and internal notes highlight firmware as a recurring issue. Together, the data points to a strong correlation between the product launch and the rise in escalations. ' + citation({ mark: intercomIco, plus: '+5', title: 'XStream Pro customer conversations', meta: 'Intercom \u00b7 6 conversations \u00b7 Last 30 days', body: 'Multiple touchpoints; reliability and firmware mentioned in 53% of customer messages.' }) + '</p>';
 html += '<h2>Suggested next steps</h2>';
 html += '<ul>';
 html += '<li>Create a visual timeline of escalation volume by product line.</li>';
@@ -1611,15 +1746,20 @@ html += '<button class="rf__btn rf__btn--dislike" title="Dislike">';
 html += '<span class="ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10.052 17.7055C10.3913 18.6828 11.6841 19.133 12.4829 18.2959C12.6455 18.1255 12.8081 17.9413 12.9176 17.7771C13.2379 17.2966 13.3725 16.6638 13.4218 16.0474C13.4721 15.4193 13.438 14.7452 13.3738 14.1349C13.3093 13.5223 13.2129 12.9602 13.1328 12.552C13.1294 12.5343 13.1259 12.5169 13.1225 12.4998H14.006C15.8777 12.4998 17.2924 10.8046 16.9576 8.9631L16.2737 5.2014C15.8017 2.60545 13.2078 0.970708 10.6622 1.66494L5.06251 3.19214C4.14894 3.4413 3.45455 4.18522 3.26885 5.11376L2.91581 6.87894C2.63809 8.26755 3.69991 9.43732 4.82905 9.88364C5.15163 10.0111 5.44337 10.173 5.66974 10.3738C7.37583 11.8873 7.99442 13.0969 9.05406 15.2228C9.4084 15.9337 9.77205 16.8992 10.052 17.7055ZM12.0165 12.1211L12.0169 12.1227L12.0187 12.13L12.0262 12.1611C12.0328 12.189 12.0426 12.2307 12.0549 12.2848C12.0793 12.3931 12.1135 12.5505 12.1515 12.7444C12.2277 13.1331 12.3188 13.6647 12.3793 14.2396C12.4401 14.8168 12.4685 15.424 12.425 15.9677C12.3806 16.5232 12.2652 16.9529 12.0855 17.2224C12.0264 17.3111 11.9138 17.4437 11.7594 17.6055C11.5605 17.814 11.1314 17.7655 10.9967 17.3775C10.7141 16.5637 10.3334 15.5478 9.94904 14.7767C8.88216 12.6363 8.19326 11.2757 6.33336 9.62572C5.99304 9.32382 5.58878 9.10865 5.19665 8.95366C4.31631 8.60568 3.75035 7.80525 3.89639 7.07506L4.24943 5.30988C4.36085 4.75276 4.77748 4.3064 5.32562 4.15691L10.9254 2.62971C12.9052 2.08975 14.9227 3.36121 15.2898 5.38028L15.9738 9.14198C16.197 10.3697 15.2538 11.4998 14.006 11.4998H12.5015C12.3476 11.4998 12.2022 11.5707 12.1074 11.6921C12.0127 11.8134 11.9792 11.9718 12.0165 12.1211Z" fill="currentColor"/></svg></span>';
 html += '<span class="ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.4829 18.2959C11.6841 19.133 10.3913 18.6828 10.052 17.7055C9.77205 16.8992 9.4084 15.9337 9.05406 15.2228C7.99442 13.0969 7.37583 11.8873 5.66974 10.3738C5.44337 10.173 5.15163 10.0111 4.82905 9.88364C3.69991 9.43732 2.63809 8.26755 2.91581 6.87894L3.26885 5.11377C3.45455 4.18522 4.14894 3.4413 5.06251 3.19215L10.6622 1.66494C13.2078 0.970708 15.8017 2.60545 16.2737 5.2014L16.9576 8.9631C17.2924 10.8046 15.8777 12.4998 14.006 12.4998H13.1225L13.1328 12.552C13.2129 12.9602 13.3093 13.5223 13.3738 14.1349C13.438 14.7452 13.4721 15.4193 13.4218 16.0474C13.3725 16.6638 13.2379 17.2966 12.9176 17.7771C12.8081 17.9413 12.6455 18.1255 12.4829 18.2959Z" fill="currentColor"/></svg></span>';
 html += '</button>';
+// Try again — Bebop responseFooter spec calls for this between Dislike and More.
+html += '<button class="rf__btn rf__btn--retry" title="Try again" aria-label="Try again">' + arrowSyncIco20 + '</button>';
+// More — overflow menu, last button before the divider.
+html += '<button class="rf__btn rf__btn--more" title="More" aria-label="More options" aria-haspopup="menu" aria-expanded="false">' + moreHorizontalIco + '</button>';
 html += '</div>';
 html += '<div class="rf__divider"></div>';
 html += '<button class="rf__sources" title="View sources">';
 html += '<span class="rf__icons">';
-html += wordFileIco;
-html += excelFileIco;
-html += pptFileIco;
+// Source-attribution stack — connector logos cited in the response above.
+html += hubspotIco;
+html += jiraIco;
+html += intercomIco;
 html += '</span>';
-html += '<span class="rf__chevron"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.64645 2.14645C4.45118 2.34171 4.45118 2.65829 4.64645 2.85355L7.79289 6L4.64645 9.14645C4.45118 9.34171 4.45118 9.65829 4.64645 9.85355C4.84171 10.0488 5.15829 10.0488 5.35355 9.85355L8.85355 6.35355C9.04882 6.15829 9.04882 5.84171 8.85355 5.64645L5.35355 2.14645C5.15829 1.95118 4.84171 1.95118 4.64645 2.14645Z" fill="currentColor"/></svg></span>';
+html += '<span class="rf__sources-label">Sources</span>';
 html += '</button>';
 html += '</div>';
 html += '</div>';
@@ -2456,6 +2596,129 @@ html += '\n';
 // Back-compat shim — older call sites pass setConnected(key, true). Route to
 // connectSource. Setting on=false here is a no-op (disconnect is Settings-only).
 html += 'function setConnected(key, on) { if (on) connectSource(key); }';
+html += '\n';
+
+// ─── Source prompt chip (Figma 460:71282 / 460:71219) ──────────────────────
+// The most recently connected source occupies a single chip slot next to the
+// generic suggestion chips. Click toggles a vertical list of source-specific
+// prompts. Persists across reloads; replaced when the user connects another source.
+html += 'var RECENT_SOURCE_KEY = "bebop:recent-source";';
+html += '\n';
+// Source-specific prompt sets. Moody\'s mirrors Figma 460:71219 exactly; other
+// sources use representative defaults so the chip works for any connector.
+html += 'var SRC_PROMPTS = {';
+html += '  moodys: ["What\'s Tesla\'s current Moody\'s credit rating and outlook?","Show me Moody\'s rating actions on US banks this quarter","Summarize Moody\'s 2026 outlook for the European auto industry","Compare credit ratings for Apple and Microsoft","What\'s Moody\'s view on default risk in commercial real estate?"],';
+html += '  lseg: ["Pull the latest LSEG filings for ARM Holdings","Compare LSEG dividend yields across UK financials","Summarize today\'s LSEG market movers","Show LSEG analyst consensus on Shell","What does LSEG data say about FTSE 100 momentum?"],';
+html += '  spglobal: ["Show S&P Global ratings actions in healthcare this week","Compare S&P credit outlooks for major airlines","Summarize S&P Global\'s 2026 sector forecast","What\'s S&P\'s view on emerging-market sovereign risk?","Pull S&P research on AI infrastructure spend"],';
+html += '  hubspot: ["Summarize my top 5 open HubSpot deals","Which HubSpot contacts haven\'t replied in 30 days?","Draft a follow-up to leads from last week\'s webinar","Show pipeline movement in HubSpot this quarter","Find HubSpot contacts at companies over 1,000 employees"],';
+html += '  notion: ["Summarize my recent Notion meeting notes","Find Notion pages about pricing strategy","What are the open action items in my Notion workspace?","Pull last week\'s engineering retro notes","Summarize the product roadmap doc in Notion"],';
+html += '  linear: ["What Linear issues are assigned to me this sprint?","Show high-priority Linear bugs filed this week","Summarize the open Linear epics for Q3","Which Linear tickets are blocked right now?","Draft a status update from my Linear activity"],';
+html += '  intercom: ["Summarize Intercom conversations from the last 7 days","Top customer complaints in Intercom this month","Pull Intercom NPS feedback by segment","Which Intercom tickets escalated to engineering?","Show resolution time trends across Intercom"],';
+html += '  canva: ["Find my recent Canva designs about Q4 launch","Pull the latest Canva templates I\'ve used","Summarize design comments in my Canva files","Show shared Canva designs from my team","Find the brand-kit colors in my Canva workspace"],';
+html += '  gcal: ["What\'s on my Google Calendar tomorrow?","Find a 30-min slot with the design team this week","Summarize next week\'s meetings","Which recurring meetings could I drop?","Pull conflicts on my calendar for Friday"],';
+html += '  gcontact: ["Find Google Contacts at companies in healthcare","Who in my Contacts have I not emailed in 6 months?","Pull contacts from yesterday\'s meeting attendees","Summarize my recent contact additions","Find duplicates in my Google Contacts"],';
+html += '  confluence: ["Summarize the latest Confluence pages in the Platform space","Find Confluence runbooks for on-call","Pull the engineering RFCs from this quarter","What\'s changed in the architecture Confluence page?","Find docs about our deployment process"],';
+html += '  github: ["Summarize PRs assigned to me this week","Which GitHub issues are stale in my main repo?","Pull review comments from yesterday","What\'s the open PR backlog in the API repo?","Draft a release note from this week\'s merged PRs"],';
+html += '  gdrive: ["Find Google Drive docs from the partnerships team","Pull the latest Q3 planning files","Summarize the design review document","Which shared Drive folders have I edited recently?","Find the customer-research deck"],';
+html += '  jira: ["What Jira tickets are assigned to me?","Show high-priority bugs in the Mobile project","Summarize the open epics in this sprint","Which Jira tickets are blocked?","Pull the release-readiness report from Jira"],';
+html += '  servicenow: ["Show open ServiceNow incidents on my queue","Summarize this week\'s P1 incidents","Pull change requests pending approval","Which ServiceNow tickets are overdue?","Find recent incidents related to authentication"]';
+html += '};';
+html += '\n';
+
+// Render the source prompt chip and its prompts list from `_recentSource`.
+// Called on load, after connect, after disconnect, after openCopilotSettings
+// disconnects, and on `storage` events from other tabs.
+html += 'function renderSourcePromptChip() {';
+html += '  var chip = document.getElementById("srcPromptChip");';
+html += '  var logo = document.getElementById("srcPromptChipLogo");';
+html += '  var name = document.getElementById("srcPromptChipName");';
+html += '  var list = document.getElementById("srcPromptList");';
+html += '  if (!chip || !logo || !name || !list) return;';
+html += '  var key = null;';
+html += '  try { key = localStorage.getItem(RECENT_SOURCE_KEY); } catch(_e) {}';
+// Guard: recent source must still be connected. If it was disconnected
+// (Settings → 3-dot → Disconnect), clear it.
+html += '  var src = key ? sources.filter(function(s){ return s.key === key; })[0] : null;';
+html += '  if (!src || !src.connected) {';
+html += '    chip.classList.remove("sc__chip--visible");';
+html += '    chip.classList.remove("sc__chip--active");';
+html += '    chip.setAttribute("aria-expanded", "false");';
+html += '    list.classList.remove("sc-prompts--open");';
+html += '    list.innerHTML = "";';
+html += '    return;';
+html += '  }';
+// Replacing a previous recent source resets the chip to the default (light) state.
+html += '  chip.classList.remove("sc__chip--active");';
+html += '  chip.setAttribute("aria-expanded", "false");';
+html += '  list.classList.remove("sc-prompts--open");';
+html += '  logo.innerHTML = src.icon || "";';
+// Chip label override map — LSEG uses the short form in the chip per Figma;
+// the longer name still appears in the Source Filter and Settings rows.
+html += '  var chipLabel = ({ lseg: "LSEG" })[src.key] || src.name;';
+html += '  name.textContent = chipLabel;';
+html += '  chip.classList.add("sc__chip--visible");';
+// Populate prompts list. Fall back to a generic prompt if no curated set exists.
+html += '  var prompts = SRC_PROMPTS[key] || ["Ask " + src.name + " about your latest data"];';
+html += '  var rows = "";';
+html += '  prompts.forEach(function(p){ rows += \'<button class="sc-prompts__item" type="button" data-prompt="\' + p.replace(/"/g, "&quot;") + \'">\' + p + \'</button>\'; });';
+html += '  list.innerHTML = rows;';
+html += '}';
+html += '\n';
+
+// Click on the chip toggles the prompts list open/closed.
+html += 'document.addEventListener("click", function(ev) {';
+html += '  var chip = ev.target.closest("#srcPromptChip");';
+html += '  if (chip) {';
+html += '    var list = document.getElementById("srcPromptList");';
+html += '    var open = list.classList.toggle("sc-prompts--open");';
+html += '    chip.classList.toggle("sc__chip--active", open);';
+html += '    chip.setAttribute("aria-expanded", open ? "true" : "false");';
+html += '    return;';
+html += '  }';
+// Click on a prompt populates the textarea and focuses it (does NOT auto-send).
+html += '  var item = ev.target.closest(".sc-prompts__item");';
+html += '  if (item) {';
+html += '    var ta = document.getElementById("textarea");';
+html += '    if (ta) { ta.value = item.getAttribute("data-prompt"); ta.focus(); ta.dispatchEvent(new Event("input", { bubbles: true })); }';
+html += '    var list2 = document.getElementById("srcPromptList");';
+html += '    if (list2) list2.classList.remove("sc-prompts--open");';
+html += '    var chip2 = document.getElementById("srcPromptChip");';
+html += '    if (chip2) { chip2.classList.remove("sc__chip--active"); chip2.setAttribute("aria-expanded", "false"); }';
+html += '  }';
+html += '});';
+html += '\n';
+
+// Wrap connectSource / disconnectSource to update `_recentSource`.
+// connectSource: mark the just-connected source as the recent one.
+// disconnectSource: if the disconnected source was the recent one, clear it.
+html += '(function(){';
+html += '  var origConnect = connectSource;';
+html += '  connectSource = function(key) {';
+html += '    var s = sources.filter(function(x){ return x.key === key; })[0];';
+html += '    var wasUnconnected = s && !s.connected;';
+html += '    origConnect(key);';
+html += '    if (wasUnconnected) {';
+html += '      try { localStorage.setItem(RECENT_SOURCE_KEY, key); } catch(_e) {}';
+html += '      renderSourcePromptChip();';
+html += '    }';
+html += '  };';
+html += '  var origDisconnect = disconnectSource;';
+html += '  disconnectSource = function(key) {';
+html += '    origDisconnect(key);';
+html += '    try {';
+html += '      var recent = localStorage.getItem(RECENT_SOURCE_KEY);';
+html += '      if (recent === key) { localStorage.removeItem(RECENT_SOURCE_KEY); renderSourcePromptChip(); }';
+html += '    } catch(_e) {}';
+html += '  };';
+html += '})();';
+html += '\n';
+
+// Cross-tab sync: react to a recent-source change written by another window.
+html += 'window.addEventListener("storage", function(e){ if (e.key === RECENT_SOURCE_KEY) renderSourcePromptChip(); });';
+html += '\n';
+
+// Initial paint.
+html += 'renderSourcePromptChip();';
 html += '\n';
 
 // Hydrate from localStorage so the menu mirrors whatever the Settings page (or
