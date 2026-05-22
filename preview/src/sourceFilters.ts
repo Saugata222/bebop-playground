@@ -1311,18 +1311,15 @@ css += '.sm-pop { position: absolute; right: 0; top: 36px; min-width: 160px; bac
 css += ".sm-pop__item { width: 100%; text-align: left; padding: 8px 10px; border: none; background: transparent; border-radius: 4px; cursor: pointer; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }\n";
 css += '.sm-pop__item:hover { background: rgba(36,36,36,0.04); }\n';
 
-// ─── Settings Modal — DISCOVERY variant (Figma 331:18118) ───
-// Same outer structure as Current variant; replaces the conn-card + browse grid
-// with: controls row (Explore/Connected tabs + Search) → single bordered list of rows.
-// All discovery-only rules below are namespaced under .sm-controls / .sm-tabs / .sm-list / .sm-row / .sm-logo
+// ─── Settings Modal — single-page Browse sources (Figma 490:74149) ───
+// Layout: title → M365 card → "Browse sources" header (label + search) →
+// one bordered list of all FCC rows. Connected items (user + admin tenant)
+// alphabetical at top, then unconnected alphabetical with Connect CTA.
+// All discovery-only rules below are namespaced under .sm-list / .sm-row / .sm-logo
 // (different selectors from the Current variant so both can coexist in the same stylesheet).
-css += '.sm-controls { display: flex; align-items: flex-start; justify-content: space-between; width: 100%; flex-shrink: 0; }\n';
-css += '.sm-tabs { display: flex; gap: 4px; }\n';
-css += ".sm-tab { height: 32px; min-height: 32px; padding: 6px 10px; border: 1px solid transparent; background: rgba(36,36,36,0); border-radius: 12px; cursor: pointer; font-family: 'Segoe Sans', 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; transition: background 0.1s, color 0.1s; }\n";
-css += '.sm-tab:hover { background: rgba(36,36,36,0.04); }\n';
-css += '.sm-tab--active { background: #242424; color: #ffffff; font-weight: 600; }\n';
-css += '.sm-tab--active:hover { background: #2b2b2b; }\n';
-css += '.sm-tab:focus-visible { outline: 2px solid #000; outline-offset: 2px; box-shadow: 0 0 0 1px #fff inset; }\n';
+// Browse-sources header — Figma 490:74834: title on left, search on right.
+css += '.sm-browse-header { display: flex; align-items: center; justify-content: space-between; width: 100%; flex-shrink: 0; }\n';
+css += ".sm-browse-header__title { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 16px; font-weight: 600; line-height: 24px; color: #242424; }\n";
 css += '.sm-search { width: 180px; height: 32px; display: flex; align-items: center; gap: 10px; padding: 0 8px; background: #ffffff; border: 1px solid #d1d1d1; border-radius: 8px; transition: border-color 0.1s, box-shadow 0.1s; box-sizing: border-box; }\n';
 css += '.sm-search:focus-within { border-color: #242424; box-shadow: 0 1px 0 #242424; }\n';
 css += '.sm-search__icon { width: 20px; height: 20px; color: #707070; flex-shrink: 0; display: inline-flex; }\n';
@@ -1331,6 +1328,10 @@ css += ".sm-search__input { flex: 1; min-width: 0; border: none; outline: none; 
 css += '.sm-search__input::placeholder { color: #707070; }\n';
 // Single list card (Figma 331:18354) — border 1 #e0e0e0, rounded-12, p-20, gap-24 between rows (with inner wrap gap-20).
 css += '.sm-list { width: 100%; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; }\n';
+// Connected tile (Figma 491:7873) — same border treatment, rows are name-only
+// with 3-dot menu; tighter gap so the rows feel like a list, not a card grid.
+css += '.sm-list--compact { gap: 16px; }\n';
+css += '.sm-list--compact .sm-row__desc { display: none; }\n';
 css += '.sm-list__row { display: flex; align-items: center; gap: 12px; height: 40px; transition: opacity 0.2s ease, transform 0.2s ease; position: relative; }\n';
 css += '.sm-list__row--leaving { opacity: 0; transform: translateY(-4px); }\n';
 // Logo squares (32×32) for the discovery list.
@@ -1354,6 +1355,10 @@ css += '.sm-row__more { width: ' + buttonIconOnlyMedium.size + '; height: ' + bu
 css += '.sm-row__more:hover { background: ' + buttonStyleSubtle.backgroundHover + '; }\n';
 css += '.sm-row__more svg { width: ' + buttonIconOnlyMedium.iconSize + '; height: ' + buttonIconOnlyMedium.iconSize + '; }\n';
 css += ".sm-empty { padding: 24px; text-align: center; color: #6f6f6f; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; }\n";
+// M365 card row — chevron-right affordance, no Connect / 3-dot controls.
+css += '.sm-list__row--m365 { cursor: pointer; }\n';
+css += '.sm-row__chevron { width: 20px; height: 20px; color: #424242; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }\n';
+css += '.sm-row__chevron svg { width: 20px; height: 20px; }\n';
 
 // ─── Reset chip — floating dev-aid styled like the Variants chip ────
 // Disconnects every non-M365 source and returns the menu to its initial
@@ -1895,25 +1900,29 @@ html += '<div class="sm-main__title-block">';
 html += '<div class="sm-main__title" id="smTitle">Sources</div>';
 html += '<div class="sm-main__desc">Add and manage the sources Copilot uses to find and retrieve content for you.</div>';
 html += '</div>';
-// Controls row (sticky — sits outside the scroll so tabs + search stay visible).
-html += '<div class="sm-controls">';
-html += '<div class="sm-tabs" role="tablist">';
-html += '<button class="sm-tab sm-tab--active" role="tab" aria-selected="true" data-tab="explore">Explore</button>';
-html += '<button class="sm-tab" role="tab" aria-selected="false" data-tab="connected">Connected</button>';
+// Scrollable region: M365 card → Connected tile (if any) → Browse sources header → Browse tile.
+html += '<div class="sm-main__scroll">';
+// M365 card — always present, own bordered box.
+html += '<div class="sm-list sm-list--m365" id="smListM365">';
+html += '<div class="sm-list__row sm-list__row--m365" data-id="m365" data-static="1">';
+html += '<span class="sm-logo sm-logo--svg">' + smCopilotIco + '</span>';
+html += '<div class="sm-row__meta"><div class="sm-row__name">Microsoft 365 Apps</div></div>';
+html += '<span class="sm-row__chevron">' + chevronRightIco + '</span>';
 html += '</div>';
+html += '</div>';
+// Connected sources tile (Figma 491:7873) — separate bordered box, name-only rows,
+// 3-dot menu (none for tenant). JS hides the whole element when empty.
+html += '<div class="sm-list sm-list--compact" id="smListConnected" style="display:none;"></div>';
+// Browse sources header — label left, search right.
+html += '<div class="sm-browse-header">';
+html += '<div class="sm-browse-header__title">Browse sources</div>';
 html += '<div class="sm-search">';
 html += '<span class="sm-search__icon">' + smSearchIco + '</span>';
 html += '<input class="sm-search__input" type="text" placeholder="Search for a source" aria-label="Search for a source"/>';
 html += '</div>';
 html += '</div>';
-// Scrollable region — contains only the list panels so only rows scroll.
-html += '<div class="sm-main__scroll">';
-html += '<div class="sm-list" id="smListExplore" role="tabpanel">';
-for (const c of smConnectors) html += smBuildRow(c, 'explore');
-html += '</div>';
-html += '<div class="sm-list" id="smListConnected" role="tabpanel" style="display:none;">';
-for (const c of smConnectors) html += smBuildRow(c, 'connected');
-html += '</div>';
+// Browse sources tile — unconnected FCCs, alphabetical, with Connect button.
+html += '<div class="sm-list" id="smListBrowse"></div>';
 html += '</div>'; // end .sm-main__scroll
 html += '</section>'; // end .sm-main
 html += '</div>'; // end .sm
@@ -2260,7 +2269,8 @@ html += '}\n';
 
 // Display order (lifecycle composition):
 //   1. M365 apps (pinned) — always row 1.
-//   2. Connected FCCs, alphabetical.
+//   2. Connected FCCs + admin-enabled tenant sources, merged and sorted
+//      alphabetically as a single group.
 //   3. Discover FCCs (unconnected, non-pinned), alphabetical, sliced to
 //      max(3, 6 - connected_count). With 0/1/2 connected → 6/5/4 discover;
 //      3+ connected → 3 discover. Pool exhaustion (very high connect count)
@@ -2269,35 +2279,24 @@ html += '}\n';
 // here. Search-active state bypasses this function entirely — see
 // renderSourceList for the flat alphabetical filter path.
 html += 'var _srcQuery = "";';
-// Curated promotion order for the Discover band. Not alphabetical —
-// reflects strategic priority defined in Figma node 467:19175.
-// Connected band still sorts alphabetically (per the lifecycle spec).
-html += 'var DISCOVER_PRIORITY = ["moodys","lseg","hubspot","notion","intercom","canva","linear","gcal","gcontact","spglobal"];';
 html += 'function orderedSources() {';
-html += '  var m365 = null; var connected = []; var tenant = []; var discoverAll = [];';
+html += '  var m365 = null; var connectedAll = []; var discoverAll = [];';
 html += '  sources.forEach(function(s) {';
 html += '    if (s.pinned) m365 = s;';
-html += '    else if (s.tenant) { if (s.connected) tenant.push(s); }';
-html += '    else if (s.connected) connected.push(s);';
+html += '    else if (s.tenant) { if (s.connected) connectedAll.push(s); }';
+html += '    else if (s.connected) connectedAll.push(s);';
 html += '    else discoverAll.push(s);';
 html += '  });';
-html += '  connected.sort(function(a, b) { return a.name.localeCompare(b.name); });';
-html += '  tenant.sort(function(a, b) { return a.name.localeCompare(b.name); });';
-html += '  discoverAll.sort(function(a, b) {';
-html += '    var ai = DISCOVER_PRIORITY.indexOf(a.key); if (ai < 0) ai = 999;';
-html += '    var bi = DISCOVER_PRIORITY.indexOf(b.key); if (bi < 0) bi = 999;';
-html += '    return ai - bi;';
-html += '  });';
-// Discover taper math: connected FCCs + tenant sources together count
-// toward the "X" in the lifecycle slide. With tenant on (5 sources) and
-// 0 user connections, X = 5 → discover = max(3, 1) = 3. With tenant off,
-// it falls back to user-connected count only.
-html += '  var discoverCount = Math.max(3, 6 - (connected.length + tenant.length));';
+html += '  connectedAll.sort(function(a, b) { return a.name.localeCompare(b.name); });';
+html += '  discoverAll.sort(function(a, b) { return a.name.localeCompare(b.name); });';
+// Discover taper math: total of connected FCCs + admin-enabled tenant
+// sources determines the discover cap. With tenant on (5 sources) and
+// 0 user connections, total = 5 → discover = max(3, 1) = 3.
+html += '  var discoverCount = Math.max(3, 6 - connectedAll.length);';
 html += '  var discover = discoverAll.slice(0, discoverCount);';
 html += '  var result = [];';
 html += '  if (m365) result.push(m365);';
-html += '  for (var i = 0; i < connected.length; i++) result.push(connected[i]);';
-html += '  for (var t = 0; t < tenant.length; t++) result.push(tenant[t]);';
+html += '  for (var i = 0; i < connectedAll.length; i++) result.push(connectedAll[i]);';
 html += '  for (var j = 0; j < discover.length; j++) result.push(discover[j]);';
 html += '  return result;';
 html += '}';
@@ -3090,11 +3089,14 @@ html += '});';
 html += '\n';
 
 // ─── Settings Modal — IIFE keeps state private; exposes window.openCopilotSettings() ───
-// Discovery-variant JS: handles Explore/Connected tabs, search, Connect/Disconnect.
-// State is SHARED with the FCC sources menu via the same localStorage key
-// (`bebop:connected-sources`, shape `{ "<id>": <activeBool> }`). Settings only
-// owns the keys it renders — it preserves m365 and unknown keys so toggle state
-// set by the other surface isn\'t clobbered.
+// Single-page Browse sources: M365 card + one list with connected (alphabetical)
+// then unconnected (alphabetical). State is SHARED with the FCC sources menu via the
+// same localStorage key (`bebop:connected-sources`, shape `{ "<id>": <activeBool> }`).
+// Settings only owns the keys it renders — it preserves m365 and unknown keys so
+// toggle state set by the other surface isn\'t clobbered.
+// Inject the connector data so the renderer can build rows on demand.
+html += 'var SM_ROWS_DATA = ' + JSON.stringify(smConnectors.map((c) => ({ id: c.id, name: c.name, desc: c.desc, logo: c.logo, tenant: !!c.tenant }))) + ';\n';
+html += 'var SM_MORE_ICO = ' + JSON.stringify(smMoreHorizontalIco) + ';\n';
 html += '(function(){\n';
 html += '  var overlay = document.getElementById("smOverlay");\n';
 html += '  if (!overlay) return;\n';
@@ -3111,60 +3113,75 @@ html += '    connectedIds.forEach(function(id){ next[id] = (id in st) ? st[id] :
 html += '    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch(e) {}\n';
 html += '  }\n';
 html += '  var connectedIds = smReadConnected();\n';
-html += '  var activeTab = "explore";\n';
-html += '  var tabs = overlay.querySelectorAll(".sm-tab");\n';
-html += '  var connectedTab = overlay.querySelector(\'.sm-tab[data-tab="connected"]\');\n';
-html += '  var exploreTab = overlay.querySelector(\'.sm-tab[data-tab="explore"]\');\n';
-html += '  var panels = { explore: overlay.querySelector("#smListExplore"), connected: overlay.querySelector("#smListConnected") };\n';
+html += '  var connectedListEl = overlay.querySelector("#smListConnected");\n';
+html += '  var browseListEl = overlay.querySelector("#smListBrowse");\n';
 html += '  var input = overlay.querySelector(".sm-search__input");\n';
-html += '  function setActiveTab(name) {\n';
-html += '    activeTab = name;\n';
-html += '    tabs.forEach(function(x){ x.classList.remove("sm-tab--active"); x.setAttribute("aria-selected","false"); });\n';
-html += '    var t = name === "connected" ? connectedTab : exploreTab;\n';
-html += '    t.classList.add("sm-tab--active");\n';
-html += '    t.setAttribute("aria-selected","true");\n';
-html += '    Object.keys(panels).forEach(function(k){ panels[k].style.display = (k === activeTab) ? "" : "none"; });\n';
+// Uniquify SVG IDs across rendered copies of the same logo so `<defs>` in one
+// SVG don\'t collide with another instance and blank it.
+html += '  function smUniqSvg(svg, suffix){\n';
+html += '    if (svg.indexOf("<svg") === -1) return svg;\n';
+html += '    return svg.replace(/id="([^"]+)"/g, \'id="$1_\' + suffix + \'"\').replace(/href="#([^"]+)"/g, \'href="#$1_\' + suffix + \'"\').replace(/url\\(#([^)]+)\\)/g, "url(#$1_" + suffix + ")");\n';
 html += '  }\n';
-html += '  function applyTabVisibility(){\n';
-// Tenant variant on → tenant rows live in the Connected tab even when the
-// user has zero personal connections. Keep the tab visible in that case.
-html += '    var hasConnected = connectedIds.size > 0 || _tenantVariant;\n';
-html += '    connectedTab.style.display = hasConnected ? "" : "none";\n';
-html += '    if (!hasConnected && activeTab === "connected") setActiveTab("explore");\n';
+html += '  function smBuildRowHtml(c, isConnected){\n';
+html += '    var logo = smUniqSvg(c.logo, "sm_" + c.id);\n';
+html += '    var tenantAttr = c.tenant ? \' data-tenant="1"\' : "";\n';
+html += '    var row = \'<div class="sm-list__row" data-id="\' + c.id + \'" data-name="\' + c.name.toLowerCase() + \'"\' + tenantAttr + \'>\';\n';
+html += '    row += \'<span class="sm-logo">\' + logo + \'</span>\';\n';
+html += '    row += \'<div class="sm-row__meta">\';\n';
+html += '    row += \'<div class="sm-row__name">\' + c.name + \'</div>\';\n';
+html += '    row += \'<div class="sm-row__desc">\' + c.desc + \'</div>\';\n';
+html += '    row += \'</div>\';\n';
+// Action: Connect for unconnected; 3-dot Disconnect for connected non-tenant; nothing for tenant.
+html += '    if (!isConnected) {\n';
+html += '      row += \'<button class="sm-row__action" data-action="connect" data-id="\' + c.id + \'">Connect</button>\';\n';
+html += '    } else if (!c.tenant) {\n';
+html += '      row += \'<button class="sm-row__more" data-action="more" data-id="\' + c.id + \'" aria-label="More options for \' + c.name + \'" aria-haspopup="true" aria-expanded="false">\' + SM_MORE_ICO + \'</button>\';\n';
+html += '    }\n';
+html += '    row += \'</div>\';\n';
+html += '    return row;\n';
 html += '  }\n';
-html += '  function applyVisibility(){\n';
+// Render the connected + browse lists every time state changes. The search
+// input only filters the Browse tile (where it visually belongs in the layout);
+// the Connected tile always shows the full set.
+html += '  function renderSmList(){\n';
 html += '    var q = (input.value || "").trim().toLowerCase();\n';
-html += '    var counts = { explore: 0, connected: 0 };\n';
-html += '    ["explore", "connected"].forEach(function(mode){\n';
-html += '      var panel = panels[mode];\n';
-html += '      panel.querySelectorAll(".sm-list__row").forEach(function(row){\n';
-html += '        if (row.classList.contains("sm-list__row--leaving")) return;\n';
-html += '        var id = row.getAttribute("data-id");\n';
-html += '        var name = row.getAttribute("data-name") || "";\n';
-html += '        var isTenant = row.getAttribute("data-tenant") === "1";\n';
-// Tenant rows: always hidden in Explore (not user-connectable); shown in
-// Connected only when the tenantSources variant is on.
-html += '        var stateMatch;\n';
-html += '        if (isTenant) { stateMatch = (mode === "connected") && _tenantVariant; }\n';
-html += '        else { stateMatch = mode === "connected" ? connectedIds.has(id) : !connectedIds.has(id); }\n';
-html += '        var queryMatch = !q || name.indexOf(q) !== -1;\n';
-html += '        var visible = stateMatch && queryMatch;\n';
-html += '        row.style.display = visible ? "" : "none";\n';
-html += '        if (visible) counts[mode]++;\n';
-html += '      });\n';
-html += '      var existing = panel.querySelector(".sm-empty");\n';
-html += '      if (counts[mode] === 0) {\n';
-html += '        var msg = q ? "No sources match \\"" + q + "\\"." : (mode === "connected" ? "No connected sources yet. Add one from Explore." : "All sources are connected.");\n';
-html += '        if (!existing) { var e = document.createElement("div"); e.className = "sm-empty"; e.textContent = msg; panel.appendChild(e); }\n';
-html += '        else { existing.textContent = msg; }\n';
-html += '      } else if (existing) { existing.remove(); }\n';
+html += '    var connectedRows = [];\n';
+html += '    var unconnectedRows = [];\n';
+html += '    SM_ROWS_DATA.forEach(function(c){\n';
+// Tenant rows: only visible when the variant is on. Tenant rows are always
+// "connected" (admin-enabled); they\'re never available for user Connect.
+html += '      if (c.tenant && !_tenantVariant) return;\n';
+html += '      var isConnected = c.tenant ? true : connectedIds.has(c.id);\n';
+html += '      if (isConnected) { connectedRows.push(c); return; }\n';
+html += '      if (q && c.name.toLowerCase().indexOf(q) === -1) return;\n';
+html += '      unconnectedRows.push(c);\n';
 html += '    });\n';
+html += '    var byName = function(a, b){ return a.name.localeCompare(b.name); };\n';
+html += '    connectedRows.sort(byName);\n';
+html += '    unconnectedRows.sort(byName);\n';
+// Connected tile — hidden entirely when nothing is connected.
+html += '    if (connectedRows.length === 0) {\n';
+html += '      connectedListEl.style.display = "none";\n';
+html += '      connectedListEl.innerHTML = "";\n';
+html += '    } else {\n';
+html += '      var ch = "";\n';
+html += '      connectedRows.forEach(function(c){ ch += smBuildRowHtml(c, true); });\n';
+html += '      connectedListEl.innerHTML = ch;\n';
+html += '      connectedListEl.style.display = "";\n';
+html += '    }\n';
+// Browse tile — always present; falls back to a "no match" empty state.
+html += '    if (unconnectedRows.length === 0) {\n';
+html += '      var msg = q ? \'No sources match "\' + q + \'".\' : "All sources connected.";\n';
+html += '      browseListEl.innerHTML = \'<div class="sm-empty">\' + msg + \'</div>\';\n';
+html += '    } else {\n';
+html += '      var bh = "";\n';
+html += '      unconnectedRows.forEach(function(c){ bh += smBuildRowHtml(c, false); });\n';
+html += '      browseListEl.innerHTML = bh;\n';
+html += '    }\n';
 html += '  }\n';
-html += '  tabs.forEach(function(t){ t.addEventListener("click", function(){ setActiveTab(t.getAttribute("data-tab")); applyVisibility(); }); });\n';
-html += '  input.addEventListener("input", applyVisibility);\n';
-// Re-run when the tenant variant flips — tenant rows enter/leave the
-// Connected sub-tab AND the Connected tab itself may need to (re)appear.
-html += '  document.addEventListener("bebop:tenant-variant-change", function(){ applyTabVisibility(); applyVisibility(); });\n';
+html += '  input.addEventListener("input", renderSmList);\n';
+// Tenant variant flip — admin-enabled rows appear/disappear.
+html += '  document.addEventListener("bebop:tenant-variant-change", renderSmList);\n';
 // Connect — route through the shared Connect dialog. On confirm, the dialog handler
 // calls setConnected(id, true) and re-opens settings on the Connected tab. On cancel,
 // it re-opens settings on the Explore tab (where the row still lives with its Connect CTA).
@@ -3183,16 +3200,14 @@ html += '      connOverlay.classList.add("conn-overlay--open");\n';
 html += '    }\n';
 html += '  }\n';
 // Disconnect — drops from connectedIds + syncs the chat-input source menu (via disconnectSource).
-// User stays on Connected as long as another source remains; applyTabVisibility auto-switches
-// to Explore only when this was the LAST connected source.
+// Row gets a brief leaving transition before the list re-renders into the unconnected position.
 html += '  function disconnect(id){\n';
-html += '    var row = panels.connected.querySelector(\'.sm-list__row[data-id="\' + id + \'"]\');\n';
+html += '    var row = connectedListEl.querySelector(\'.sm-list__row[data-id="\' + id + \'"]\');\n';
 html += '    if (row) row.classList.add("sm-list__row--leaving");\n';
 html += '    setTimeout(function(){\n';
 html += '      connectedIds.delete(id);\n';
 html += '      if (typeof disconnectSource === "function") { disconnectSource(id); } else { smPersist(); }\n';
-html += '      if (row) row.classList.remove("sm-list__row--leaving");\n';
-html += '      applyTabVisibility(); applyVisibility();\n';
+html += '      renderSmList();\n';
 html += '    }, 200);\n';
 html += '  }\n';
 html += '  function closeAllPops(){\n';
@@ -3228,14 +3243,13 @@ html += '  function closeOverlay(){ overlay.classList.remove("sm-overlay--open")
 html += '  overlay.querySelector("[data-action=dismiss]").addEventListener("click", closeOverlay);\n';
 html += '  overlay.addEventListener("click", function(ev){ if (ev.target === overlay) closeOverlay(); });\n';
 html += '  document.addEventListener("keydown", function(ev){ if (ev.key === "Escape" && overlay.classList.contains("sm-overlay--open")) closeOverlay(); });\n';
-html += '  window.openCopilotSettings = function(defaultTab){\n';
+html += '  window.openCopilotSettings = function(){\n';
 // Re-read storage every open so the modal reflects any toggles/connects that
-// happened in the sources menu while it was closed.
+// happened in the sources menu while it was closed. `defaultTab` arg is ignored
+// (single-page layout) but kept tolerant for legacy call sites.
 html += '    connectedIds = smReadConnected();\n';
-html += '    var tab = (defaultTab === "explore" || defaultTab === "connected") ? defaultTab : (connectedIds.size > 0 ? "connected" : "explore");\n';
-html += '    setActiveTab(tab);\n';
-html += '    applyTabVisibility(); applyVisibility();\n';
 html += '    if (input) input.value = "";\n';
+html += '    renderSmList();\n';
 html += '    overlay.classList.add("sm-overlay--open");\n';
 html += '  };\n';
 // Cross-surface sync: when the FCC sources menu (or another tab) writes the
@@ -3244,9 +3258,9 @@ html += '  };\n';
 html += '  window.addEventListener("storage", function(e){\n';
 html += '    if (e.key !== STORAGE_KEY) return;\n';
 html += '    connectedIds = smReadConnected();\n';
-html += '    applyTabVisibility(); applyVisibility();\n';
+html += '    renderSmList();\n';
 html += '  });\n';
-html += '  applyTabVisibility(); applyVisibility();\n';
+html += '  renderSmList();\n';
 html += '})();\n';
 
 // Wire the Copilot Menu "Chat settings" item to open the modal, and close the menu.
