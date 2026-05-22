@@ -3141,8 +3141,8 @@ html += '    row += \'</div>\';\n';
 html += '    return row;\n';
 html += '  }\n';
 // Render the connected + browse lists every time state changes. The search
-// input only filters the Browse tile (where it visually belongs in the layout);
-// the Connected tile always shows the full set.
+// query filters BOTH tiles so connected matches stay alphabetically above
+// unconnected matches; the connected tile auto-hides when nothing matches.
 html += '  function renderSmList(){\n';
 html += '    var q = (input.value || "").trim().toLowerCase();\n';
 html += '    var connectedRows = [];\n';
@@ -3151,10 +3151,9 @@ html += '    SM_ROWS_DATA.forEach(function(c){\n';
 // Tenant rows: only visible when the variant is on. Tenant rows are always
 // "connected" (admin-enabled); they\'re never available for user Connect.
 html += '      if (c.tenant && !_tenantVariant) return;\n';
-html += '      var isConnected = c.tenant ? true : connectedIds.has(c.id);\n';
-html += '      if (isConnected) { connectedRows.push(c); return; }\n';
 html += '      if (q && c.name.toLowerCase().indexOf(q) === -1) return;\n';
-html += '      unconnectedRows.push(c);\n';
+html += '      var isConnected = c.tenant ? true : connectedIds.has(c.id);\n';
+html += '      (isConnected ? connectedRows : unconnectedRows).push(c);\n';
 html += '    });\n';
 html += '    var byName = function(a, b){ return a.name.localeCompare(b.name); };\n';
 html += '    connectedRows.sort(byName);\n';

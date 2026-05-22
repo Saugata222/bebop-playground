@@ -640,10 +640,9 @@ var SM_MORE_ICO = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"
     var unconnectedRows = [];
     SM_ROWS_DATA.forEach(function(c){
       if (c.tenant && !_tenantVariant) return;
-      var isConnected = c.tenant ? true : connectedIds.has(c.id);
-      if (isConnected) { connectedRows.push(c); return; }
       if (q && c.name.toLowerCase().indexOf(q) === -1) return;
-      unconnectedRows.push(c);
+      var isConnected = c.tenant ? true : connectedIds.has(c.id);
+      (isConnected ? connectedRows : unconnectedRows).push(c);
     });
     var byName = function(a, b){ return a.name.localeCompare(b.name); };
     connectedRows.sort(byName);
