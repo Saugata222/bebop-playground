@@ -2279,6 +2279,18 @@ html += '}\n';
 // here. Search-active state bypasses this function entirely — see
 // renderSourceList for the flat alphabetical filter path.
 html += 'var _srcQuery = "";';
+// Featured connector pool — these unconnected FCCs sort before the rest
+// (alphabetical within each subgroup, no visual separator). Shared with
+// the Settings page so both surfaces order unconnected sources identically.
+html += 'var FEATURED_FCCS = new Set(["hubspot","intercom","linear","lseg","moodys","notion"]);';
+html += 'function sortByFeaturedThenName(arr) {';
+html += '  return arr.slice().sort(function(a, b) {';
+html += '    var af = FEATURED_FCCS.has(a.key) ? 0 : 1;';
+html += '    var bf = FEATURED_FCCS.has(b.key) ? 0 : 1;';
+html += '    if (af !== bf) return af - bf;';
+html += '    return a.name.localeCompare(b.name);';
+html += '  });';
+html += '}';
 html += 'function orderedSources() {';
 html += '  var m365 = null; var connectedAll = []; var discoverAll = [];';
 html += '  sources.forEach(function(s) {';
@@ -2288,7 +2300,8 @@ html += '    else if (s.connected) connectedAll.push(s);';
 html += '    else discoverAll.push(s);';
 html += '  });';
 html += '  connectedAll.sort(function(a, b) { return a.name.localeCompare(b.name); });';
-html += '  discoverAll.sort(function(a, b) { return a.name.localeCompare(b.name); });';
+// Unconnected band: featured-then-rest, alphabetical within each group.
+html += '  discoverAll = sortByFeaturedThenName(discoverAll);';
 // Discover taper math: total of connected FCCs + admin-enabled tenant
 // sources determines the discover cap. With tenant on (5 sources) and
 // 0 user connections, total = 5 → discover = max(3, 1) = 3.
@@ -2325,7 +2338,9 @@ html += '      if (s.pinned) m365Match = s;';
 html += '      else if (s.connected) connMatches.push(s);';
 html += '      else discMatches.push(s);';
 html += '    });';
-html += '    connMatches.sort(byName); discMatches.sort(byName);';
+html += '    connMatches.sort(byName);';
+// Unconnected matches: featured-first, alphabetical within each subgroup.
+html += '    discMatches = sortByFeaturedThenName(discMatches);';
 html += '    arr = [];';
 html += '    if (m365Match) arr.push(m365Match);';
 html += '    for (var i = 0; i < connMatches.length; i++) arr.push(connMatches[i]);';
@@ -3170,7 +3185,14 @@ html += '      (isConnected ? connectedRows : unconnectedRows).push(c);\n';
 html += '    });\n';
 html += '    var byName = function(a, b){ return a.name.localeCompare(b.name); };\n';
 html += '    connectedRows.sort(byName);\n';
-html += '    unconnectedRows.sort(byName);\n';
+// Unconnected band: featured-first, alphabetical within each subgroup. Same
+// FEATURED_FCCS set as the Source Filter so both surfaces order identically.
+html += '    unconnectedRows = unconnectedRows.slice().sort(function(a, b){\n';
+html += '      var af = FEATURED_FCCS.has(a.id) ? 0 : 1;\n';
+html += '      var bf = FEATURED_FCCS.has(b.id) ? 0 : 1;\n';
+html += '      if (af !== bf) return af - bf;\n';
+html += '      return a.name.localeCompare(b.name);\n';
+html += '    });\n';
 // Connected tile — hidden entirely when nothing is connected.
 html += '    if (connectedRows.length === 0) {\n';
 html += '      connectedListEl.style.display = "none";\n';
