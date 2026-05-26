@@ -2418,7 +2418,7 @@ html += '}\n';
 //      max(3, 6 - connected_count). With 0/1/2 connected → 6/5/4 discover;
 //      3+ connected → 3 discover. Pool exhaustion (very high connect count)
 //      gracefully renders fewer than 3.
-// Trailing "Explore 40+ sources" tile is appended by renderSourceList, not
+// Trailing "Explore more sources" tile is appended by renderSourceList, not
 // here. Search-active state bypasses this function entirely — see
 // renderSourceList for the flat alphabetical filter path.
 html += 'var _srcQuery = "";';
@@ -2511,7 +2511,7 @@ html += '    rows += \'</div></div>\';';
 html += '  });';
 // Trailing "Connect more sources" — same .si row, hover-only highlight, sits
 // at the end of the scroll list (NOT pinned).
-html += '  rows += \'<div class="si" id="srcConnectMore" role="button" tabindex="0"><div class="si__inner"><span class="si__icon">' + flowIco.replace(/'/g, "\\'") + '</span><span class="si__label">Explore 40+ sources</span></div></div>\';';
+html += '  rows += \'<div class="si" id="srcConnectMore" role="button" tabindex="0"><div class="si__inner"><span class="si__icon">' + flowIco.replace(/'/g, "\\'") + '</span><span class="si__label">Explore more sources</span></div></div>\';';
 html += '  list.innerHTML = rows;';
 html += '}';
 html += '\n';
