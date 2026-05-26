@@ -208,9 +208,9 @@ function smBuildRow(c: SmConnector, mode: 'explore' | 'connected'): string {
   row += '</div>';
   if (mode === 'explore') {
     row += '<button class="sm-row__action" data-action="connect" data-id="' + c.id + '">Connect</button>';
-  } else if (c.tenant) {
-    // Tenant rows: admin-managed, user can\'t disconnect. No 3-dot menu.
   } else {
+    // Connected rows: 3-dot menu. Tenant rows open a disabled "Admin enabled" label;
+    // user-connected rows open a Disconnect action.
     row += '<button class="sm-row__more" data-action="more" data-id="' + c.id + '" aria-label="More options for ' + c.name + '" aria-haspopup="true" aria-expanded="false">' + smMoreHorizontalIco + '</button>';
   }
   row += '</div>';
@@ -1433,8 +1433,11 @@ css += '.sm-browse-card__action:focus-visible { outline: 2px solid #000; outline
 css += '.sm-browse-card__action[disabled] { color: #929292; cursor: not-allowed; }\n';
 // More-button popover (Disconnect).
 css += '.sm-pop { position: absolute; right: 0; top: 36px; min-width: 160px; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.14), 0 0 2px rgba(0,0,0,0.12); padding: 4px; z-index: 5; }\n';
-css += ".sm-pop__item { width: 100%; text-align: left; padding: 8px 10px; border: none; background: transparent; border-radius: 4px; cursor: pointer; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }\n";
+css += ".sm-pop__item { width: 100%; text-align: left; padding: 8px 10px; border: none; background: transparent; border-radius: 4px; cursor: pointer; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; display: block; box-sizing: border-box; }\n";
 css += '.sm-pop__item:hover { background: rgba(36,36,36,0.04); }\n';
+// Disabled variant — used for tenant rows ("Admin enabled" label). No hover, not clickable.
+css += '.sm-pop__item--disabled { color: #929292; cursor: not-allowed; }\n';
+css += '.sm-pop__item--disabled:hover { background: transparent; }\n';
 
 // ─── Settings Modal — single-page Browse sources (Figma 490:74149) ───
 // Layout: title → M365 card → "Browse sources" header (label + search) →
@@ -3425,7 +3428,7 @@ html += '    row += \'</div>\';\n';
 // Action: Connect for unconnected; 3-dot Disconnect for connected non-tenant; nothing for tenant.
 html += '    if (!isConnected) {\n';
 html += '      row += \'<button class="sm-row__action" data-action="connect" data-id="\' + c.id + \'">Connect</button>\';\n';
-html += '    } else if (!c.tenant) {\n';
+html += '    } else {\n';
 html += '      row += \'<button class="sm-row__more" data-action="more" data-id="\' + c.id + \'" aria-label="More options for \' + c.name + \'" aria-haspopup="true" aria-expanded="false">\' + SM_MORE_ICO + \'</button>\';\n';
 html += '    }\n';
 html += '    row += \'</div>\';\n';
@@ -3517,7 +3520,15 @@ html += '    closeAllPops();\n';
 html += '    if (open) return;\n';
 html += '    var pop = document.createElement("div");\n';
 html += '    pop.className = "sm-pop";\n';
-html += '    pop.innerHTML = \'<button class="sm-pop__item" type="button" data-pop-action="disconnect" data-id="\' + btn.getAttribute("data-id") + \'">Disconnect</button>\';\n';
+// Tenant rows: render a disabled "Admin enabled" label (no action). User-connected
+// rows: render the Disconnect action.
+html += '    var row = btn.closest(".sm-list__row");\n';
+html += '    var isTenant = row && row.getAttribute("data-tenant") === "1";\n';
+html += '    if (isTenant) {\n';
+html += '      pop.innerHTML = \'<span class="sm-pop__item sm-pop__item--disabled" aria-disabled="true">Admin enabled</span>\';\n';
+html += '    } else {\n';
+html += '      pop.innerHTML = \'<button class="sm-pop__item" type="button" data-pop-action="disconnect" data-id="\' + btn.getAttribute("data-id") + \'">Disconnect</button>\';\n';
+html += '    }\n';
 // Append the pop as a SIBLING of the more button, not a CHILD — otherwise
 // clicks on the Disconnect button bubble through the More button first, match
 // the [data-action=more] selector, and re-toggle the pop (closing it) before

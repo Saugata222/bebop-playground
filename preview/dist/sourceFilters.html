@@ -478,8 +478,10 @@ html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -ap
 .sm-browse-card__action:focus-visible { outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 1px #fff inset; }
 .sm-browse-card__action[disabled] { color: #929292; cursor: not-allowed; }
 .sm-pop { position: absolute; right: 0; top: 36px; min-width: 160px; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.14), 0 0 2px rgba(0,0,0,0.12); padding: 4px; z-index: 5; }
-.sm-pop__item { width: 100%; text-align: left; padding: 8px 10px; border: none; background: transparent; border-radius: 4px; cursor: pointer; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }
+.sm-pop__item { width: 100%; text-align: left; padding: 8px 10px; border: none; background: transparent; border-radius: 4px; cursor: pointer; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; display: block; box-sizing: border-box; }
 .sm-pop__item:hover { background: rgba(36,36,36,0.04); }
+.sm-pop__item--disabled { color: #929292; cursor: not-allowed; }
+.sm-pop__item--disabled:hover { background: transparent; }
 .sm-browse-header { display: flex; align-items: center; justify-content: space-between; width: 100%; flex-shrink: 0; }
 .sm-browse-header__title { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 16px; font-weight: 600; line-height: 24px; color: #242424; }
 .sm-search { width: 180px; height: 32px; display: flex; align-items: center; gap: 10px; padding: 0 8px; background: #ffffff; border: 1px solid #d1d1d1; border-radius: 8px; transition: border-color 0.1s, box-shadow 0.1s; box-sizing: border-box; }
@@ -675,7 +677,7 @@ var SM_MORE_ICO = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"
     row += '</div>';
     if (!isConnected) {
       row += '<button class="sm-row__action" data-action="connect" data-id="' + c.id + '">Connect</button>';
-    } else if (!c.tenant) {
+    } else {
       row += '<button class="sm-row__more" data-action="more" data-id="' + c.id + '" aria-label="More options for ' + c.name + '" aria-haspopup="true" aria-expanded="false">' + SM_MORE_ICO + '</button>';
     }
     row += '</div>';
@@ -752,7 +754,13 @@ var SM_MORE_ICO = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"
     if (open) return;
     var pop = document.createElement("div");
     pop.className = "sm-pop";
-    pop.innerHTML = '<button class="sm-pop__item" type="button" data-pop-action="disconnect" data-id="' + btn.getAttribute("data-id") + '">Disconnect</button>';
+    var row = btn.closest(".sm-list__row");
+    var isTenant = row && row.getAttribute("data-tenant") === "1";
+    if (isTenant) {
+      pop.innerHTML = '<span class="sm-pop__item sm-pop__item--disabled" aria-disabled="true">Admin enabled</span>';
+    } else {
+      pop.innerHTML = '<button class="sm-pop__item" type="button" data-pop-action="disconnect" data-id="' + btn.getAttribute("data-id") + '">Disconnect</button>';
+    }
     btn.parentElement.appendChild(pop);
     btn.setAttribute("aria-expanded","true");
   }
