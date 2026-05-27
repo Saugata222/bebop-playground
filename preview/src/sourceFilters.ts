@@ -1500,12 +1500,13 @@ css += ".reset-chip { position: fixed; bottom: 16px; left: 16px; z-index: 99999;
 css += ".reset-chip:hover { background: #fafafa; }\n";
 css += ".reset-chip:focus-visible { outline: 2px solid #000; outline-offset: 1px; }\n";
 css += ".reset-chip svg { display: block; color: #5d5d5d; }\n";
-// Reset chip stays hidden in the preview build. Variant chips remain visible
-// but are stacked vertically in the bottom-right (overrides their default
-// horizontal layout further down).
-css += '.reset-chip { display: none !important; }\n';
+// Source-tab variant chip is hidden in the preview build (variant kept off
+// via the _sourceTabVariant default below). Tenant variant chip stays in the
+// bottom-right corner, and the Reset sources chip is repositioned above it
+// in the slot the Source-tab chip used to occupy.
+css += '#stChip { display: none !important; }\n';
 css += '#tvChip { right: 16px !important; bottom: 16px !important; }\n';
-css += '#stChip { right: 16px !important; bottom: 64px !important; }\n';
+css += '.reset-chip { left: auto !important; right: 16px !important; bottom: 64px !important; }\n';
 
 // Variant chips — segmented controls mounted bottom-right. Stacked from
 // right-to-left: Tenant (right-most), Source tab (left of it). Visible at
