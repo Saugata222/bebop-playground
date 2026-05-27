@@ -1500,10 +1500,12 @@ css += ".reset-chip { position: fixed; bottom: 16px; left: 16px; z-index: 99999;
 css += ".reset-chip:hover { background: #fafafa; }\n";
 css += ".reset-chip:focus-visible { outline: 2px solid #000; outline-offset: 1px; }\n";
 css += ".reset-chip svg { display: block; color: #5d5d5d; }\n";
-// Dev chips (Reset sources + Variant toggles) temporarily hidden in the
-// preview build — the prototype still respects URL params (?tenant, ?srcTab)
-// for testing, but the floating UI is suppressed.
-css += '.reset-chip, .tv-chip { display: none !important; }\n';
+// Reset chip stays hidden in the preview build. Variant chips remain visible
+// but are stacked vertically in the bottom-right (overrides their default
+// horizontal layout further down).
+css += '.reset-chip { display: none !important; }\n';
+css += '#tvChip { right: 16px !important; bottom: 16px !important; }\n';
+css += '#stChip { right: 16px !important; bottom: 64px !important; }\n';
 
 // Variant chips — segmented controls mounted bottom-right. Stacked from
 // right-to-left: Tenant (right-most), Source tab (left of it). Visible at
@@ -2294,6 +2296,15 @@ html += '  _srcQuery = "";';
 html += '  var inp = document.getElementById("srcSearchInput"); if (inp) inp.value = "";';
 html += '  renderSourceList();';
 html += '  srcOverlay.classList.add("src-overlay--open");';
+// If a source was just connected from inside this menu, scroll its row so it
+// sits at the bottom of the visible scroll window — visible to the user
+// without any extra scroll, but without pushing connected sources at the top
+// out of view.
+html += '  if (_justConnectedKey && l) {';
+html += '    var row = l.querySelector(\'.si[data-key="\' + _justConnectedKey + \'"]\');';
+html += '    if (row) { l.scrollTop = Math.max(0, row.offsetTop + row.offsetHeight - l.clientHeight); }';
+html += '    _justConnectedKey = null;';
+html += '  }';
 html += '}';
 
 // Sources tab update logic
@@ -2430,6 +2441,9 @@ html += '}\n';
 // here. Search-active state bypasses this function entirely — see
 // renderSourceList for the flat alphabetical filter path.
 html += 'var _srcQuery = "";';
+// Tracks the key of the most recent connect operation so openSources() can
+// scroll that row into view. Cleared once consumed.
+html += 'var _justConnectedKey = null;';
 // Featured connector pool — these unconnected FCCs sort before the rest
 // (alphabetical within each subgroup, no visual separator). Shared with
 // the Settings page so both surfaces order unconnected sources identically.
@@ -2711,6 +2725,9 @@ html += '    origConnect(key);';
 html += '    if (wasUnconnected) {';
 html += '      try { localStorage.setItem(RECENT_SOURCE_KEY, key); } catch(_e) {}';
 html += '      renderSourcePromptChip();';
+// Remember the just-connected key so the next openSources() can scroll its row
+// into view as the last visible item.
+html += '      _justConnectedKey = key;';
 html += '    }';
 html += '  };';
 html += '  var origDisconnect = disconnectSource;';
