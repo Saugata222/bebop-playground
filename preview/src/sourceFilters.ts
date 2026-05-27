@@ -593,6 +593,10 @@ css += '.sc__chip--source .sc__chip-logo { width: 20px; height: 20px; flex-shrin
 css += '\n';
 css += '.sc__chip--source .sc__chip-logo img, .sc__chip--source .sc__chip-logo svg { width: 100%; height: 100%; object-fit: contain; display: block; }';
 css += '\n';
+// Source-prompt chip + list temporarily hidden — prototype falls back to the
+// original suggestion chips while the source-prompt UX is paused.
+css += '.sc__chip--source, .sc-prompts { display: none !important; }';
+css += '\n';
 // Source-prompt list (Figma 460:71232 / 523:23445) — vertical list of prompts.
 // 20px gap below the chip row (matches Figma\'s outer Frame gap). Same 56px
 // horizontal padding as `.sc` so prompts align with the chips and the input bar text.
