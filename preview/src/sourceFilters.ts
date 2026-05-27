@@ -1496,6 +1496,10 @@ css += ".reset-chip { position: fixed; bottom: 16px; left: 16px; z-index: 99999;
 css += ".reset-chip:hover { background: #fafafa; }\n";
 css += ".reset-chip:focus-visible { outline: 2px solid #000; outline-offset: 1px; }\n";
 css += ".reset-chip svg { display: block; color: #5d5d5d; }\n";
+// Dev chips (Reset sources + Variant toggles) temporarily hidden in the
+// preview build — the prototype still respects URL params (?tenant, ?srcTab)
+// for testing, but the floating UI is suppressed.
+css += '.reset-chip, .tv-chip { display: none !important; }\n';
 
 // Variant chips — segmented controls mounted bottom-right. Stacked from
 // right-to-left: Tenant (right-most), Source tab (left of it). Visible at
@@ -2380,7 +2384,7 @@ html += 'var _tenantVariant = false;\n';
 // Source tab variant flag. When false, updateSourcesTab unconditionally
 // hides the pill below the chat input — even if disabled sources exist.
 // Default true preserves current behavior (show when ≥1 source is off).
-html += 'var _sourceTabVariant = true;\n';
+html += 'var _sourceTabVariant = false;\n';
 html += 'function loadState(){ try { var v = JSON.parse(localStorage.getItem(STORAGE_KEY) || \'{"m365":true}\'); return (v && typeof v === "object" && !Array.isArray(v)) ? v : {"m365":true}; } catch(e) { return {"m365":true}; } }\n';
 html += 'function saveState(state){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }\n';
 html += 'function syncFromStorage(){\n';
