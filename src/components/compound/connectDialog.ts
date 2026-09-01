@@ -32,8 +32,10 @@ export const connectDialogSurface = {
   width: '556px',
   background: '#ffffff',
   borderRadius: '16px',
-  border: '1px solid #dedede',
-  boxShadow: '0px 12px 48px rgba(0, 0, 0, 0.12)',
+  /** Border is transparent in Figma — surface defined by shadow alone */
+  border: '1px solid rgba(36, 36, 36, 0)',
+  /** Elevation 5 — Ambient + Key drop shadows */
+  boxShadow: '0px 12px 48px rgba(0, 0, 0, 0.24), 0px 0px 3px rgba(0, 0, 0, 0.03)',
   overflow: 'hidden',
 } as const;
 
@@ -48,8 +50,8 @@ export const connectDialogBanner = {
 // ─── Icon Row ───────────────────────────────────────────────
 
 export const connectDialogIconRow = {
-  /** Centered over the banner, overlapping top and bottom */
-  top: '38px',
+  /** Centered over the banner, overlapping top and bottom — Figma top: 37px */
+  top: '37px',
   gap: '16px',
   /** Copilot and connector icons */
   iconSize: '48px',
@@ -90,6 +92,8 @@ export const connectDialogBody = {
   fontWeight: '400',
   lineHeight: '20px',
   color: '#242424',
+  /** Text column width — Figma uses 472px to control wrap inside the 556px surface */
+  maxWidth: '472px',
   /** "Settings" link */
   linkTextDecoration: 'underline',
 } as const;

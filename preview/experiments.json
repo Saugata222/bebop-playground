@@ -1,0 +1,196 @@
+{
+  "viewport": { "width": 1440, "height": 900 },
+  "experiments": [
+    {
+      "name": "shell",
+      "title": "Copilot Shell",
+      "kind": "prototype",
+      "status": "ready",
+      "description": "The canonical Bebop shell and interaction baseline.",
+      "owner": "Bebop Playground",
+      "updated": "2026-08-25",
+      "tags": ["shell", "baseline"],
+      "output": "preview/dist/shell.html",
+      "routes": []
+    },
+    {
+      "name": "connectorsGoldenFlow",
+      "title": "Connectors Golden Flow",
+      "kind": "prototype",
+      "status": "ready",
+      "description": "Connectors onboarding and connection golden-path exploration.",
+      "owner": "Bebop Playground",
+      "updated": "2026-08-25",
+      "tags": ["connectors", "onboarding"],
+      "output": "preview/dist/connectorsGoldenFlow.html",
+      "parent": "shell",
+      "routes": []
+    },
+    {
+      "name": "seamlessConnect",
+      "title": "Seamless Connect",
+      "kind": "prototype",
+      "status": "ready",
+      "description": "Batch-connect exploration for enterprise data sources.",
+      "owner": "Bebop Playground",
+      "updated": "2026-08-25",
+      "tags": ["connectors", "authentication"],
+      "output": "preview/dist/seamlessConnect.html",
+      "parent": "connectorsGoldenFlow",
+      "routes": []
+    },
+    {
+      "name": "copilotExtensions",
+      "title": "Copilot Extensions",
+      "kind": "surface",
+      "status": "ready",
+      "description": "Extensions management and discovery surface.",
+      "owner": "Bebop Playground",
+      "updated": "2026-08-25",
+      "tags": ["extensions", "management"],
+      "output": "preview/dist/copilotExtensions.html",
+      "routes": []
+    },
+    {
+      "name": "intentDetection",
+      "title": "Intent Detection",
+      "folder": "Connector discovery",
+      "kind": "prototype",
+      "status": "ready",
+      "description": "Connector discovery triggered by high-intent prompts.",
+      "owner": "Bebop Playground",
+      "updated": "2026-08-25",
+      "tags": ["connectors", "discovery", "intent"],
+      "output": "preview/dist/intentDetection.html",
+      "parent": "shell",
+      "routes": []
+    },
+    {
+      "name": "connectorSkillsP0",
+      "title": "Skills P0",
+      "folder": "Connector Skills",
+      "kind": "prototype",
+      "status": "in-review",
+      "description": "End-to-end connector skills exploration across discovery, settings, CIQ, and disconnected response states.",
+      "owner": "Saugata Pramanik",
+      "updated": "2026-08-25",
+      "tags": ["connectors", "skills", "settings", "ciq"],
+      "output": "preview/dist/connectorSkillsP0.html",
+      "parent": "connectorsSkillsV3",
+      "requiredAssets": [
+        "src/components/icons/avatar-user.png",
+        "src/components/icons/confluence-logo.png",
+        "src/components/icons/lseg-logo.png",
+        "src/components/icons/moodys-logo.png"
+      ],
+      "knownGaps": [
+        "connectorSkillsP0: Orbit is not bundled; Orbit labels fall back to the system font unless baked into imagery."
+      ],
+      "routes": [
+        { "id": "home", "title": "Zero state", "query": "", "selectors": [".shell", "#cmpTa", "#cmpSend"] },
+        { "id": "settings", "title": "Settings and sources", "query": "?view=settings", "selectors": [".shell", "#stgOverlay", "#stgList"] },
+        { "id": "ciq", "title": "Attach a connector skill", "query": "?view=ciq", "selectors": [".shell", "#cmpTa", "#ciqMenu"] },
+        { "id": "disconnected", "title": "Disconnected discovery response", "query": "?view=disc", "selectors": [".shell", "#thread", "#cmpTa"] }
+      ]
+    },
+    {
+      "name": "connectorSkillsAdminX",
+      "title": "Connectors Admin Center",
+      "folder": "Connector Skills",
+      "kind": "surface",
+      "status": "in-review",
+      "description": "Administrator connector inventory, details, tools, skills, and governance exploration.",
+      "owner": "Saugata Pramanik",
+      "updated": "2026-08-25",
+      "tags": ["connectors", "admin", "governance"],
+      "output": "preview/dist/connectorSkillsAdminX.html",
+      "requiredAssets": [
+        "preview/src/assets/connectorSkillsDeck/adminx-list.png",
+        "src/components/icons/servicenow-logo.png",
+        "src/components/icons/figma-logo.svg",
+        "src/components/icons/notion-logo.png",
+        "src/components/icons/linear-logo.png",
+        "src/components/icons/engineering-hub-logo.png"
+      ],
+      "routes": [
+        { "id": "inventory", "title": "Connector inventory", "query": "", "selectors": [".ax", ".ax-bg", "#axPane"] }
+      ]
+    },
+    {
+      "name": "copilotShell",
+      "title": "Copilot Shell",
+      "kind": "prototype",
+      "status": "in-review",
+      "description": "Reusable Copilot shell cloned from ConnectorSkills P0 with a blank default composer.",
+      "owner": "Saugata Pramanik",
+      "updated": "2026-08-27",
+      "tags": ["copilot", "shell", "connectors", "skills"],
+      "output": "preview/dist/copilotShell.html",
+      "parent": "connectorSkillsP0",
+      "requiredAssets": [
+        "src/components/icons/avatar-user.png",
+        "src/components/icons/confluence-logo.png",
+        "src/components/icons/lseg-logo.png",
+        "src/components/icons/moodys-logo.png"
+      ],
+      "knownGaps": [
+        "copilotShell: Orbit is not bundled; Orbit labels fall back to the system font unless baked into imagery."
+      ],
+      "routes": [
+        { "id": "home", "title": "Blank composer", "query": "", "selectors": [".shell", "#cmpTa", "#cmpSend"] },
+        { "id": "settings", "title": "Settings and sources", "query": "?view=settings", "selectors": [".shell", "#stgOverlay", "#stgList"] },
+        { "id": "ciq", "title": "Attach a connector skill", "query": "?view=ciq", "selectors": [".shell", "#cmpTa", "#ciqMenu"] },
+        { "id": "disconnected", "title": "Disconnected discovery response", "query": "?view=disc", "selectors": [".shell", "#thread", "#cmpTa"] }
+      ]
+    },
+    {
+      "name": "connectorSkillsDeck",
+      "title": "Deck for Deepak",
+      "folder": "Connector Skills",
+      "kind": "deck",
+      "status": "in-review",
+      "description": "Stakeholder narrative combining Figma-authored slides with live end-user and admin scenarios.",
+      "owner": "Saugata Pramanik",
+      "updated": "2026-08-25",
+      "tags": ["connectors", "skills", "presentation"],
+      "output": "preview/dist/connectorSkillsDeck.html",
+      "compare": false,
+      "requiredAssets": [
+        "preview/dist/connectorSkillsP0.html",
+        "preview/dist/connectorSkillsAdminX.html"
+      ],
+      "assetDirectories": [
+        { "path": "preview/src/assets/connectorSkillsDeck", "minimumFiles": 30 }
+      ],
+      "routes": [
+        { "id": "cover", "title": "Cover", "query": "#1", "selectors": ["#frame", "#edgePrev", "#edgeNext"] },
+        { "id": "settings-live", "title": "Live settings story", "query": "#7", "selectors": ["#frame", "#liveScreen iframe"] },
+        {
+          "id": "admin-live",
+          "title": "Live admin story",
+          "query": "#12",
+          "selectors": ["#frame", "#liveScreen iframe"],
+          "styles": [
+            { "selector": "#live", "property": "overflow", "equals": "hidden" }
+          ]
+        },
+        { "id": "compete-claude-awareness", "title": "Claude skill awareness", "query": "#4", "selectors": ["#frame", "#crisp .crisplayer img"] },
+        { "id": "compete-openai-awareness", "title": "OpenAI skill awareness", "query": "#5", "selectors": ["#frame", "#crisp .crisplayer img"] },
+        { "id": "compete-claude-invocation", "title": "Claude skill invocation", "query": "#6", "selectors": ["#frame", "#crisp .crisplayer img"] }
+      ]
+    },
+    {
+      "name": "excelAgentSkills",
+      "title": "Skills in Excel Agent",
+      "folder": "Connector Skills",
+      "kind": "prototype",
+      "status": "in-review",
+      "description": "The Excel + Copilot surface from the Connector Skills Figma — a static Q3 Financials workbook on the left and the interactive Copilot pane on the right: greeting, composer, suggestion chips, and the sources picker popover (Web / Work / Confluence / Github / Moody's / Canva). Fluent 2 web styling.",
+      "owner": "Saugata Pramanik",
+      "updated": "2026-07-09",
+      "tags": ["connectors", "skills", "excel"],
+      "output": "preview/dist/excelAgentSkills.html",
+      "routes": []
+    }
+  ]
+}

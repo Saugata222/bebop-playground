@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connector Intent Flow Experiment</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f6f4ef;
+      --panel: #ffffff;
+      --ink: #242424;
+      --muted: #5d5d5d;
+      --line: #ded7ca;
+      --accent: #0f766e;
+      --accent-soft: #d8f3ef;
+      --warn: #a16207;
+      --warn-soft: #fef3c7;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 18px 36px rgba(38, 32, 18, 0.09);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: "Aptos", "Segoe UI", "Segoe Sans", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(1100px 600px at 8% 0%, #f3e9d2 0%, transparent 56%),
+        radial-gradient(900px 580px at 100% 22%, #d7ece8 0%, transparent 58%),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid #ebe7dd;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 44px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+      max-width: 760px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid #ece7de;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .controls {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #7b7468;
+      font-weight: 600;
+    }
+
+    .scenario {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      font: inherit;
+      color: var(--ink);
+    }
+
+    .scenario:hover { transform: translateY(-1px); border-color: #c9bfad; }
+    .scenario[aria-pressed='true'] {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      box-shadow: inset 0 0 0 1px #8bd5ca;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      line-height: 1.4;
+      border: 1px solid #e8e3d8;
+      background: #faf8f4;
+      color: #635d52;
+    }
+
+    .chip.good {
+      border-color: #9fd7cd;
+      background: #e6f7f3;
+      color: #065f57;
+    }
+
+    .board {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      opacity: 0.45;
+      transform: translateY(3px);
+      transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card.active {
+      opacity: 1;
+      transform: translateY(0);
+      border-color: #b9dece;
+      box-shadow: inset 0 0 0 1px #d9f1ea;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border: 1px solid #eadfcb;
+      color: #6e6351;
+      background: #fff8eb;
+    }
+
+    .pill.warn {
+      border-color: #f3d487;
+      color: #7a4f00;
+      background: var(--warn-soft);
+    }
+
+    .summary {
+      border-top: 1px dashed #ded8cb;
+      margin-top: 4px;
+      padding-top: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .summary .line {
+      font-size: 13px;
+      color: #504b43;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .controls { order: 2; }
+      .board { order: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero panel">
+      <h1>Connector Discovery and Intent Flow</h1>
+      <p>
+        This experiment maps the FigJam journey from first-run acquisition to connected-state efficiency.
+        Switch scenarios to evaluate placement, confidence thresholds, and source prioritization logic.
+      </p>
+    </section>
+
+    <section class="layout">
+      <aside class="controls panel" id="controls"></aside>
+      <main class="board panel" id="board"></main>
+    </section>
+  </div>
+
+  <script>
+    const flowCards = [
+      {
+        id: 'fre',
+        title: 'First Run Experience',
+        body: 'Personalized source prompts based on tenant and user signals. Caps at six high-relevance connectors.',
+        tags: ['Modified Pattern', 'Acquisition'],
+      },
+      {
+        id: 'banner',
+        title: 'General Banner Nudge',
+        body: 'Low-friction educational banner introducing user-led connectors without interrupting task flow.',
+        tags: ['Core Pattern', 'Awareness'],
+      },
+      {
+        id: 'highSingle',
+        title: 'High Confidence Single Connector',
+        body: 'URL paste or exact connector name plus intent score triggers inline connect action.',
+        tags: ['Autocomplete', 'Just-in-Time'],
+      },
+      {
+        id: 'highMulti',
+        title: 'Medium Confidence Multi Connector',
+        body: 'Semantic query match triggers grouped connector suggestions for broader exploration.',
+        tags: ['Inline Suggestion', 'Intent + Lexical'],
+      },
+      {
+        id: 'connected',
+        title: 'Connected Tab and Source Filter',
+        body: 'When fewer than five connectors are linked, promote discovery. Beyond five, prioritize usage-first ordering.',
+        tags: ['Usage Pivot', 'Adaptive Ranking'],
+      },
+      {
+        id: 'settings',
+        title: 'Settings Ordering Logic',
+        body: 'Entry-point aware sorting: tenant vertical first for generic entry, bucket-specific sources for targeted notifications.',
+        tags: ['Explore Tab', 'Connected Tab'],
+      },
+    ];
+
+    const scenarios = [
+      {
+        id: 'firstRun',
+        label: 'First Run / Early User',
+        active: ['fre', 'banner', 'settings'],
+        confidence: 'Low intent',
+        discovery: 'Aggressive discovery',
+        note: 'Show 6 curated connectors from org + personal signals.',
+      },
+      {
+        id: 'singleIntent',
+        label: 'High Intent Single Connector',
+        active: ['highSingle', 'connected', 'settings'],
+        confidence: 'High intent',
+        discovery: 'Targeted connect',
+        note: 'Fire autocomplete connector CTA when exact connector signal is present.',
+      },
+      {
+        id: 'multiIntent',
+        label: 'High Intent Multi Connector',
+        active: ['highMulti', 'connected', 'settings'],
+        confidence: 'Medium intent',
+        discovery: 'Clustered suggestions',
+        note: 'Group connector suggestions by semantic neighborhood and role.',
+      },
+      {
+        id: 'connectedPower',
+        label: 'Connected Power User',
+        active: ['connected', 'settings'],
+        confidence: 'Known user',
+        discovery: 'Usage first',
+        note: 'Prioritize already connected sources and collapse discovery prompts.',
+      },
+    ];
+
+    const controls = document.getElementById('controls');
+    const board = document.getElementById('board');
+
+    function renderControls(current) {
+      controls.innerHTML = '';
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.textContent = 'Scenario';
+      controls.appendChild(title);
+
+      scenarios.forEach((s) => {
+        const b = document.createElement('button');
+        b.className = 'scenario';
+        b.type = 'button';
+        b.setAttribute('aria-pressed', String(s.id === current.id));
+        b.textContent = s.label;
+        b.addEventListener('click', () => renderScenario(s));
+        controls.appendChild(b);
+      });
+
+      const chipsTitle = document.createElement('div');
+      chipsTitle.className = 'section-title';
+      chipsTitle.textContent = 'Signals';
+      controls.appendChild(chipsTitle);
+
+      const chipRow = document.createElement('div');
+      chipRow.className = 'chip-row';
+      chipRow.innerHTML =
+        '<span class="chip good">' + current.confidence + '</span>' +
+        '<span class="chip">' + current.discovery + '</span>';
+      controls.appendChild(chipRow);
+
+      const summary = document.createElement('div');
+      summary.className = 'summary';
+      summary.innerHTML =
+        '<div class="line"><strong>Hypothesis:</strong> ' + current.note + '</div>' +
+        '<div class="line"><strong>Experiment Goal:</strong> Maximize connector activation without interrupting answer flow.</div>';
+      controls.appendChild(summary);
+    }
+
+    function renderBoard(current) {
+      board.innerHTML = '';
+      flowCards.forEach((card) => {
+        const el = document.createElement('article');
+        const isActive = current.active.includes(card.id);
+        el.className = 'card' + (isActive ? ' active' : '');
+
+        const tagMarkup = card.tags
+          .map((t) => {
+            const warn = /High|Medium|Low/.test(t) ? ' pill warn' : ' pill';
+            return '<span class="' + warn.trim() + '">' + t + '</span>';
+          })
+          .join('');
+
+        el.innerHTML =
+          '<h3>' + card.title + '</h3>' +
+          '<p>' + card.body + '</p>' +
+          '<div class="meta">' + tagMarkup + '</div>';
+
+        board.appendChild(el);
+      });
+    }
+
+    function renderScenario(scenario) {
+      renderControls(scenario);
+      renderBoard(scenario);
+    }
+
+    renderScenario(scenarios[0]);
+  </script>
+</body>
+</html>

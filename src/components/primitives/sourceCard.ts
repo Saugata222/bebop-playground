@@ -56,9 +56,9 @@ export const sourceCardIcon = {
 
 export const sourceCardName = {
   /** Font size — body-medium */
-  fontSize: '14px',
+  fontSize: 'var(--f-typography-fontSize-14)',
   /** Font weight */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Line height */
   lineHeight: '20px',
   /** Color — rest */

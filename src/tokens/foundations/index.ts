@@ -19,7 +19,7 @@ export { spacing, gap, padding, gapAtomic, gapComposite, gapLayout, paddingTight
 // Typography
 export {
   typography,
-  fontFamily, fontSize, fontWeight, lineHeight, letterSpacing,
+  fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, opticalSize,
   typeFunctional, typeContent,
 } from './typography';
 

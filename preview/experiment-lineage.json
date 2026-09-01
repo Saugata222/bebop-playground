@@ -1,0 +1,21 @@
+{
+  "families": [
+    {
+      "name": "connector-source-shell",
+      "canonical": "preview/src/connectorSkillsP0.ts",
+      "sharedSurfaces": ["sourcesModal", "settingsModal", "authModal"],
+      "forks": [
+        "preview/src/authFailed.ts",
+        "preview/src/connectorSkills.ts",
+        "preview/src/copilotShell.ts",
+        "preview/src/connectorsSkillsV3.ts",
+        "preview/src/discoveryV2.ts",
+        "preview/src/oneCopilotShell.ts",
+        "preview/src/pluginsV1.ts",
+        "preview/src/userSyncAuthFail.ts",
+        "preview/src/userSyncExperiment.ts",
+        "preview/src/userSyncV2.ts"
+      ]
+    }
+  ]
+}

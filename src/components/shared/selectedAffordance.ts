@@ -15,7 +15,7 @@
 
 export const selectedAffordance = {
   /** Semibold weight for selected text */
-  fontWeight: '600',
+  fontWeight: 'var(--f-typography-fontWeight-semibold)',
   /** Regular weight for unselected text */
   fontWeightUnselected: '400',
   /** Icon variant when selected */

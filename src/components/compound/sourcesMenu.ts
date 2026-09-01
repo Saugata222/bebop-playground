@@ -1,169 +1,170 @@
 /**
- * Component: Sources Menu
+ * Component: Sources Menu  ("Change data sources")
  *
- * Bebop Design System — Data-source picker shown below the chat input.
+ * One Copilot / Bebop Design System — modal popover for toggling which data
+ * sources Copilot may draw from. Aligned to the One Copilot Desktop UI Kit
+ * (Figma node 4096:12750).
  *
- * A scrollable list of data-source rows, each with an icon, label,
- * and a right-side action: either a toggle switch (with optional
- * sub-label like "Chats, Emails, Meetings") or a "Connect" button.
+ * Composition (reuses existing One Copilot primitives):
+ *   Popover        — white card, 28px inset, radius 16, Shadow/Highest
+ *   ├─ Header      — Subtitle title + subtle close Button (dismiss-20)
+ *   ├─ Search      — Input (search-20 leading, "Search" placeholder), 40px
+ *   ├─ List        — stack of Source Menu items + footer MenuListItem
+ *   │   Source Menu item = MenuListItem row (icon 20 + Body Medium label)
+ *   │     + optional Body Small metadata (#5d5d5d)
+ *   │     + trailing control: Toggle (on/off) | "Connect" link
+ *   │   Footer = MenuListItem ("Manage sources", more-horizontal-20)
+ *   └─ Scrollbar   — overflow affordance
  *
- * Anatomy:
- *   Sources Container — vertical list, horizontal padding, scrollable
- *   Source Item (Default) — 44px row: [icon 20px] [label 14px] [toggle/connect]
- *   Source Item (Small)   — compact row: [icon 16px] [label 12px] [toggle/connect]
+ * The Source Menu item row geometry is identical to the MenuListItem primitive
+ * (px 12 / py 10, gap 6, radius 12, Body Medium label). The trailing Toggle
+ * reuses the Toggle primitive (32×16 track, 12 thumb).
  *
- * Properties — Source Item:
- *   Size:    Default | Small
- *   State:   Rest | Hover
- *   Action:  Toggle (on/off, optional sub-label) | Connect (button)
- *
- * Reuses:
- *   Toggle (from primitives/toggle.ts) — 32×16px switch
- *   Button (from primitives/button.ts) — subtle style for "Connect"
- *
- * Prefix: --c-sourcesMenu-{property}
+ * Prefix: --c-sources-menu-{property}
  */
 
-// ─── Container Tokens ───────────────────────────────────────
+// ─── Popover Surface ────────────────────────────────────────
 
-export const sourcesMenuContainer = {
-  /** Width */
-  width: '820px',
-  /** Horizontal padding */
-  paddingInline: '56px',
-  /** Vertical gap between items */
-  gap: '0px',
+export const sourcesMenuPopover = {
+  /** Modal width */
+  width: '664px',
+  /** Modal min height */
+  minHeight: '520px',
+  /** Surface — --gnrc-color-surface-neutral-nearer */
+  background: '#ffffff',
+  /** Border — 1px --gnrc-color-stroke-neutral-transparent */
+  border: '1px solid rgba(36,36,36,0)',
+  /** Corner radius — --gnrc-border-radius-base-400 */
+  borderRadius: '16px',
+  /** Content inset — --gnrc-spacing-component-base-700 */
+  padding: '28px',
+  /** Vertical gap between header / search / list — base-400 */
+  sectionGap: '16px',
+  /** Shadow/Highest — contour + elevated ambient + elevated key */
+  boxShadow:
+    '0 0 1px 0 rgba(0,0,0,0.08), 0 8px 16px 0 rgba(0,0,0,0.03), 0 32px 48px 0 rgba(0,0,0,0.08)',
 } as const;
 
-// ─── Item Size — Default ────────────────────────────────────
+// ─── Header ─────────────────────────────────────────────────
 
-export const sourcesMenuItemDefault = {
-  /** Outer row height */
-  height: '44px',
-  /** Outer row vertical padding */
-  paddingBlock: '4px',
-  /** Container horizontal padding */
-  containerPaddingInline: '12px',
-  /** Container vertical padding */
-  containerPaddingBlock: '8px',
-  /** Container gap between icon/label/action */
-  containerGap: '8px',
-  /** Container border radius */
-  containerRadius: '12px',
-  /** Icon size */
-  iconSize: '20px',
-  /** Label font size — body-medium (14px) */
-  fontSize: '14px',
-  /** Label line height */
-  lineHeight: '20px',
-} as const;
-
-// ─── Item Size — Small ──────────────────────────────────────
-
-export const sourcesMenuItemSmall = {
-  /** Outer row vertical padding */
-  paddingBlock: '2px',
-  /** Container horizontal padding */
-  containerPaddingInline: '12px',
-  /** Container vertical padding */
-  containerPaddingBlock: '4px',
-  /** Container gap */
-  containerGap: '8px',
-  /** Container border radius */
-  containerRadius: '12px',
-  /** Icon size */
-  iconSize: '16px',
-  /** Label font size — body-small (12px) */
-  fontSize: '12px',
-  /** Label line height */
-  lineHeight: '16px',
-  /** Sub-text font size — caption (10px) */
-  subtextFontSize: '10px',
-  /** Sub-text line height */
-  subtextLineHeight: '14px',
-} as const;
-
-// ─── Item Style ─────────────────────────────────────────────
-
-export const sourcesMenuItemStyle = {
-  /** Rest background */
-  backgroundRest: 'rgba(36, 36, 36, 0)',
-  /** Hover background */
-  backgroundHover: 'rgba(36, 36, 36, 0.04)',
-  /** Label color */
-  color: '#242424',
-  /** Sub-text / toggle label color */
-  secondaryColor: '#5d5d5d',
-} as const;
-
-// ─── Toggle Label ───────────────────────────────────────────
-
-export const sourcesMenuToggleLabel = {
-  /** Font size — caption / body-small (12px) */
-  fontSize: '12px',
-  /** Line height */
-  lineHeight: '16px',
-  /** Color */
-  color: '#5d5d5d',
-  /** Gap between label and toggle — atomic/medium (6px) */
-  gap: '6px',
-  /** Padding around the toggle+label group */
-  padding: '2px',
-} as const;
-
-// ─── Connect Button ─────────────────────────────────────────
-
-export const sourcesMenuConnectButton = {
-  /** Style — subtle (transparent bg) */
-  background: 'transparent',
-  /** Hover */
-  backgroundHover: 'rgba(36, 36, 36, 0.04)',
-  /** Text color */
-  color: '#242424',
-  /** Font size — body-medium (14px) */
-  fontSize: '14px',
-  /** Font weight */
-  fontWeight: '400',
-  /** Height */
+export const sourcesMenuHeader = {
+  /** Row height */
   height: '32px',
-  /** Padding */
-  paddingInline: '10px',
-  paddingBlock: '6px',
-  /** Border radius */
-  borderRadius: '12px',
+  /** Title — Functional Subtitle (Display Semibold) */
+  titleFontSize: '20px',
+  titleLineHeight: '28px',
+  titleFontWeight: '600',
+  titleLetterSpacing: '-0.15px',
+  /** Title color — --gnrc-color-foreground-neutral-primary */
+  titleColor: '#242424',
+  /** Close button footprint (subtle icon Button) */
+  closeButtonSize: '32px',
+  /** Close glyph — dismiss-20 */
+  closeIconSize: '20px',
 } as const;
 
-// ─── Scrollbar ──────────────────────────────────────────────
+// ─── Search ─────────────────────────────────────────────────
 
-export const sourcesMenuScrollbar = {
-  /** Track width */
-  width: '2px',
-  /** Track color */
-  thumbColor: '#929292',
-  /** Track background */
-  trackColor: '#d9d9d9',
-  /** Border radius */
+export const sourcesMenuSearch = {
+  /** Input height (medium) */
+  height: '40px',
+  /** Pill shape — --gnrc-border-radius-circular */
   borderRadius: '9999px',
+  /** Border — --gnrc-color-stroke-neutral-subtle */
+  borderColor: 'rgba(189,189,189,0.5)',
+  /** Leading glyph — search-20 */
+  iconSize: '20px',
+  /** Placeholder — --gnrc-color-foreground-neutral-tertiary */
+  placeholderColor: '#6f6f6f',
+} as const;
+
+// ─── Sources list (scroll viewport) ──────────────────────
+// 6 connectors are visible in the viewport; the rest load on an infinite,
+// lazy scroll as the list is scrolled toward the bottom.
+
+export const sourcesMenuList = {
+  /** Rows visible in the viewport before scrolling */
+  visibleRows: 6,
+  /** Viewport height (6 × 56px row pitch) */
+  maxHeight: '360px',
+  /** Row divider — --gnrc-color-stroke-neutral-subtle */
+  rowDivider: '1px solid rgba(189,189,189,0.5)',
+} as const;
+
+// ─── Source Menu item (row) ─────────────────────────────────
+// Row = MenuListItem geometry; trailing control varies by state.
+
+export const sourcesMenuItem = {
+  /** Row pitch (slot height) */
+  height: '56px',
+  /** Interactive backplate — surface --gnrc-color-background-neutral-transparent */
+  background: 'rgba(36,36,36,0)',
+  /** Hover backplate — transparent hover */
+  backgroundHover: 'rgba(36,36,36,0.04)',
+  /** Inline padding — base-300 */
+  paddingInline: '12px',
+  /** Block padding — base-250 */
+  paddingBlock: '10px',
+  /** Gap between icon / label / trailing — base-150 */
+  gap: '6px',
+  /** Backplate radius — base-300 */
+  borderRadius: '12px',
+  /** Leading connector logo size */
+  iconSize: '20px',
+  /** Label — Functional Body Medium */
+  labelFontSize: '14px',
+  labelLineHeight: '20px',
+  labelFontWeight: '420',
+  /** Label color — --gnrc-color-foreground-neutral-primary */
+  labelColor: '#242424',
+  /** Metadata — Functional Body Small, --gnrc-color-foreground-neutral-secondary */
+  metadataFontSize: '12px',
+  metadataLineHeight: '16px',
+  metadataColor: '#5d5d5d',
+  /** Hairline divider under each row — --gnrc-color-stroke-neutral-subtle */
+  rowDivider: '1px solid rgba(189,189,189,0.5)',
+} as const;
+
+// ─── "Connect" trailing link ────────────────────────────────
+
+export const sourcesMenuConnect = {
+  /** Functional Body Medium */
+  fontSize: '14px',
+  lineHeight: '20px',
+  fontWeight: '420',
+  /** Color — --gnrc-color-foreground-neutral-primary */
+  color: '#242424',
+} as const;
+
+// ─── Footer row (MenuListItem) ──────────────────────────────
+
+export const sourcesMenuFooter = {
+  /** Row height */
+  height: '40px',
+  /** Leading glyph — more-horizontal-20 */
+  iconSize: '20px',
+  /** Label — Functional Body Medium, neutral-primary */
+  fontSize: '14px',
+  lineHeight: '20px',
+  color: '#242424',
 } as const;
 
 // ─── Typography ─────────────────────────────────────────────
 
 export const sourcesMenuTypography = {
-  fontFamily: 'var(--f-typography-fontFamily-body)',
+  fontFamily: 'Segoe Sans',
   letterSpacing: '0px',
 } as const;
 
 // ─── Aggregate Export ───────────────────────────────────────
 
 export const sourcesMenu = {
-  container: sourcesMenuContainer,
-  item: {
-    default: sourcesMenuItemDefault,
-    small: sourcesMenuItemSmall,
-    style: sourcesMenuItemStyle,
-  },
-  toggleLabel: sourcesMenuToggleLabel,
-  connectButton: sourcesMenuConnectButton,
-  scrollbar: sourcesMenuScrollbar,
+  popover: sourcesMenuPopover,
+  header: sourcesMenuHeader,
+  search: sourcesMenuSearch,
+  list: sourcesMenuList,
+  item: sourcesMenuItem,
+  connect: sourcesMenuConnect,
+  footer: sourcesMenuFooter,
   typography: sourcesMenuTypography,
 } as const;

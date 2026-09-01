@@ -73,7 +73,7 @@ export const toggleThumbUnchecked = {
 
 export const toggleLabel = {
   /** Font size — body-small (12px) */
-  fontSize: '12px',
+  fontSize: 'var(--f-typography-fontSize-12)',
   /** Line height */
   lineHeight: '16px',
   /** Color — foreground/neutral/secondary */

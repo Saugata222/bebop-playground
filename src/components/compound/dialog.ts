@@ -1,50 +1,50 @@
 /**
  * Component: Dialog
  *
- * Bebop Design System — Modal dialog surface.
+ * One Copilot / Bebop Design System — Modal dialog surface.
  *
- * A dialog is a supplemental surface that can provide helpful interactions
- * or require someone to take an action before they can continue their task,
- * like confirming a deletion.
+ * Dialogs temporarily interrupt the main workflow to demand user attention and
+ * action, reserved for critical interactions requiring explicit acknowledgment
+ * — confirmations, warnings, or structured inputs.
  *
- * Based on Fluent 2 Dialog, simplified for Bebop (no checkbox).
+ * Types:
+ *   Neutral      — a routine confirmation (Cancel + primary action)
+ *   Feedback     — richer body with a primary submit (Cancel + Submit)
+ *   Destructive  — irreversible action; the confirm button is Danger
  *
  * Anatomy:
- *   Surface   — white card with elevated shadow and rounded corners
- *   Header    — title text (subtitle) + optional dismiss icon button
- *   Body      — descriptive text (body-medium)
- *   Footer    — left slot (tertiary) + right slot (primary + secondary)
- *   Overlay   — semi-transparent backdrop behind the dialog
+ *   Overlay   — semi-transparent backdrop
+ *   Surface   — white card, radius 24, Shadow/Highest, 24px padding
+ *   Header    — title (Functional Title Small, 24/28) + optional dismiss
+ *   Body      — descriptive text (Functional Body Large, 16/22)
+ *   Footer    — right-aligned Cancel (Subtle) + primary/danger action
  *
- * Optional parts:
- *   dismiss:         true | false (× icon button top-right)
- *   body:            true | false
- *   footer:          true | false
- *   secondaryButton: true | false
- *   tertiaryButton:  true | false
+ * Reused primitive: Button (Subtle Cancel; Primary/Danger confirm).
  *
  * Prefix: --c-dialog-{property}
+ *
+ * Figma: One-Copilot-Desktop-UI-Kit — Dialog (page 2519:484419; node 4020:1796)
  */
 
 // ─── Surface Tokens ─────────────────────────────────────────
 
 export const dialogSurface = {
-  /** Background — surface/neutral/default (white) */
-  background: 'var(--f-color-white)',
+  /** Background — --gnrc-color-surface-neutral-nearer (white) */
+  background: '#ffffff',
   /** Minimum width */
-  minWidth: '480px',
+  minWidth: '320px',
   /** Default width */
-  width: '600px',
+  width: '360px',
   /** Padding — relaxed/medium (24px) */
   padding: '24px',
-  /** Gap between header/body/footer sections — composite/small (8px) */
-  gap: '8px',
-  /** Border radius — composite/medium (16px) */
-  borderRadius: '16px',
+  /** Gap between header/body/footer sections — --gnrc-spacing-component-base-300 (12px) */
+  gap: '12px',
+  /** Border radius — --gnrc-border-radius-base-600 (24px) */
+  borderRadius: '24px',
   /** Border — transparent 1px (structural only) */
   border: '1px solid rgba(36, 36, 36, 0)',
-  /** Elevation — elevated shadow */
-  boxShadow: '0px 12px 48px 0px rgba(0, 0, 0, 0.24), 0px 0px 3px 0px rgba(0, 0, 0, 0.03)',
+  /** Elevation — Shadow/Highest */
+  boxShadow: '0 0 1px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.03), 0 32px 48px rgba(0,0,0,0.08)',
 } as const;
 
 // ─── Overlay Tokens ─────────────────────────────────────────
@@ -59,12 +59,14 @@ export const dialogOverlay = {
 export const dialogHeader = {
   /** Gap between title and dismiss — composite/small (8px) */
   gap: '8px',
-  /** Title font size — subtitle (20px) */
-  fontSize: '20px',
+  /** Title font size — Functional Title Small (24px) */
+  fontSize: '24px',
   /** Title font weight — semibold */
   fontWeight: '600',
-  /** Title line height */
-  lineHeight: '1.4',
+  /** Title line height — 28px */
+  lineHeight: '28px',
+  /** Title letter-spacing — --gnrc-letter-spacing-functional-title-small */
+  letterSpacing: '-0.15px',
   /** Title color — foreground/neutral/primary */
   color: '#242424',
 } as const;
@@ -93,14 +95,25 @@ export const dialogDismiss = {
 // ─── Body Tokens ────────────────────────────────────────────
 
 export const dialogBody = {
-  /** Font size — body-medium (14px) */
-  fontSize: '14px',
+  /** Font size — Functional Body Large (16px) */
+  fontSize: '16px',
   /** Font weight — regular */
-  fontWeight: '400',
-  /** Line height */
-  lineHeight: '1.4',
+  fontWeight: '420',
+  /** Line height — 22px */
+  lineHeight: '22px',
   /** Text color — foreground/neutral/primary */
   color: '#242424',
+} as const;
+
+// ─── Footer Danger Action (Destructive type) ────────────────
+
+export const dialogButtonDanger = {
+  /** Background — --gnrc-color-background-danger-soft */
+  background: '#ffe3e6',
+  /** Foreground — --gnrc-color-foreground-danger-primary */
+  color: '#a62147',
+  /** Hover — slightly deeper soft */
+  backgroundHover: '#ffd0d6',
 } as const;
 
 // ─── Footer Tokens ──────────────────────────────────────────
@@ -128,5 +141,6 @@ export const dialog = {
   dismiss: dialogDismiss,
   body: dialogBody,
   footer: dialogFooter,
+  buttonDanger: dialogButtonDanger,
   typography: dialogTypography,
 } as const;

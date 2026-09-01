@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Side-by-side compare — M365 Copilot Playground</title>
+<style>
+@font-face { font-family: 'Segoe Sans'; src: url('fonts/Segoe-sans.woff2') format('woff2-variations'), url('fonts/Segoe-sans.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Segoe Sans'; src: url('fonts/Segoe-sans-Italic.woff2') format('woff2-variations'), url('fonts/Segoe-sans-Italic.woff2') format('woff2'); font-weight: 100 900; font-style: italic; font-display: swap; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #fff; color: #242424; display: flex; flex-direction: column; }
+
+/* ─── Top bar ─── */
+.topbar { flex: none; display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 48px; border-bottom: 1px solid #dedede; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.topbar__back { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 12px; font-size: 13px; font-weight: 400; color: #242424; text-decoration: none; transition: background 0.1s; }
+.topbar__back:hover { background: rgba(36,36,36,0.04); }
+.topbar__back svg { width: 14px; height: 14px; }
+.topbar__title { font-size: 13px; font-weight: 600; color: #242424; }
+.topbar__divider { width: 1px; height: 16px; background: #dedede; }
+.topbar__spacer { flex: 1; }
+.topbar__btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 12px; font-family: inherit; font-size: 13px; font-weight: 400; color: #242424; background: transparent; border: 1px solid #dedede; cursor: pointer; transition: background 0.1s; }
+.topbar__btn:hover { background: rgba(36,36,36,0.04); }
+.topbar__btn svg { width: 14px; height: 14px; }
+.topbar__btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.topbar__toggle { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 12px; font-size: 13px; color: #242424; cursor: pointer; user-select: none; }
+.topbar__toggle:hover { background: rgba(36,36,36,0.04); }
+.topbar__toggle input { margin: 0; cursor: pointer; accent-color: #242424; }
+
+/* ─── Pane container ─── */
+.panes { flex: 1; display: flex; min-height: 0; position: relative; }
+
+/* ─── Single pane ─── */
+.pane { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #fafafa; }
+.pane__header { flex: none; display: flex; align-items: center; gap: 8px; padding: 0 14px; height: 36px; border-bottom: 1px solid #ebebeb; background: #fff; }
+.pane__label { font-size: 12px; font-weight: 600; color: #242424; }
+.pane__sub { font-size: 11px; font-weight: 400; color: #8f8f8f; }
+.pane__sub a { color: inherit; text-decoration: none; }
+.pane__sub a:hover { text-decoration: underline; }
+.pane__header-spacer { flex: 1; }
+.pane__icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 0; border-radius: 6px; background: transparent; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; }
+.pane__icon-btn:hover { background: rgba(36,36,36,0.06); color: #242424; }
+.pane__icon-btn svg { width: 14px; height: 14px; }
+.pane__body { flex: 1; position: relative; min-height: 0; background: #f5f5f5; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px; }
+/* Stage holds the scaled iframe; size is computed by JS to maintain 14.4:9 ratio */
+.pane__stage { position: relative; flex: none; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-radius: 8px; overflow: hidden; background: #fff; }
+.pane__iframe { width: 1440px; height: 900px; border: 0; display: block; background: #fff; transform-origin: top left; }
+
+/* ─── Divider ─── */
+.divider { flex: none; width: 6px; background: transparent; position: relative; cursor: col-resize; user-select: none; z-index: 10; }
+.divider::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #dedede; transform: translateX(-50%); transition: background 0.1s, width 0.1s; }
+.divider:hover::before, .divider.divider--active::before { background: #242424; width: 2px; }
+
+/* ─── Empty / error state ─── */
+.empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; text-align: center; gap: 16px; background: #fafafa; color: #5d5d5d; }
+.empty__icon { width: 64px; height: 64px; border-radius: 16px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #8f8f8f; }
+.empty__icon svg { width: 32px; height: 32px; }
+.empty__title { font-size: 18px; font-weight: 600; color: #242424; }
+.empty__desc { font-size: 14px; color: #6f6f6f; max-width: 480px; line-height: 1.5; }
+.empty__code { font-family: 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; padding: 8px 12px; background: #fff; border: 1px solid #dedede; border-radius: 8px; color: #242424; }
+
+/* ─── Pane error state ─── */
+.pane__error { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; text-align: center; gap: 12px; color: #5d5d5d; background: #fafafa; }
+.pane__error-title { font-size: 14px; font-weight: 600; color: #242424; }
+.pane__error-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.pane__error code { font-family: 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; padding: 2px 6px; background: #fff; border: 1px solid #dedede; border-radius: 6px; color: #242424; }
+
+/* ─── Stacked layout for narrow screens ─── */
+@media (max-width: 900px) {
+  .panes { flex-direction: column; }
+  .divider { width: 100%; height: 6px; cursor: row-resize; }
+  .divider::before { left: 0; right: 0; top: 50%; bottom: auto; width: auto; height: 1px; transform: translateY(-50%); }
+  .divider:hover::before, .divider.divider--active::before { height: 2px; width: auto; }
+  .pane { width: 100% !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Top bar ─── -->
+<div class="topbar">
+  <a class="topbar__back" href="prototypes.html" aria-label="Back to Prototypes">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 3l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Prototypes</span>
+  </a>
+  <div class="topbar__divider"></div>
+  <span class="topbar__title">Side-by-side compare</span>
+  <div class="topbar__spacer"></div>
+  <button class="topbar__btn" id="swapBtn" type="button" title="Swap A ↔ B">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M3 5h9M9 2l3 3-3 3M13 11H4M7 8l-3 3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Swap
+  </button>
+  <button class="topbar__btn" id="resetBtn" type="button" title="Reset split to 50/50">
+    Reset split
+  </button>
+</div>
+
+<!-- ─── Panes ─── -->
+<div class="panes" id="panes">
+  <!-- Populated by JS -->
+</div>
+
+<script>
+(function () {
+  // ─── Read URL params ───
+  function readParams() {
+    var u = new URL(window.location.href);
+    return {
+      a: (u.searchParams.get('a') || '').trim(),
+      b: (u.searchParams.get('b') || '').trim(),
+      split: parseFloat(u.searchParams.get('split') || '50')
+    };
+  }
+
+  function writeParams(params, replace) {
+    var u = new URL(window.location.href);
+    if (params.a !== undefined) u.searchParams.set('a', params.a);
+    if (params.b !== undefined) u.searchParams.set('b', params.b);
+    if (params.split !== undefined) u.searchParams.set('split', String(params.split));
+    var fn = replace ? 'replaceState' : 'pushState';
+    history[fn](null, '', u.toString());
+  }
+
+  // ─── Slug → URL ───
+  function slugToUrl(slug) {
+    if (!slug) return '';
+    // Allow full URLs (e.g., for ad-hoc compare against external)
+    if (/^https?:\/\//i.test(slug)) return slug;
+    return 'dist/' + slug + '.html';
+  }
+
+  // ─── Render ───
+  var panes = document.getElementById('panes');
+
+  function renderEmpty() {
+    panes.innerHTML = '';
+    var empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = ''
+      + '<div class="empty__icon">'
+      +   '<svg viewBox="0 0 24 24" fill="none"><path d="M3 5h7v14H3zM14 5h7v14h-7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+      + '</div>'
+      + '<div class="empty__title">Pick two prototypes to compare</div>'
+      + '<div class="empty__desc">Ask your AI agent to compare any two experiments or shells. The agent will list available prototypes and build the URL for you.</div>'
+      + '<div class="empty__code">compare.html?a={slugA}&b={slugB}</div>';
+    panes.appendChild(empty);
+  }
+
+  function renderPane(slug, side) {
+    var pane = document.createElement('div');
+    pane.className = 'pane pane--' + side;
+
+    var header = document.createElement('div');
+    header.className = 'pane__header';
+    header.innerHTML = ''
+      + '<span class="pane__label">' + (side === 'a' ? 'A' : 'B') + '</span>'
+      + '<span class="pane__sub">'
+      +   (slug ? '<a href="' + slugToUrl(slug) + '" target="_blank" rel="noopener">' + escapeHtml(slug) + '</a>'
+                : '<em>(empty)</em>')
+      + '</span>'
+      + '<span class="pane__header-spacer"></span>'
+      + (slug
+          ? '<a class="pane__icon-btn" href="' + slugToUrl(slug) + '" target="_blank" rel="noopener" title="Open ' + escapeHtml(slug) + ' in a new tab">'
+            + '<svg viewBox="0 0 16 16" fill="none"><path d="M9 2h5v5M14 2L7 9M12 9v4a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+            + '</a>'
+          : '');
+    pane.appendChild(header);
+
+    var body = document.createElement('div');
+    body.className = 'pane__body';
+
+    if (!slug) {
+      body.innerHTML = ''
+        + '<div class="pane__error">'
+        +   '<div class="pane__error-title">No prototype selected</div>'
+        +   '<div class="pane__error-desc">Add <code>?' + side + '={slug}</code> to the URL.</div>'
+        + '</div>';
+    } else {
+      var stage = document.createElement('div');
+      stage.className = 'pane__stage';
+
+      var iframe = document.createElement('iframe');
+      iframe.className = 'pane__iframe';
+      iframe.src = slugToUrl(slug);
+      iframe.setAttribute('loading', 'eager');
+      iframe.setAttribute('title', 'Prototype ' + side.toUpperCase() + ': ' + slug);
+      // Detect 404: hide iframe and show error if it never loads a content document
+      iframe.addEventListener('load', function () {
+        try {
+          var doc = iframe.contentDocument;
+          if (doc && doc.title && /^(error|page not found|404)/i.test(doc.title)) {
+            showPaneError(body, slug, 'Page not found');
+            return;
+          }
+          // Hide injected catalog chrome so users can't navigate out of the iframe
+          if (doc) {
+            var s = doc.createElement('style');
+            s.textContent = '.copilot-backbar,.copilot-shell-bar,.copilot-shell-hover,.bp-header,.bp-related,.copilot-hover-zone{display:none!important}';
+            doc.head.appendChild(s);
+            // Block any link that targets _top or _parent
+            doc.addEventListener('click', function (ev) {
+              var a = ev.target && ev.target.closest && ev.target.closest('a');
+              if (a && (a.target === '_top' || a.target === '_parent')) ev.preventDefault();
+            }, true);
+          }
+        } catch (e) {
+          // Cross-origin — assume OK
+        }
+      });
+      iframe.addEventListener('error', function () {
+        showPaneError(body, slug, 'Failed to load');
+      });
+      stage.appendChild(iframe);
+      body.appendChild(stage);
+    }
+
+    pane.appendChild(body);
+    return pane;
+  }
+
+  function showPaneError(body, slug, msg) {
+    body.innerHTML = ''
+      + '<div class="pane__error">'
+      +   '<div class="pane__error-title">' + escapeHtml(msg) + '</div>'
+      +   '<div class="pane__error-desc">Could not load <code>' + escapeHtml(slug) + '</code>. Check the slug and try again.</div>'
+      + '</div>';
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  }
+
+  function renderCompare(p) {
+    panes.innerHTML = '';
+    if (!p.a && !p.b) { renderEmpty(); return; }
+
+    var paneA = renderPane(p.a, 'a');
+    var paneB = renderPane(p.b, 'b');
+    var divider = document.createElement('div');
+    divider.className = 'divider';
+    divider.id = 'divider';
+
+    panes.appendChild(paneA);
+    panes.appendChild(divider);
+    panes.appendChild(paneB);
+
+    applySplit(p.split);
+    wireDivider();
+  }
+
+  // ─── Split (flex-basis on each pane) ───
+  function applySplit(pct) {
+    if (!isFinite(pct)) pct = 50;
+    pct = Math.max(15, Math.min(85, pct));
+    var paneA = panes.querySelector('.pane--a');
+    var paneB = panes.querySelector('.pane--b');
+    if (!paneA || !paneB) return;
+    paneA.style.flex = pct + ' 1 0';
+    paneB.style.flex = (100 - pct) + ' 1 0';
+    rescaleStages();
+  }
+
+  // ─── Scale each stage to fit its pane body, preserving 1440:900 ratio ───
+  var DESIGN_W = 1440;
+  var DESIGN_H = 900;
+  var STAGE_PADDING = 32; // matches .pane__body padding * 2
+
+  function rescaleStages() {
+    requestAnimationFrame(function () {
+      var ratio = DESIGN_W / DESIGN_H; // 14.4 / 9 = 1.6
+      var stages = panes.querySelectorAll('.pane__stage');
+      stages.forEach(function (stage) {
+        var body = stage.parentElement;
+        if (!body) return;
+        var availW = Math.max(0, body.clientWidth - STAGE_PADDING);
+        var availH = Math.max(0, body.clientHeight - STAGE_PADDING);
+        if (availW <= 0 || availH <= 0) return;
+        var stageW, stageH;
+        if (availW / availH > ratio) {
+          // Height is the constraint
+          stageH = availH;
+          stageW = stageH * ratio;
+        } else {
+          // Width is the constraint
+          stageW = availW;
+          stageH = stageW / ratio;
+        }
+        var scale = stageW / DESIGN_W;
+        stage.style.width = stageW + 'px';
+        stage.style.height = stageH + 'px';
+        var iframe = stage.querySelector('iframe');
+        if (iframe) iframe.style.transform = 'scale(' + scale + ')';
+      });
+    });
+  }
+
+  window.addEventListener('resize', rescaleStages);
+
+  function wireDivider() {
+    var divider = document.getElementById('divider');
+    if (!divider) return;
+    var dragging = false;
+
+    function onPointerDown(e) {
+      dragging = true;
+      divider.classList.add('divider--active');
+      document.body.style.cursor = window.matchMedia('(max-width: 900px)').matches ? 'row-resize' : 'col-resize';
+      try { divider.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    function onPointerMove(e) {
+      if (!dragging) return;
+      var rect = panes.getBoundingClientRect();
+      var pct;
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        pct = ((e.clientY - rect.top) / rect.height) * 100;
+      } else {
+        pct = ((e.clientX - rect.left) / rect.width) * 100;
+      }
+      applySplit(pct);
+    }
+    function onPointerUp(e) {
+      if (!dragging) return;
+      dragging = false;
+      divider.classList.remove('divider--active');
+      document.body.style.cursor = '';
+      try { divider.releasePointerCapture(e.pointerId); } catch (err) {}
+      // Persist split to URL
+      var paneA = panes.querySelector('.pane--a');
+      if (paneA) {
+        var flexVal = parseFloat((paneA.style.flex || '50').split(' ')[0]);
+        if (isFinite(flexVal)) writeParams({ split: Math.round(flexVal) }, true);
+      }
+    }
+
+    divider.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+
+    // Double-click resets to 50/50
+    divider.addEventListener('dblclick', function () {
+      applySplit(50);
+      writeParams({ split: 50 }, true);
+    });
+  }
+
+  // ─── Toolbar buttons ───
+  document.getElementById('swapBtn').addEventListener('click', function () {
+    var p = readParams();
+    if (!p.a && !p.b) return;
+    writeParams({ a: p.b, b: p.a, split: 100 - (p.split || 50) }, false);
+    renderCompare(readParams());
+  });
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    applySplit(50);
+    writeParams({ split: 50 }, true);
+  });
+
+  // Disable swap if nothing to swap
+  function updateButtons() {
+    var p = readParams();
+    document.getElementById('swapBtn').disabled = !(p.a || p.b);
+  }
+
+  // ─── Handle browser back/forward ───
+  window.addEventListener('popstate', function () {
+    renderCompare(readParams());
+    updateButtons();
+  });
+
+  // ─── Initial render ───
+  renderCompare(readParams());
+  updateButtons();
+})();
+</script>
+
+</body>
+</html>

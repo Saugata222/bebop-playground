@@ -13,6 +13,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { autoVariantTabsHead } from './_autoVariantTabs.js';
+import { tokensCSS } from './_tokens';
 
 // ─── Icons (20px, fill="currentColor") ──────────────────────
 
@@ -31,8 +33,9 @@ const mentionIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" 
 // ─── CSS ────────────────────────────────────────────────────
 
 let css = '';
+css += tokensCSS;
 css += '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n';
-css += "html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; background: #f5f5f5; }\n";
+css += "html, body { height: 100%; font-family: var(--f-typography-fontFamily-functional); color: #242424; background: #f5f5f5; }\n";
 css += '.page { padding: 40px; display: flex; flex-direction: column; gap: 48px; }\n';
 css += 'h2 { font-size: 14px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }\n';
 css += '.demo { background: #fff; border-radius: 16px; padding: 32px; border: 1px solid #e8e8e8; display: inline-flex; }\n';
@@ -41,7 +44,7 @@ css += '.state-cell { display: flex; flex-direction: column; gap: 8px; }\n';
 css += '.state-label { font-size: 11px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.6px; }\n';
 
 // Add menu surface
-css += ".am { display: flex; flex-direction: column; gap: 4px; width: 260px; background: #fff; border-radius: 16px; padding: 8px; font-family: 'Segoe UI', sans-serif; }\n";
+css += ".am { display: flex; flex-direction: column; gap: 4px; width: 260px; background: #fff; border-radius: 16px; padding: 8px; font-family: var(--f-typography-fontFamily-functional); }\n";
 
 // Header row
 css += '.am__hdr { display: flex; height: 44px; align-items: center; padding: 4px 0; }\n';
@@ -62,7 +65,7 @@ css += '.am__divider { padding: 8px 0; width: 100%; }\n';
 css += '.am__divider-line { height: 1px; background: #f0f0f0; width: 100%; }\n';
 
 // Menu item
-css += ".am__item { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; background: transparent; border: none; cursor: pointer; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; text-align: left; width: 100%; transition: background 0.1s; outline: none; }\n";
+css += ".am__item { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; background: transparent; border: none; cursor: pointer; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; text-align: left; width: 100%; transition: background 0.1s; outline: none; }\n";
 css += '.am__item:hover { background: rgba(36,36,36,0.04); color: #1d1d1d; }\n';
 css += '.am__item:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }\n';
 css += '.am__item-icon { display: flex; flex-shrink: 0; width: 20px; height: 20px; color: #242424; }\n';
@@ -88,8 +91,9 @@ html += '<html lang="en">';
 html += '<head>';
 html += '<meta charset="utf-8"/>';
 html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
-html += '<title>Add Menu \u2014 Bebop Design System Preview</title>';
+html += '<title>Add Menu \u2014 M365 Copilot Design System Preview</title>';
 html += '<style>' + css + '</style>';
+html += autoVariantTabsHead;
 html += '</head>';
 html += '<body>';
 html += '<div class="page">';
@@ -97,7 +101,7 @@ html += '<div class="page">';
 // ─── Section 1: Full component (interactive) ───
 html += '<div>';
 html += '<h2>Add Menu \u2014 Interactive</h2>';
-html += '<div class="demo">';
+html += '<div class="demo bp-stage__canvas">';
 html += '<div class="am">';
 
 // Header

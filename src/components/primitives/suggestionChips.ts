@@ -51,9 +51,9 @@ export const suggestionChipSize = {
   /** Border radius — Medium */
   borderRadius: '12px',
   /** Font size — body-medium */
-  fontSize: '14px',
+  fontSize: 'var(--f-typography-fontSize-14)',
   /** Font weight — regular */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Line height */
   lineHeight: '1.4',
   /** No wrap */

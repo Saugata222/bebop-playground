@@ -62,9 +62,9 @@ export const acquiredCardIcon = {
 
 export const acquiredCardName = {
   /** Font size */
-  fontSize: '16px',
+  fontSize: 'var(--f-typography-fontSize-16)',
   /** Font weight — regular */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Line height */
   lineHeight: '24px',
   /** Color — neutral[26] */
@@ -115,9 +115,9 @@ export const acquiredCardMenuItem = {
   /** Background hover */
   backgroundHover: 'rgba(36, 36, 36, 0.04)',
   /** Font size — typeFunctional.bodyMedium */
-  fontSize: '14px',
+  fontSize: 'var(--f-typography-fontSize-14)',
   /** Font weight */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Line height */
   lineHeight: '20px',
   /** Color — neutral[26] */

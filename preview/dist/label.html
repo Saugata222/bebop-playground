@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Label Preview</title><style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+h2 { font-size: 18px; font-weight: 600; margin: 40px 0 16px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
+.hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
+.wrap { max-width: 760px; margin: 0 auto; }
+
+/* Matrix */
+.matrix { display: grid; grid-template-columns: 150px repeat(4, 1fr); gap: 14px 16px; align-items: center; background: #fff; border: 1px solid #ececec; border-radius: 12px; padding: 20px 24px; }
+.matrix__col { font-size: 10px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.8px; text-align: left; padding-bottom: 4px; }
+.matrix__rl { font-size: 11px; font-weight: 600; color: #5d5d5d; }
+
+/* ─── Label ─── */
+.lbl {
+  display: inline-flex; align-items: center; gap: 2px;
+  font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0; white-space: nowrap;
+}
+.lbl__text { display: inline-block; }
+.lbl__req { display: inline-block; color: #a62147; }
+
+/* Sizes — font-size / line-height + optical size axis */
+.lbl--small  { font-size: 12px; line-height: 16px; }
+.lbl--medium { font-size: 14px; line-height: 20px; }
+.lbl--large  { font-size: 16px; line-height: 22px; }
+.lbl--small,  .lbl--medium { font-variation-settings: 'opsz' 8; }
+.lbl--large   { font-variation-settings: 'opsz' 12; }
+
+/* Weights — 420 regular / 625 semibold (with matching wght axis) */
+.lbl--regular.lbl--small,  .lbl--regular.lbl--medium { font-weight: 420; font-variation-settings: 'opsz' 8, 'wght' 420; }
+.lbl--regular.lbl--large   { font-weight: 420; font-variation-settings: 'opsz' 12, 'wght' 420; }
+.lbl--strong.lbl--small,   .lbl--strong.lbl--medium  { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.lbl--strong.lbl--large    { font-weight: 625; font-variation-settings: 'opsz' 12, 'wght' 625; }
+
+/* States */
+.lbl--rest     { color: #242424; }
+.lbl--disabled { color: rgba(0, 0, 0, 0.43); }
+.lbl--disabled .lbl__req { color: rgba(0, 0, 0, 0.43); }
+
+/* ─── Bebop page overrides (injected by _inject.ts) ─── */
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
+
+/* Page wrapper */
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
+.bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
+.bp-header__tag--compound { background: #ebebeb; color: #242424; }
+.bp-header__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
+.bp-header__desc { font-size: 15px; color: #6f6f6f; line-height: 1.6; max-width: 600px; margin-bottom: 20px; }
+.bp-header__states { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
+.bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
+
+/* Content area — override all wrapper variants */
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+
+/* Headings */
+h1 { display: none !important; }
+.hint, p.hint { display: none !important; }
+h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
+h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
+/* Rows and cells */
+.row { gap: 24px !important; margin-bottom: 20px !important; }
+.cell { gap: 8px !important; }
+.rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+
+/* ─── Related components ─── */
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+.bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
+.bp-related__card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.bp-related__card-top { display: flex; align-items: center; gap: 8px; }
+.bp-related__card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
+.bp-related__card-arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
+.bp-related__card:hover .bp-related__card-arrow { color: #242424; transform: translateX(2px); }
+.bp-related__card-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
+
+/* ─── Back bar (sticky, frosted) ─── */
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Label</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Functional text label that names a control, with an optional required asterisk in danger. Small, Medium, and Large sizes in Regular (420) and Strong (625) weights, across Rest and Disabled states. Segoe Sans with size-stepped optical sizing (opsz 8 for S/M, 12 for L).</p><div class="bp-header__states"><span class="bp-header__state">Rest</span><span class="bp-header__state">Disabled</span><span class="bp-header__state">Required</span></div></div><!-- /INJECT:HEADER --><div class="bp-stage"><div class="bp-stage__canvas"><span id="heroLbl" class="lbl lbl--large lbl--strong lbl--rest" style="font-size:20px;line-height:26px"><span class="lbl__text">Label</span><span class="lbl__req" style="display:none">*</span></span></div><div class="bp-controls"><div class="bp-control"><span class="bp-lbl">Size</span><div class="bp-seg" data-seg="size"><button type="button" data-ctrl="size" data-value="small">S</button><button type="button" data-ctrl="size" data-value="medium">M</button><button type="button" data-ctrl="size" data-value="large" class="is-active">L</button></div></div><div class="bp-control"><span class="bp-lbl">Weight</span><div class="bp-seg" data-seg="weight"><button type="button" data-ctrl="weight" data-value="regular">Regular</button><button type="button" data-ctrl="weight" data-value="strong" class="is-active">Strong</button></div></div><div class="bp-control"><span class="bp-lbl">Required</span><div class="bp-seg" data-seg="required"><button type="button" data-ctrl="required" data-value="off" class="is-active">Off</button><button type="button" data-ctrl="required" data-value="on">On</button></div></div><div class="bp-control"><span class="bp-lbl">Disabled</span><div class="bp-seg" data-seg="dis"><button type="button" data-ctrl="dis" data-value="off" class="is-active">Off</button><button type="button" data-ctrl="dis" data-value="on">On</button></div></div></div></div>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Size × Weight × State</span></div><div class="bp-matrix-wrap"><table class="bp-matrix"><thead><tr><th></th><th>Rest</th><th>Disabled</th><th>Rest · Required</th><th>Disabled · Required</th></tr></thead><tbody><tr><th>strong · small</th><td><span class="lbl lbl--small lbl--strong lbl--rest"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--small lbl--strong lbl--disabled"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--small lbl--strong lbl--rest"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td><td><span class="lbl lbl--small lbl--strong lbl--disabled"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td></tr><tr><th>strong · medium</th><td><span class="lbl lbl--medium lbl--strong lbl--rest"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--medium lbl--strong lbl--disabled"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--medium lbl--strong lbl--rest"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td><td><span class="lbl lbl--medium lbl--strong lbl--disabled"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td></tr><tr><th>strong · large</th><td><span class="lbl lbl--large lbl--strong lbl--rest"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--large lbl--strong lbl--disabled"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--large lbl--strong lbl--rest"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td><td><span class="lbl lbl--large lbl--strong lbl--disabled"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td></tr><tr><th>regular · small</th><td><span class="lbl lbl--small lbl--regular lbl--rest"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--small lbl--regular lbl--disabled"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--small lbl--regular lbl--rest"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td><td><span class="lbl lbl--small lbl--regular lbl--disabled"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td></tr><tr><th>regular · medium</th><td><span class="lbl lbl--medium lbl--regular lbl--rest"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--medium lbl--regular lbl--disabled"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--medium lbl--regular lbl--rest"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td><td><span class="lbl lbl--medium lbl--regular lbl--disabled"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td></tr><tr><th>regular · large</th><td><span class="lbl lbl--large lbl--regular lbl--rest"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--large lbl--regular lbl--disabled"><span class="lbl__text">Label</span></span></td><td><span class="lbl lbl--large lbl--regular lbl--rest"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td><td><span class="lbl lbl--large lbl--regular lbl--disabled"><span class="lbl__text">Label</span><span class="lbl__req">*</span></span></td></tr></tbody></table></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Specs</span></div><div class="bp-specs"><div class="bp-spec"><div class="bp-spec__k">Sizes</div><div class="bp-spec__v">12 / 14 / 16 px</div></div><div class="bp-spec"><div class="bp-spec__k">Line height</div><div class="bp-spec__v">16 / 20 / 22</div></div><div class="bp-spec"><div class="bp-spec__k">Optical size</div><div class="bp-spec__v">8 (S/M) · 12 (L)</div></div><div class="bp-spec"><div class="bp-spec__k">Regular weight</div><div class="bp-spec__v">420</div></div><div class="bp-spec"><div class="bp-spec__k">Strong weight</div><div class="bp-spec__v">625</div></div><div class="bp-spec"><div class="bp-spec__k">Required mark</div><div class="bp-spec__v">#a62147</div></div><div class="bp-spec"><div class="bp-spec__k">Disabled</div><div class="bp-spec__v">rgba(0,0,0,0.43)</div></div><div class="bp-spec"><div class="bp-spec__k">Font</div><div class="bp-spec__v">Segoe Sans</div></div></div></section>
+
+<script>
+(function () {
+  var hero = document.getElementById('heroLbl');
+  var star = hero.querySelector('.lbl__req');
+  var st = { size: 'large', weight: 'strong', required: false, dis: false };
+  function paint() {
+    var state = st.dis ? 'disabled' : 'rest';
+    hero.className = 'lbl lbl--' + st.size + ' lbl--' + st.weight + ' lbl--' + state;
+    star.style.display = st.required ? 'inline-block' : 'none';
+  }
+  document.querySelectorAll('[data-ctrl]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var name = btn.getAttribute('data-ctrl');
+      var val = btn.getAttribute('data-value');
+      if (name === 'size') st.size = val;
+      else if (name === 'weight') st.weight = val;
+      else if (name === 'required') st.required = val === 'on';
+      else if (name === 'dis') st.dis = val === 'on';
+      var seg = document.querySelector('[data-seg="' + name + '"]');
+      if (seg) seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+      paint();
+    });
+  });
+  paint();
+})();
+</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="input.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Input</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Single-line text field with an optional leading icon. Outline and Underline shap...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="checkbox.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Checkbox</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Selection control for deferred, multi-select decisions. Unchecked, Checked, and ...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="dropdown.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Dropdown</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Single-select dropdown. A 32px trigger (transparent surface, neutral stroke, Seg...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a></div></div><!-- /INJECT:RELATED --></body></html>

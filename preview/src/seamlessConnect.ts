@@ -520,37 +520,57 @@ css += '.fre__card-btn svg { width: 20px; height: 20px; }';
 css += '\n';
 
 // ─── Connect Dialog ───
+// Matches Figma `[Bebop V2] Dialog` (node 2562:165377) and the Bebop Connect Dialog
+// compound component spec (`src/components/compound/connectDialog.ts`):
+//   • 556px wide, 16px radius, transparent 1px border, Elevation 5 dual shadow
+//   • Hero band 122px #f5f5f5; floating logo row at top: 37px
+//   • Padding-inline 24px; pb 24px; section gap 16 (hero↔content, text-group↔footer)
+//   • Inside text-group: gap 8 (header↔body); inside header: gap 2 (title↔subtitle)
+//   • Title: Segoe Sans Semibold 20/28 #242424
+//   • Subtitle: Segoe UI Regular 12/16 #424242
+//   • Body: Segoe Sans Regular 14/20 #242424, max-width 472px
+//   • Buttons: 32px height, 10px padding-inline, 12px radius (Bebop buttonSizeMedium)
 css += '.conn-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; }';
 css += '\n';
 css += '.conn-overlay--open { display: flex; }';
 css += '\n';
-css += '.conn-dlg { width: 556px; background: #fff; border-radius: 16px; border: 1px solid #dedede; overflow: hidden; position: relative; box-shadow: 0px 12px 48px rgba(0,0,0,0.12); }';
+css += '.conn-dlg { width: 556px; background: #fff; border-radius: 16px; border: 1px solid rgba(36,36,36,0); overflow: hidden; position: relative; box-shadow: 0px 12px 48px rgba(0,0,0,0.24), 0px 0px 3px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 16px; padding: 0 0 24px 0; }';
 css += '\n';
-css += '.conn-dlg__banner { width: 100%; height: 122px; background: #f5f5f5; }';
+css += '.conn-dlg__banner { width: 100%; height: 122px; background: #f5f5f5; flex-shrink: 0; }';
 css += '\n';
-css += '.conn-dlg__icons { position: absolute; top: 38px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; }';
+css += '.conn-dlg__icons { position: absolute; top: 37px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; }';
 css += '\n';
-css += '.conn-dlg__icons .conn-dlg__ico { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }';
+css += '.conn-dlg__icons .conn-dlg__ico { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }';
 css += '\n';
 css += '.conn-dlg__icons .conn-dlg__ico svg, .conn-dlg__icons .conn-dlg__ico img { width: 48px; height: 48px; display: block; }';
 css += '\n';
-css += '.conn-dlg__dots { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #242424; }';
+css += '.conn-dlg__dots { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #5d5d5d; flex-shrink: 0; }';
 css += '\n';
 css += '.conn-dlg__dots svg { width: 32px; height: 32px; }';
 css += '\n';
-css += '.conn-dlg__content { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 16px; }';
+// Content: text-group (gap 8) ↔ footer (parent gap 16)
+css += '.conn-dlg__content { padding: 0 24px; display: flex; flex-direction: column; gap: 16px; }';
 css += '\n';
-css += ".conn-dlg__title { font-family: 'Segoe UI', sans-serif; font-size: 20px; font-weight: 600; line-height: 28px; color: #242424; }";
+css += '.conn-dlg__text-group { display: flex; flex-direction: column; gap: 8px; }';
 css += '\n';
-css += ".conn-dlg__dev { font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; line-height: 16px; color: #424242; margin-top: 2px; }";
+css += '.conn-dlg__header { display: flex; flex-direction: column; gap: 2px; word-break: break-word; }';
 css += '\n';
-css += ".conn-dlg__body { font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; margin-top: 8px; }";
+css += ".conn-dlg__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 600; line-height: 28px; color: #242424; }";
 css += '\n';
-css += '.conn-dlg__body a { color: #242424; text-decoration: underline; }';
+css += ".conn-dlg__dev { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 400; line-height: 16px; color: #424242; }";
 css += '\n';
-css += '.conn-dlg__footer { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }';
+css += ".conn-dlg__body { font-family: 'Segoe Sans', 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; max-width: 472px; word-break: break-word; }";
 css += '\n';
-css += ".conn-dlg__btn { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 6px 12px; border-radius: 12px; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; border: none; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; }";
+css += '.conn-dlg__body a { color: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }';
+css += '\n';
+css += '.conn-dlg__body a:hover { text-decoration-thickness: 2px; }';
+css += '\n';
+// Footer: justify-between with empty left slot to mirror Figma 107px reserved column
+css += '.conn-dlg__footer { display: flex; align-items: flex-start; justify-content: space-between; padding-top: 4px; }';
+css += '\n';
+css += '.conn-dlg__footer-right { display: flex; gap: 8px; }';
+css += '\n';
+css += ".conn-dlg__btn { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding-inline: 10px; border-radius: 12px; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 20px; border: none; cursor: pointer; transition: background 0.1s ease, color 0.1s ease; outline: none; white-space: nowrap; }";
 css += '\n';
 css += '.conn-dlg__btn--primary { background: #242424; color: #fff; }';
 css += '\n';
@@ -559,6 +579,8 @@ css += '\n';
 css += '.conn-dlg__btn--secondary { background: #f5f5f5; color: #242424; }';
 css += '\n';
 css += '.conn-dlg__btn--secondary:hover { background: #ebebeb; }';
+css += '\n';
+css += '.conn-dlg__btn:focus-visible { outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 1px #fff inset; }';
 css += '\n';
 css += '.si__subtitle:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
@@ -917,17 +939,17 @@ css += '.nav--collapsed .ni.nav__pin-collapsed { display: flex; }';
 css += '\n';
 
 // ─── Back bar (hover to navigate to catalog) ───
-css += '.bebop-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
+css += '.copilot-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
 css += '\n';
-css += '.bebop-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
+css += '.copilot-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
 css += '\n';
-css += '.bebop-shell-hover:hover ~ .bebop-shell-bar, .bebop-shell-bar:hover { transform: translateY(0); }';
+css += '.copilot-shell-hover:hover ~ .copilot-shell-bar, .copilot-shell-bar:hover { transform: translateY(0); }';
 css += '\n';
-css += ".bebop-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
+css += ".copilot-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
 css += '\n';
-css += '.bebop-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
+css += '.copilot-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += '.bebop-shell-bar a svg { width: 16px; height: 16px; }';
+css += '.copilot-shell-bar a svg { width: 16px; height: 16px; }';
 css += '\n';
 
 // ─── HTML ───────────────────────────────────────────────────────────
@@ -943,8 +965,8 @@ html += '</head>';
 html += '<body>';
 
 // Back bar (hover top edge to show)
-html += '<div class="bebop-shell-hover"></div>';
-html += '<div class="bebop-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
+html += '<div class="copilot-shell-hover"></div>';
+html += '<div class="copilot-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
 
 // ─── Shell container ───
 html += '<div class="shell">';
@@ -1373,27 +1395,33 @@ html += '</div>'; // end step 2
 
 html += '</div>'; // end fre-overlay
 
-// Connect Dialog overlay
+// Connect Dialog overlay — uses the Bebop Connect Dialog spec.
+// Title / body / icon / primary-button text are populated per-connector at click time.
 html += '<div class="conn-overlay" id="connOverlay">';
-html += '<div class="conn-dlg">';
+html += '<div class="conn-dlg" role="dialog" aria-labelledby="connDlgTitle" aria-describedby="connDlgBody">';
 html += '<div class="conn-dlg__banner"></div>';
-html += '<div class="conn-dlg__icons">';
-html += '<div class="conn-dlg__ico">' + copilotIco.replace('width="20"', 'width="48"').replace('height="20"', 'height="48"').replace('viewBox="0 0 20 20"', 'viewBox="0 0 20 20"') + '</div>';
+html += '<div class="conn-dlg__icons" aria-hidden="true">';
+html += '<div class="conn-dlg__ico">' + copilotIco.replace('width="20"', 'width="48"').replace('height="20"', 'height="48"') + '</div>';
 html += '<div class="conn-dlg__dots"><svg width="32" height="32" viewBox="0 0 20 20" fill="none"><path d="M6.25 10C6.25 10.6904 5.69036 11.25 5 11.25C4.30964 11.25 3.75 10.6904 3.75 10C3.75 9.30964 4.30964 8.75 5 8.75C5.69036 8.75 6.25 9.30964 6.25 10ZM11.25 10C11.25 10.6904 10.6904 11.25 10 11.25C9.30964 11.25 8.75 10.6904 8.75 10C8.75 9.30964 9.30964 8.75 10 8.75C10.6904 8.75 11.25 9.30964 11.25 10ZM15 11.25C15.6904 11.25 16.25 10.6904 16.25 10C16.25 9.30964 15.6904 8.75 15 8.75C14.3096 8.75 13.75 9.30964 13.75 10C13.75 10.6904 14.3096 11.25 15 11.25Z" fill="currentColor"/></svg></div>';
 html += '<div class="conn-dlg__ico" id="connDlgIco"></div>';
 html += '</div>';
 html += '<div class="conn-dlg__content">';
-html += '<div>';
+html += '<div class="conn-dlg__text-group">';
+html += '<div class="conn-dlg__header">';
 html += '<div class="conn-dlg__title" id="connDlgTitle"></div>';
 html += '<div class="conn-dlg__dev">Developed by Microsoft Corporation</div>';
 html += '</div>';
 html += '<div class="conn-dlg__body" id="connDlgBody"></div>';
+html += '</div>'; // end .conn-dlg__text-group
 html += '<div class="conn-dlg__footer">';
-html += '<button class="conn-dlg__btn conn-dlg__btn--primary" id="connDlgConnect"></button>';
+html += '<div></div>'; // empty left slot mirroring Figma reserved column
+html += '<div class="conn-dlg__footer-right">';
 html += '<button class="conn-dlg__btn conn-dlg__btn--secondary" id="connDlgCancel">Cancel</button>';
+html += '<button class="conn-dlg__btn conn-dlg__btn--primary" id="connDlgConnect"></button>';
 html += '</div>';
 html += '</div>';
-html += '</div>';
+html += '</div>'; // end .conn-dlg__content
+html += '</div>'; // end .conn-dlg
 html += '</div>'; // end conn-overlay
 
 html += '</div>'; // end shell
@@ -1758,7 +1786,7 @@ html += '    var dlgIco = document.getElementById("connDlgIco");';
 html += '    var dlgConnect = document.getElementById("connDlgConnect");';
 html += '    var dlgOverlay = document.getElementById("connOverlay");';
 html += '    dlgTitle.textContent = "Connect " + name;';
-html += "    dlgBody.innerHTML = 'Let Copilot securely read your content from ' + name + '. You can manage sources in <a href=\"#\">Settings</a>.';";
+html += "    dlgBody.innerHTML = 'Let Copilot securely read your content from ' + name + '. You can manage your sources in <a href=\"#\">Settings</a>.';";
 html += '    dlgIco.innerHTML = iconHtml;';
 html += '    dlgConnect.textContent = "Continue to " + name;';
 html += '    _connActive = { si: null, key: key, name: name, freCard: card };';
@@ -1819,7 +1847,7 @@ html += '    var iconEl = si.querySelector(".si__icon");';
 html += '    var iconHtml = iconEl ? iconEl.innerHTML : "";';
 // Populate dialog
 html += '    connDlgTitle.textContent = "Connect " + name;';
-html += '    connDlgBody.innerHTML = "Let Copilot securely read your content from " + name + ". You can manage sources in <a href=\'#\'>Settings</a>.";';
+html += '    connDlgBody.innerHTML = "Let Copilot securely read your content from " + name + ". You can manage your sources in <a href=\'#\'>Settings</a>.";';
 html += '    connDlgIco.innerHTML = iconHtml;';
 html += '    connDlgConnect.textContent = "Continue to " + name;';
 html += '    _connActive = { si: si, key: key, name: name };';

@@ -12,6 +12,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { compareEntryRuntime } from './_compareEntry.js';
+import { tokensCSS } from './_tokens';
 
 // ─── Read icon files ────────────────────────────────────────
 
@@ -87,9 +89,11 @@ const mentionIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" 
 // ─── CSS ────────────────────────────────────────────────────────────
 
 var css = '';
+
+css += tokensCSS;
 css += '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }';
 css += '\n';
-css += "html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; }";
+css += "html, body { height: 100%; font-family: var(--f-typography-fontFamily-functional); color: #242424; }";
 css += '\n';
 
 // ─── Shell layout ───
@@ -191,7 +195,7 @@ css += '.hdr__right { display: flex; align-items: center; flex: 1; justify-conte
 css += '\n';
 
 // ─── Base button ───
-css += ".b { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; outline: none; font-family: 'Segoe UI', sans-serif; transition: background 0.1s; }";
+css += ".b { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; outline: none; font-family: var(--f-typography-fontFamily-functional); transition: background 0.1s; }";
 css += '\n';
 css += '.b svg { display: block; flex-shrink: 0; }';
 css += '\n';
@@ -211,7 +215,7 @@ css += ".b--picker { height: 32px; padding: 6px 10px; border-radius: 12px; backg
 css += '\n';
 css += '.b--picker:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += ".b--picker .picker-label { font-size: 14px; font-weight: 400; line-height: 1.4; font-family: 'Segoe UI', sans-serif; }";
+css += ".b--picker .picker-label { font-size: 14px; font-weight: 400; line-height: 1.4; font-family: var(--f-typography-fontFamily-functional); }";
 css += '\n';
 css += '.b--picker .picker-chevron { display: inline-flex; align-items: center; }';
 css += '\n';
@@ -225,7 +229,7 @@ css += '.content__inner { width: 820px; max-width: 820px; display: flex; flex-di
 css += '\n';
 
 // ─── Greeting ───
-css += ".greeting { font-size: 39px; line-height: 40px; text-align: left; font-family: Aptos, 'Segoe UI', sans-serif; padding: 0 100px; }";
+css += ".greeting { font-size: 40px; line-height: 40px; text-align: left; font-family: var(--f-typography-fontFamily-functional); padding: 0 100px; }";
 css += '\n';
 css += '.greeting__hi { font-weight: 400; color: #000; }';
 css += '\n';
@@ -251,7 +255,7 @@ css += '.ci--focused .ci__line { background: #242424; }';
 css += '\n';
 
 // ─── Textarea ───
-css += ".ci__textarea { flex: 1; min-width: 0; border: none; outline: none; resize: none; background: transparent; overflow: hidden; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; padding: 0 0 0 12px; margin: 0; caret-color: #242424; field-sizing: content; }";
+css += ".ci__textarea { flex: 1; min-width: 0; border: none; outline: none; resize: none; background: transparent; overflow: hidden; font-family: var(--f-typography-fontFamily-functional); font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; padding: 0 0 0 12px; margin: 0; caret-color: #242424; field-sizing: content; }";
 css += '\n';
 css += '.ci__textarea::placeholder { color: #6f6f6f; line-height: 1.7; }';
 css += '\n';
@@ -309,7 +313,7 @@ css += '\n';
 // ─── Suggestion chips ───
 css += '.sc { display: flex; align-items: center; gap: 8px; height: 32px; flex-wrap: nowrap; width: 100%; padding: 0 100px; }';
 css += '\n';
-css += ".sc__chip { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 12px; border-radius: 12px; border: 1px solid #dedede; background: transparent; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s, border-color 0.1s; outline: none; white-space: nowrap; }";
+css += ".sc__chip { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 12px; border-radius: 12px; border: 1px solid #dedede; background: transparent; color: #242424; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s, border-color 0.1s; outline: none; white-space: nowrap; }";
 css += '\n';
 css += '.sc__chip:hover { background: rgba(36,36,36,0.04); border-color: #c4c4c4; }';
 css += '\n';
@@ -350,7 +354,7 @@ css += '.src-search__icon svg { display: block; width: 20px; height: 20px; }';
 css += '\n';
 css += '.src-search__field { flex: 1; position: relative; padding: 8px 0; }';
 css += '\n';
-css += ".src-search__input { width: 100%; border: none; outline: none; background: transparent; font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; caret-color: #242424; padding-left: 12px; }";
+css += ".src-search__input { width: 100%; border: none; outline: none; background: transparent; font-family: var(--f-typography-fontFamily-functional); font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; caret-color: #242424; padding-left: 12px; }";
 css += '\n';
 css += '.src-search__input::placeholder { color: #6f6f6f; }';
 css += '\n';
@@ -404,7 +408,7 @@ css += ".si__connect { display: inline-flex; align-items: center; justify-conten
 css += '\n';
 css += '.si__connect:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += ".am { position: absolute; display: flex; flex-direction: column; gap: 4px; width: 260px; background: transparent; border-radius: 16px; padding: 8px; font-family: 'Segoe UI', sans-serif; opacity: 0; transform: translateY(12px); transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s; }";
+css += ".am { position: absolute; display: flex; flex-direction: column; gap: 4px; width: 260px; background: transparent; border-radius: 16px; padding: 8px; font-family: var(--f-typography-fontFamily-functional); opacity: 0; transform: translateY(12px); transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s; }";
 css += '\n';
 css += '.am-overlay--open .am { opacity: 1; transform: translateY(0); }';
 css += '\n';
@@ -430,7 +434,7 @@ css += '.am__divider { padding: 8px 0; width: 100%; }';
 css += '\n';
 css += '.am__divider-line { height: 1px; background: #f0f0f0; width: 100%; }';
 css += '\n';
-css += ".am__item { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; background: transparent; border: none; cursor: pointer; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; text-align: left; width: 100%; transition: background 0.1s; outline: none; }";
+css += ".am__item { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; background: transparent; border: none; cursor: pointer; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; text-align: left; width: 100%; transition: background 0.1s; outline: none; }";
 css += '\n';
 css += '.am__item:hover { background: rgba(36,36,36,0.04); color: #1d1d1d; }';
 css += '\n';
@@ -454,7 +458,7 @@ css += '\n';
 // ─── User message bubble ───
 css += '.user-msg { display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end; max-width: 708px; width: 100%; padding: 0 0 32px 32px; }';
 css += '\n';
-css += ".user-msg__bubble { background: #f5f5f5; border-radius: 12px; padding: 8px 16px; max-width: 580px; font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #424242; word-wrap: break-word; }";
+css += ".user-msg__bubble { background: #f5f5f5; border-radius: 12px; padding: 8px 16px; max-width: 580px; font-family: var(--f-typography-fontFamily-functional); font-size: 16px; line-height: 28px; color: #424242; word-wrap: break-word; }";
 css += '\n';
 
 // ─── Thinking indicator ───
@@ -462,7 +466,7 @@ css += '.thinking { display: flex; gap: 8px; align-items: center; padding: 0; }'
 css += '\n';
 css += '.thinking__gif { width: 20px; height: 20px; flex-shrink: 0; }';
 css += '\n';
-css += ".thinking__text { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #242424; }";
+css += ".thinking__text { font-family: var(--f-typography-fontFamily-functional); font-size: 16px; line-height: 28px; color: #242424; }";
 css += '\n';
 
 // ─── Disclaimer text ───
@@ -494,15 +498,22 @@ css += '.b--stop svg { width: 20px; height: 20px; display: block; }';
 css += '\n';
 
 // ─── Skip Thinking button (secondary) ───
-css += ".skip-thinking { display: none; height: 32px; padding: 6px 10px; border-radius: 12px; border: none; background: #f5f5f5; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s; outline: none; margin-top: 4px; }";
+css += ".skip-thinking { display: none; height: 32px; padding: 6px 10px; border-radius: 12px; border: none; background: #f5f5f5; color: #242424; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s; outline: none; margin-top: 4px; position: relative; overflow: hidden; isolation: isolate; }";
 css += '\n';
 css += '.skip-thinking:hover { background: #ebebeb; }';
 css += '\n';
 css += '.skip-thinking--visible { display: inline-flex; }';
 css += '\n';
+// Loader fill: a left→right wipe behind the label that fills over 4s while the auto-skip timer counts down.
+css += '.skip-thinking::before { content: ""; position: absolute; inset: 0; background: #ebebeb; transform: translateX(-100%); transform-origin: left center; z-index: -1; pointer-events: none; }';
+css += '\n';
+css += '.skip-thinking--loading::before { animation: skipLoaderFill 4000ms linear forwards; }';
+css += '\n';
+css += '@keyframes skipLoaderFill { from { transform: translateX(-100%); } to { transform: translateX(0); } }';
+css += '\n';
 
 // ─── Response content ───
-css += ".response-text { display: none; font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #242424; max-width: 708px; width: 100%; }";
+css += ".response-text { display: none; font-family: var(--f-typography-fontFamily-functional); font-size: 16px; line-height: 28px; color: #242424; max-width: 708px; width: 100%; }";
 css += '\n';
 css += '.response-text--visible { display: block; }';
 css += '\n';
@@ -568,17 +579,19 @@ css += '.rf__toast--visible { opacity: 1; }';
 css += '\n';
 css += '.rf__divider { width: 1px; height: 20px; background: #dedede; margin: 0 4px; flex-shrink: 0; }';
 css += '\n';
-css += '.rf__sources { display: flex; align-items: center; gap: 4px; height: 32px; min-width: 32px; padding: 6px 10px; border-radius: 16px; background: transparent; border: none; cursor: pointer; color: #242424; transition: background 0.1s; }';
+css += '.rf__sources { display: flex; align-items: center; gap: 6px; height: 32px; padding: 6px 10px 6px 8px; border-radius: 9999px; background: transparent; border: none; cursor: pointer; color: #242424; transition: background 0.1s; font-family: inherit; font-size: 14px; line-height: 20px; }';
 css += '\n';
 css += '.rf__sources:hover { background: rgba(36, 36, 36, 0.04); }';
 css += '\n';
-css += '.rf__icons { display: flex; align-items: center; gap: 2px; }';
+css += '.rf__avatars { display: inline-flex; align-items: center; }';
 css += '\n';
-css += '.rf__icons svg { width: 20px; height: 20px; }';
+css += '.rf__avatar { width: 20px; height: 20px; border-radius: 9999px; background-color: #fff; background-size: cover; background-position: center; background-repeat: no-repeat; box-shadow: 0 0 0 1.5px #fff; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff; font-size: 10px; font-weight: 600; }';
 css += '\n';
-css += '.rf__chevron { width: 12px; height: 12px; color: #424242; }';
+css += '.rf__avatar + .rf__avatar { margin-left: -6px; }';
 css += '\n';
-css += '.rf__chevron svg { width: 12px; height: 12px; }';
+css += '.rf__avatar svg { width: 12px; height: 12px; color: #5d5d5d; }';
+css += '\n';
+css += '.rf__avatar--web { background: #ebebeb; color: #5d5d5d; }';
 css += '\n';
 // rf visibility controlled solely by rf--visible class added after streaming completes
 css += '\n';
@@ -649,6 +662,7 @@ html += '<meta charset="utf-8"/>';
 html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
 html += '<title>Copilot Shell \u2014 Interactive Preview</title>';
 html += '<style>' + css + '</style>';
+html += compareEntryRuntime;
 html += '</head>';
 html += '<body>';
 
@@ -826,15 +840,17 @@ html += '<button class="rf__btn rf__btn--dislike" title="Dislike">';
 html += '<span class="ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10.052 17.7055C10.3913 18.6828 11.6841 19.133 12.4829 18.2959C12.6455 18.1255 12.8081 17.9413 12.9176 17.7771C13.2379 17.2966 13.3725 16.6638 13.4218 16.0474C13.4721 15.4193 13.438 14.7452 13.3738 14.1349C13.3093 13.5223 13.2129 12.9602 13.1328 12.552C13.1294 12.5343 13.1259 12.5169 13.1225 12.4998H14.006C15.8777 12.4998 17.2924 10.8046 16.9576 8.9631L16.2737 5.2014C15.8017 2.60545 13.2078 0.970708 10.6622 1.66494L5.06251 3.19214C4.14894 3.4413 3.45455 4.18522 3.26885 5.11376L2.91581 6.87894C2.63809 8.26755 3.69991 9.43732 4.82905 9.88364C5.15163 10.0111 5.44337 10.173 5.66974 10.3738C7.37583 11.8873 7.99442 13.0969 9.05406 15.2228C9.4084 15.9337 9.77205 16.8992 10.052 17.7055ZM12.0165 12.1211L12.0169 12.1227L12.0187 12.13L12.0262 12.1611C12.0328 12.189 12.0426 12.2307 12.0549 12.2848C12.0793 12.3931 12.1135 12.5505 12.1515 12.7444C12.2277 13.1331 12.3188 13.6647 12.3793 14.2396C12.4401 14.8168 12.4685 15.424 12.425 15.9677C12.3806 16.5232 12.2652 16.9529 12.0855 17.2224C12.0264 17.3111 11.9138 17.4437 11.7594 17.6055C11.5605 17.814 11.1314 17.7655 10.9967 17.3775C10.7141 16.5637 10.3334 15.5478 9.94904 14.7767C8.88216 12.6363 8.19326 11.2757 6.33336 9.62572C5.99304 9.32382 5.58878 9.10865 5.19665 8.95366C4.31631 8.60568 3.75035 7.80525 3.89639 7.07506L4.24943 5.30988C4.36085 4.75276 4.77748 4.3064 5.32562 4.15691L10.9254 2.62971C12.9052 2.08975 14.9227 3.36121 15.2898 5.38028L15.9738 9.14198C16.197 10.3697 15.2538 11.4998 14.006 11.4998H12.5015C12.3476 11.4998 12.2022 11.5707 12.1074 11.6921C12.0127 11.8134 11.9792 11.9718 12.0165 12.1211Z" fill="currentColor"/></svg></span>';
 html += '<span class="ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.4829 18.2959C11.6841 19.133 10.3913 18.6828 10.052 17.7055C9.77205 16.8992 9.4084 15.9337 9.05406 15.2228C7.99442 13.0969 7.37583 11.8873 5.66974 10.3738C5.44337 10.173 5.15163 10.0111 4.82905 9.88364C3.69991 9.43732 2.63809 8.26755 2.91581 6.87894L3.26885 5.11377C3.45455 4.18522 4.14894 3.4413 5.06251 3.19215L10.6622 1.66494C13.2078 0.970708 15.8017 2.60545 16.2737 5.2014L16.9576 8.9631C17.2924 10.8046 15.8777 12.4998 14.006 12.4998H13.1225L13.1328 12.552C13.2129 12.9602 13.3093 13.5223 13.3738 14.1349C13.438 14.7452 13.4721 15.4193 13.4218 16.0474C13.3725 16.6638 13.2379 17.2966 12.9176 17.7771C12.8081 17.9413 12.6455 18.1255 12.4829 18.2959Z" fill="currentColor"/></svg></span>';
 html += '</button>';
+html += '<button class="rf__btn rf__btn--retry" title="Try again"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M11.4142 3.63503C11.6095 3.43977 11.6095 3.12319 11.4142 2.92792L9.29289 0.806603C9.09763 0.611341 8.78104 0.611341 8.58578 0.806603C8.39052 1.00186 8.39052 1.31845 8.58578 1.51371L9.58264 2.51056C7.80518 2.60911 6.05488 3.33754 4.69671 4.6957C1.76776 7.62463 1.76776 12.3734 4.69671 15.3023C4.95359 15.5592 5.2247 15.7937 5.50757 16.0058C5.72852 16.1714 6.04191 16.1266 6.20756 15.9057C6.3732 15.6847 6.32838 15.3713 6.10743 15.2057C5.86235 15.0219 5.6271 14.8185 5.40382 14.5952C2.8654 12.0568 2.8654 7.94121 5.40382 5.40281C6.68997 4.11666 8.38002 3.48223 10.0664 3.49934C10.0915 3.49959 10.1162 3.49799 10.1404 3.49466L8.58578 5.04924C8.39052 5.24451 8.39052 5.56109 8.58578 5.75635C8.78104 5.95161 9.09763 5.95161 9.29289 5.75635L11.4142 3.63503ZM8.58578 16.363C8.39052 16.5582 8.39052 16.8748 8.58578 17.0701L10.7071 19.1914C10.9024 19.3866 11.219 19.3866 11.4142 19.1914C11.6095 18.9961 11.6095 18.6795 11.4142 18.4843L10.4174 17.4874C12.1948 17.3889 13.9451 16.6605 15.3033 15.3023C18.2322 12.3734 18.2322 7.62462 15.3033 4.69569C15.0464 4.43881 14.7753 4.20428 14.4924 3.99221C14.2715 3.82656 13.9581 3.87139 13.7924 4.09233C13.6268 4.31327 13.6716 4.62667 13.8926 4.79231C14.1377 4.97606 14.3729 5.17952 14.5962 5.40279C17.1346 7.9412 17.1346 12.0568 14.5962 14.5952C13.31 15.8813 11.62 16.5158 9.9336 16.4987C9.90849 16.4984 9.88379 16.5 9.85963 16.5033L11.4142 14.9487C11.6095 14.7535 11.6095 14.4369 11.4142 14.2416C11.219 14.0464 10.9024 14.0464 10.7071 14.2416L8.58578 16.363Z" fill="currentColor"/></svg></button>';
+html += '<button class="rf__btn rf__btn--more" title="More actions"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6.25 10C6.25 10.6904 5.69036 11.25 5 11.25C4.30964 11.25 3.75 10.6904 3.75 10C3.75 9.30964 4.30964 8.75 5 8.75C5.69036 8.75 6.25 9.30964 6.25 10ZM11.25 10C11.25 10.6904 10.6904 11.25 10 11.25C9.30964 11.25 8.75 10.6904 8.75 10C8.75 9.30964 9.30964 8.75 10 8.75C10.6904 8.75 11.25 9.30964 11.25 10ZM15 11.25C15.6904 11.25 16.25 10.6904 16.25 10C16.25 9.30964 15.6904 8.75 15 8.75C14.3096 8.75 13.75 9.30964 13.75 10C13.75 10.6904 14.3096 11.25 15 11.25Z" fill="currentColor"/></svg></button>';
 html += '</div>';
 html += '<div class="rf__divider"></div>';
 html += '<button class="rf__sources" title="View sources">';
-html += '<span class="rf__icons">';
-html += wordFileIco;
-html += excelFileIco;
-html += pptFileIco;
+html += '<span class="rf__avatars">';
+html += '<span class="rf__avatar" style="background:#7C3AED">Y</span>';
+html += '<span class="rf__avatar rf__avatar--web"><svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm0 1c.83 0 1.65.16 2.41.45-.49.7-.94 1.62-1.27 2.65-.36-.07-.74-.1-1.14-.1-.4 0-.78.03-1.14.1-.33-1.03-.78-1.95-1.27-2.65A6.97 6.97 0 0 1 10 3Zm-3.66 1.04c.43.6.83 1.4 1.13 2.32-.86.27-1.61.7-2.18 1.24a7 7 0 0 1 1.05-3.56Zm7.32 0a7 7 0 0 1 1.05 3.56c-.57-.54-1.32-.97-2.18-1.24.3-.92.7-1.72 1.13-2.32ZM10 7c.31 0 .61.02.9.07-.18.74-.3 1.55-.36 2.43H9.46c-.06-.88-.18-1.69-.36-2.43.29-.05.59-.07.9-.07Zm-1.85.36c.16.63.27 1.36.32 2.14H6.05c.07-.94.84-1.74 2.1-2.14Zm3.7 0c1.26.4 2.03 1.2 2.1 2.14h-2.42c.05-.78.16-1.51.32-2.14ZM6.05 10.5h2.42c-.05.78-.16 1.51-.32 2.14-1.26-.4-2.03-1.2-2.1-2.14Zm3.41 0h1.08c-.07.88-.18 1.69-.36 2.43A7.1 7.1 0 0 1 10 13c-.31 0-.61-.02-.9-.07.18-.74.3-1.55.36-2.43Zm2.07 0h2.42c-.07.94-.84 1.74-2.1 2.14a13.7 13.7 0 0 1-.32-2.14ZM6.29 13.4c.57.54 1.32.97 2.18 1.24-.3.92-.7 1.72-1.13 2.32a7 7 0 0 1-1.05-3.56Zm7.42 0a7 7 0 0 1-1.05 3.56c-.43-.6-.83-1.4-1.13-2.32.86-.27 1.61-.7 2.18-1.24Zm-6.04 1.51c.36.07.74.1 1.14.1.4 0 .78-.03 1.14-.1.33 1.03.78 1.95 1.27 2.65A6.97 6.97 0 0 1 10 17a6.97 6.97 0 0 1-2.41-.45c.49-.7.94-1.62 1.27-2.65Z" fill="currentColor"/></svg></span>';
+html += '<span class="rf__avatar rf__avatar--web"><svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm0 1c.83 0 1.65.16 2.41.45-.49.7-.94 1.62-1.27 2.65-.36-.07-.74-.1-1.14-.1-.4 0-.78.03-1.14.1-.33-1.03-.78-1.95-1.27-2.65A6.97 6.97 0 0 1 10 3Zm-3.66 1.04c.43.6.83 1.4 1.13 2.32-.86.27-1.61.7-2.18 1.24a7 7 0 0 1 1.05-3.56Zm7.32 0a7 7 0 0 1 1.05 3.56c-.57-.54-1.32-.97-2.18-1.24.3-.92.7-1.72 1.13-2.32ZM10 7c.31 0 .61.02.9.07-.18.74-.3 1.55-.36 2.43H9.46c-.06-.88-.18-1.69-.36-2.43.29-.05.59-.07.9-.07Zm-1.85.36c.16.63.27 1.36.32 2.14H6.05c.07-.94.84-1.74 2.1-2.14Zm3.7 0c1.26.4 2.03 1.2 2.1 2.14h-2.42c.05-.78.16-1.51.32-2.14ZM6.05 10.5h2.42c-.05.78-.16 1.51-.32 2.14-1.26-.4-2.03-1.2-2.1-2.14Zm3.41 0h1.08c-.07.88-.18 1.69-.36 2.43A7.1 7.1 0 0 1 10 13c-.31 0-.61-.02-.9-.07.18-.74.3-1.55.36-2.43Zm2.07 0h2.42c-.07.94-.84 1.74-2.1 2.14a13.7 13.7 0 0 1-.32-2.14ZM6.29 13.4c.57.54 1.32.97 2.18 1.24-.3.92-.7 1.72-1.13 2.32a7 7 0 0 1-1.05-3.56Zm7.42 0a7 7 0 0 1-1.05 3.56c-.43-.6-.83-1.4-1.13-2.32.86-.27 1.61-.7 2.18-1.24Zm-6.04 1.51c.36.07.74.1 1.14.1.4 0 .78-.03 1.14-.1.33 1.03.78 1.95 1.27 2.65A6.97 6.97 0 0 1 10 17a6.97 6.97 0 0 1-2.41-.45c.49-.7.94-1.62 1.27-2.65Z" fill="currentColor"/></svg></span>';
 html += '</span>';
-html += '<span class="rf__chevron"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.64645 2.14645C4.45118 2.34171 4.45118 2.65829 4.64645 2.85355L7.79289 6L4.64645 9.14645C4.45118 9.34171 4.45118 9.65829 4.64645 9.85355C4.84171 10.0488 5.15829 10.0488 5.35355 9.85355L8.85355 6.35355C9.04882 6.15829 9.04882 5.84171 8.85355 5.64645L5.35355 2.14645C5.15829 1.95118 4.84171 1.95118 4.64645 2.14645Z" fill="currentColor"/></svg></span>';
+html += '<span class="rf__sources-label">Sources</span>';
 html += '</button>';
 html += '</div>';
 html += '</div>';
@@ -909,7 +925,7 @@ html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"
 // ServiceNow
 html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/servicenow-20-color.svg" alt="ServiceNow" width="20" height="20" style="display:block" /></span><span class="si__label">ServiceNow</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
 // Jira
-html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/jira-20-color.png" alt="Jira" width="20" height="20" style="display:block" /></span><span class="si__label">Jira</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
+html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/jira-logo.png" alt="Jira" width="20" height="20" style="display:block;object-fit:contain" /></span><span class="si__label">Jira</span><div class="si__toggle-area"><div class="tgl-track tgl-track--on"><div class="tgl-thumb"></div></div></div></div></div>';
 // Notion
 html += '<div class="si si--child"><div class="si__inner"><span class="si__icon"><img src="../../src/components/icons/notion-20-color.svg" alt="Notion" width="20" height="20" style="display:block" /></span><span class="si__label">Notion</span><button class="si__connect">Connect</button></div></div>';
 // Hubspot
@@ -1128,13 +1144,23 @@ html += '  document.getElementById("skipThinking").classList.remove("skip-thinki
 html += '  document.getElementById("responseText").classList.remove("response-text--visible");';
 html += '  document.getElementById("thinkingRow").style.display = "";';
 html += '  shell.classList.add("shell--sent");';
+// Clear inline padding-top set by positionZQ so the sent-state CSS padding takes effect
+html += '  contentInner.style.paddingTop = "";';
 html += '\n';
 html += '  setTimeout(function() { var ct = document.querySelector(".content"); var msg = document.getElementById("userMsg"); ct.scrollTop = msg.offsetTop - ct.offsetTop; }, 100);';
 html += '\n';
 html += '  clearTimeout(window._skipTimer);';
+html += '  clearTimeout(window._autoSkipTimer);';
+html += '  document.getElementById("skipThinking").classList.remove("skip-thinking--loading");';
 html += '  window._skipTimer = setTimeout(function() {';
-html += '    document.getElementById("skipThinking").classList.add("skip-thinking--visible");';
-html += '  }, 2000);';
+html += '    var sb = document.getElementById("skipThinking");';
+html += '    sb.classList.add("skip-thinking--visible");';
+html += '    void sb.offsetWidth;';
+html += '    sb.classList.add("skip-thinking--loading");';
+html += '  }, 1000);';
+html += '  window._autoSkipTimer = setTimeout(function() {';
+html += '    document.getElementById("skipThinking").click();';
+html += '  }, 5000);';
 html += '}';
 html += '\n';
 
@@ -1241,9 +1267,15 @@ html += '  respText.classList.remove("response-text--visible");';
 html += '  ta2.value = "";';
 html += '  setFooterBtn("stop");';
 // Show skip thinking after 2s
+html += '  skipBtn.classList.remove("skip-thinking--loading");';
 html += '  window._skipTimer = setTimeout(function() {';
 html += '    skipBtn.classList.add("skip-thinking--visible");';
-html += '  }, 2000);';
+html += '    void skipBtn.offsetWidth;';
+html += '    skipBtn.classList.add("skip-thinking--loading");';
+html += '  }, 1000);';
+html += '  window._autoSkipTimer = setTimeout(function() {';
+html += '    skipBtn.click();';
+html += '  }, 5000);';
 html += '}';
 html += '\n';
 
@@ -1307,6 +1339,8 @@ html += '\n';
 
 html += 'document.getElementById("skipThinking").addEventListener("click", function() {';
 html += '  clearTimeout(window._skipTimer);';
+html += '  clearTimeout(window._autoSkipTimer);';
+html += '  this.classList.remove("skip-thinking--loading");';
 html += '  setFooterBtn("eq");';
 html += '  streamResponse();';
 html += '});';

@@ -1,7 +1,14 @@
 /**
  * Component: Button
  *
- * Bebop Design System — Multi-variant button component.
+ * One Copilot / Bebop Design System — Multi-variant button component.
+ *
+ * Already present in Bebop; the One Copilot spec maps 1:1 onto Bebop
+ * foundations. Two functional TYPES: Standard (fires and returns to rest)
+ * and Toggle (holds a selected / unselected state). Selecting a toggle
+ * shifts the label from regular to semibold — reserve the layout space at
+ * the semibold width up front (ghost-element pattern) so the container does
+ * not resize on selection. Icon toggles swap Regular → Filled glyphs.
  *
  * Properties:
  *   Layout: Icon and text | Text only | Icon only
@@ -13,20 +20,33 @@
  * Focus ring: 2px black outer border + 1px white inner border
  *
  * Prefix: --c-button-{property}
+ *
+ * Figma: One-Copilot-Desktop-UI-Kit — Button (node 1413:21099),
+ *        usage guidance (node 1480:6946)
  */
 
 // ─── Size Tokens ────────────────────────────────────────────
 
 export const buttonSizeSmall = {
-  height: '25px',
+  /** --gnrc-size-* Small container height */
+  height: '24px',
+  /** Small icon slot — 16px */
   iconSize: '16px',
+  /** --gnrc-font-size-functional-body-small */
   fontSize: '12px',
-  fontWeight: '400',
-  fontWeightStrong: '600',
-  lineHeight: '1.4',
+  /** --gnrc-font-weight-functional-regular */
+  fontWeight: '420',
+  /** --gnrc-font-weight-functional-bold — selected/toggle */
+  fontWeightStrong: '625',
+  /** --gnrc-line-height-functional-body-small (16px) */
+  lineHeight: '16px',
+  /** --gnrc-spacing-component-base-200 / atomic 8px */
   paddingInline: '8px',
+  /** --gnrc-spacing-component-base-100 / atomic 4px */
   paddingBlock: '4px',
+  /** --gnrc-spacing-component-base-50 / atomic 2px */
   gap: '2px',
+  /** --gnrc-border-radius-base-200 / atomic-small 8px */
   borderRadius: '8px',
 } as const;
 
@@ -34,9 +54,9 @@ export const buttonSizeMedium = {
   height: '32px',
   iconSize: '20px',
   fontSize: '14px',
-  fontWeight: '400',
-  fontWeightStrong: '600',
-  lineHeight: '1.4',
+  fontWeight: '420',
+  fontWeightStrong: '625',
+  lineHeight: '20px',
   paddingInline: '10px',
   paddingBlock: '6px',
   gap: '4px',
@@ -47,9 +67,9 @@ export const buttonSizeLarge = {
   height: '38px',
   iconSize: '20px',
   fontSize: '16px',
-  fontWeight: '400',
-  fontWeightStrong: '600',
-  lineHeight: '1.4',
+  fontWeight: '420',
+  fontWeightStrong: '625',
+  lineHeight: '22px',
   paddingInline: '12px',
   paddingBlock: '8px',
   gap: '6px',
@@ -99,16 +119,16 @@ export const buttonStyleOutline = {
   backgroundHover: 'rgba(36, 36, 36, 0.04)',
   /** Text and icon color */
   color: '#242424',
-  /** Subtle border */
-  border: '1px solid #dedede',
+  /** Border — --gnrc-color-stroke-neutral-subtle */
+  border: '1px solid rgba(189,189,189,0.5)',
 } as const;
 
 export const buttonStyleSecondary = {
-  /** Rest: neutral subtle */
-  backgroundRest: '#f5f5f5',
-  /** Hover: 4% black overlay on top */
-  backgroundHover: '#ebebeb',
-  /** Text and icon color */
+  /** Rest: --gnrc-color-background-neutral-subtle (translucent) */
+  backgroundRest: 'rgba(229, 229, 229, 0.5)',
+  /** Hover: --gnrc-color-background-neutral-subtle +lightness-hover */
+  backgroundHover: 'rgba(212,212,212,0.54)',
+  /** Text and icon color — --gnrc-color-foreground-neutral-primary */
   color: '#242424',
   /** No border */
   border: 'none',
@@ -117,8 +137,8 @@ export const buttonStyleSecondary = {
 export const buttonStylePrimary = {
   /** Rest: brand-heavy */
   backgroundRest: '#242424',
-  /** Hover: slightly lighter */
-  backgroundHover: '#3b3b3b',
+  /** Hover: --gnrc-color-background-brand-heavy -lightness-hover */
+  backgroundHover: '#313131',
   /** Text and icon color — white on dark */
   color: '#ffffff',
   /** No border */
@@ -128,10 +148,10 @@ export const buttonStylePrimary = {
 // ─── Selected Style Tokens ──────────────────────────────────
 
 export const buttonSelectedSubtle = {
-  /** Selected rest: neutral-soft */
-  backgroundRest: '#ebebeb',
+  /** Selected rest: --gnrc-color-background-neutral-soft */
+  backgroundRest: 'rgba(215,215,215,0.5)',
   /** Selected hover */
-  backgroundHover: '#e0e0e0',
+  backgroundHover: 'rgba(200,200,200,0.54)',
   /** Text color */
   color: '#242424',
   /** Icon variant: Filled (not Regular) */
@@ -142,10 +162,10 @@ export const buttonSelectedSubtle = {
 } as const;
 
 export const buttonSelectedOutline = {
-  /** Selected rest: neutral-soft */
-  backgroundRest: '#ebebeb',
+  /** Selected rest: --gnrc-color-background-neutral-soft */
+  backgroundRest: 'rgba(215,215,215,0.5)',
   /** Selected hover */
-  backgroundHover: '#e0e0e0',
+  backgroundHover: 'rgba(200,200,200,0.54)',
   /** Text color */
   color: '#242424',
   /** Icon variant: Filled */
@@ -159,7 +179,7 @@ export const buttonSelectedSecondary = {
   /** Selected rest: neutral-heavy (inverted) */
   backgroundRest: '#242424',
   /** Selected hover */
-  backgroundHover: '#3b3b3b',
+  backgroundHover: '#313131',
   /** Text color — white on dark */
   color: '#ffffff',
   /** Icon variant: Filled */
@@ -208,8 +228,24 @@ export const buttonFocusRing = {
 // ─── Typography ─────────────────────────────────────────────
 
 export const buttonTypography = {
-  fontFamily: 'var(--f-typography-fontFamily-body)',
+  /** --gnrc-font-family-functional — Segoe Sans */
+  fontFamily: 'var(--f-typography-fontFamily-display)',
+  /** --gnrc-letter-spacing-functional-body-* (0) */
   letterSpacing: '0px',
+} as const;
+
+// ─── Toggle Width Reservation ───────────────────────────────
+
+/**
+ * Toggle buttons must hold their width across selection: the label weight
+ * shifts regular → semibold when selected, which would otherwise resize the
+ * container. Reserve the space up front with a hidden semibold ghost.
+ */
+export const buttonToggleGhost = {
+  /** Ghost renders at the strong weight the selected label will use */
+  fontWeight: '600',
+  /** Ghost is invisible but occupies width */
+  visibility: 'hidden',
 } as const;
 
 // ─── Aggregate Export ───────────────────────────────────────
@@ -240,4 +276,5 @@ export const button = {
   disabled: buttonStateDisabled,
   focusRing: buttonFocusRing,
   typography: buttonTypography,
+  toggleGhost: buttonToggleGhost,
 } as const;

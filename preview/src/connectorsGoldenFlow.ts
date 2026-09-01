@@ -10,6 +10,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { compareEntryRuntime } from './_compareEntry.js';
+import { tokensCSS } from './_tokens';
 
 // ─── Read icon files ────────────────────────────────────────
 
@@ -22,7 +24,7 @@ const wordFileIco = readIcon('word-20-color.svg');
 const excelFileIco = readIcon('excel-20-color.svg');
 const pptFileIco = readIcon('powerpoint-20-color.svg');
 const serviceNowIco = readIcon('servicenow-20-color.svg');
-const jiraIco = '<img src="../../src/components/icons/jira-20-color.png" alt="Jira" width="20" height="20" style="display:block" />';
+const jiraIco = '<img src="../../src/components/icons/jira-logo.png" alt="Jira" width="20" height="20" style="display:block;object-fit:contain" />';
 const notionIco = readIcon('notion-20-color.svg');
 const hubspotIco = readIcon('hubspot-20-color.svg');
 const briefcaseOffIco = readIcon('briefcase-off-20-regular.svg');
@@ -90,9 +92,11 @@ const mentionIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" 
 // ─── CSS ────────────────────────────────────────────────────────────
 
 var css = '';
+
+css += tokensCSS;
 css += '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }';
 css += '\n';
-css += "html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; }";
+css += "html, body { height: 100%; font-family: var(--f-typography-fontFamily-functional); color: #242424; }";
 css += '\n';
 
 // ─── Shell layout ───
@@ -194,7 +198,7 @@ css += '.hdr__right { display: flex; align-items: center; flex: 1; justify-conte
 css += '\n';
 
 // ─── Base button ───
-css += ".b { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; outline: none; font-family: 'Segoe UI', sans-serif; transition: background 0.1s; }";
+css += ".b { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; outline: none; font-family: var(--f-typography-fontFamily-functional); transition: background 0.1s; }";
 css += '\n';
 css += '.b svg { display: block; flex-shrink: 0; }';
 css += '\n';
@@ -214,7 +218,7 @@ css += ".b--picker { height: 32px; padding: 6px 10px; border-radius: 12px; backg
 css += '\n';
 css += '.b--picker:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += ".b--picker .picker-label { font-size: 14px; font-weight: 400; line-height: 1.4; font-family: 'Segoe UI', sans-serif; }";
+css += ".b--picker .picker-label { font-size: 14px; font-weight: 400; line-height: 1.4; font-family: var(--f-typography-fontFamily-functional); }";
 css += '\n';
 css += '.b--picker .picker-chevron { display: inline-flex; align-items: center; }';
 css += '\n';
@@ -228,7 +232,7 @@ css += '.content__inner { width: 820px; max-width: 820px; display: flex; flex-di
 css += '\n';
 
 // ─── Greeting ───
-css += ".greeting { font-size: 39px; line-height: 40px; text-align: left; font-family: Aptos, 'Segoe UI', sans-serif; padding: 0 100px; }";
+css += ".greeting { font-size: 40px; line-height: 40px; text-align: left; font-family: var(--f-typography-fontFamily-functional); padding: 0 100px; }";
 css += '\n';
 css += '.greeting__hi { font-weight: 400; color: #000; }';
 css += '\n';
@@ -256,7 +260,7 @@ css += '.ci--focused .ci__line { background: #242424; }';
 css += '\n';
 
 // ─── Textarea ───
-css += ".ci__textarea { flex: 1; min-width: 0; border: none; outline: none; resize: none; background: transparent; overflow: hidden; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; padding: 0 0 0 12px; margin: 0; caret-color: #242424; field-sizing: content; }";
+css += ".ci__textarea { flex: 1; min-width: 0; border: none; outline: none; resize: none; background: transparent; overflow: hidden; font-family: var(--f-typography-fontFamily-functional); font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; padding: 0 0 0 12px; margin: 0; caret-color: #242424; field-sizing: content; }";
 css += '\n';
 css += '.ci__textarea::placeholder { color: #6f6f6f; line-height: 1.7; }';
 css += '\n';
@@ -314,7 +318,7 @@ css += '\n';
 // ─── Suggestion chips ───
 css += '.sc { display: flex; align-items: center; gap: 8px; height: 32px; flex-wrap: nowrap; width: 100%; padding: 0 100px; }';
 css += '\n';
-css += ".sc__chip { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 12px; border-radius: 12px; border: 1px solid #dedede; background: transparent; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s, border-color 0.1s; outline: none; white-space: nowrap; }";
+css += ".sc__chip { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 12px; border-radius: 12px; border: 1px solid #dedede; background: transparent; color: #242424; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s, border-color 0.1s; outline: none; white-space: nowrap; }";
 css += '\n';
 css += '.sc__chip:hover { background: rgba(36,36,36,0.04); border-color: #c4c4c4; }';
 css += '\n';
@@ -340,13 +344,13 @@ css += '.src-tab--visible { display: inline-flex; }';
 css += '\n';
 // src-tab-wrap removed — Sources Tab is now inside ci__content
 css += '\n';
-css += ".src-tab__label { font-family: 'Segoe UI', 'Segoe Sans', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; white-space: nowrap; }";
+css += ".src-tab__label { font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; white-space: nowrap; }";
 css += '\n';
 css += '.src-tab__icons { display: flex; align-items: center; gap: 2px; }';
 css += '\n';
 css += '.src-tab__icons img, .src-tab__icons svg { width: 16px; height: 16px; display: block; }';
 css += '\n';
-css += ".src-tab__count { font-family: 'Segoe UI', sans-serif; font-size: 10px; font-weight: 400; line-height: 14px; color: #8f8f8f; white-space: nowrap; }";
+css += ".src-tab__count { font-family: var(--f-typography-fontFamily-functional); font-size: 10px; font-weight: 400; line-height: 14px; color: #8f8f8f; white-space: nowrap; }";
 css += '\n';
 css += '.src-tab__workoff { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; color: #242424; }';
 css += '\n';
@@ -378,7 +382,7 @@ css += '.src-search__icon svg { display: block; width: 20px; height: 20px; }';
 css += '\n';
 css += '.src-search__field { flex: 1; position: relative; padding: 8px 0; }';
 css += '\n';
-css += ".src-search__input { width: 100%; border: none; outline: none; background: transparent; font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; caret-color: #242424; padding-left: 12px; }";
+css += ".src-search__input { width: 100%; border: none; outline: none; background: transparent; font-family: var(--f-typography-fontFamily-functional); font-size: 20px; font-weight: 400; line-height: 36px; color: #1f1f1f; caret-color: #242424; padding-left: 12px; }";
 css += '\n';
 css += '.src-search__input::placeholder { color: #6f6f6f; }';
 css += '\n';
@@ -410,7 +414,7 @@ css += '.si__icon svg, .si__icon img { display: block; width: 20px; height: 20px
 css += '\n';
 css += '.si__label { flex: 1 0 0; min-width: 1px; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }';
 css += '\n';
-css += ".si__subtitle { display: inline-flex; align-items: center; height: 24px; padding: 4px 8px; border-radius: 8px; border: none; background: transparent; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; line-height: 16px; color: #5d5d5d; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; flex-shrink: 0; }";
+css += ".si__subtitle { display: inline-flex; align-items: center; height: 24px; padding: 4px 8px; border-radius: 8px; border: none; background: transparent; font-family: var(--f-typography-fontFamily-functional); font-size: 12px; font-weight: 400; line-height: 16px; color: #5d5d5d; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; flex-shrink: 0; }";
 css += '\n';
 css += '.si__divider { width: 100%; height: 1px; background: #dedede; margin: 4px 0; }';
 css += '\n';
@@ -419,7 +423,7 @@ css += '.conn-overlay { position: fixed; inset: 0; z-index: 200; background: rgb
 css += '\n';
 css += '.conn-overlay--open { display: flex; }';
 css += '\n';
-css += '.conn-dlg { width: 556px; background: #fff; border-radius: 16px; border: 1px solid #dedede; overflow: hidden; position: relative; box-shadow: 0px 12px 48px rgba(0,0,0,0.12); }';
+css += '.conn-dlg { width: 412px; background: #fff; border-radius: 16px; border: 1px solid #dedede; overflow: hidden; position: relative; box-shadow: 0px 12px 48px rgba(0,0,0,0.12); }';
 css += '\n';
 css += '.conn-dlg__banner { width: 100%; height: 122px; background: #f5f5f5; }';
 css += '\n';
@@ -435,17 +439,17 @@ css += '.conn-dlg__dots svg { width: 32px; height: 32px; }';
 css += '\n';
 css += '.conn-dlg__content { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 16px; }';
 css += '\n';
-css += ".conn-dlg__title { font-family: 'Segoe UI', sans-serif; font-size: 20px; font-weight: 600; line-height: 28px; color: #242424; }";
+css += ".conn-dlg__title { font-family: var(--f-typography-fontFamily-functional); font-size: 20px; font-weight: 600; line-height: 28px; color: #242424; }";
 css += '\n';
-css += ".conn-dlg__dev { font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; line-height: 16px; color: #424242; margin-top: 2px; }";
+css += ".conn-dlg__dev { font-family: var(--f-typography-fontFamily-functional); font-size: 12px; font-weight: 400; line-height: 16px; color: #424242; margin-top: 2px; }";
 css += '\n';
-css += ".conn-dlg__body { font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; margin-top: 8px; }";
+css += ".conn-dlg__body { font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; margin-top: 8px; }";
 css += '\n';
 css += '.conn-dlg__body a { color: #242424; text-decoration: underline; }';
 css += '\n';
 css += '.conn-dlg__footer { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }';
 css += '\n';
-css += ".conn-dlg__btn { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 6px 12px; border-radius: 12px; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; border: none; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; }";
+css += ".conn-dlg__btn { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 6px 12px; border-radius: 12px; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 1.4; border: none; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; }";
 css += '\n';
 css += '.conn-dlg__btn--primary { background: #242424; color: #fff; }';
 css += '\n';
@@ -479,7 +483,7 @@ css += ".si__connect { display: inline-flex; align-items: center; justify-conten
 css += '\n';
 css += '.si__connect:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += ".am { position: absolute; display: flex; flex-direction: column; gap: 4px; width: 260px; background: transparent; border-radius: 16px; padding: 8px; font-family: 'Segoe UI', sans-serif; opacity: 0; transform: translateY(12px); transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s; }";
+css += ".am { position: absolute; display: flex; flex-direction: column; gap: 4px; width: 260px; background: transparent; border-radius: 16px; padding: 8px; font-family: var(--f-typography-fontFamily-functional); opacity: 0; transform: translateY(12px); transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s; }";
 css += '\n';
 css += '.am-overlay--open .am { opacity: 1; transform: translateY(0); }';
 css += '\n';
@@ -505,7 +509,7 @@ css += '.am__divider { padding: 8px 0; width: 100%; }';
 css += '\n';
 css += '.am__divider-line { height: 1px; background: #f0f0f0; width: 100%; }';
 css += '\n';
-css += ".am__item { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; background: transparent; border: none; cursor: pointer; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; text-align: left; width: 100%; transition: background 0.1s; outline: none; }";
+css += ".am__item { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; background: transparent; border: none; cursor: pointer; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; text-align: left; width: 100%; transition: background 0.1s; outline: none; }";
 css += '\n';
 css += '.am__item:hover { background: rgba(36,36,36,0.04); color: #1d1d1d; }';
 css += '\n';
@@ -515,7 +519,7 @@ css += '.am__item-icon { display: flex; flex-shrink: 0; width: 20px; height: 20p
 css += '\n';
 css += '.am__item-icon svg { display: block; width: 20px; height: 20px; }';
 css += '\n';
-css += '.am__item-count { font-family: \"Segoe UI\", sans-serif; font-size: 10px; font-weight: 400; line-height: 14px; color: #8f8f8f; white-space: nowrap; flex-shrink: 0; }';
+css += '.am__item-count { font-family: var(--f-typography-fontFamily-functional); font-size: 10px; font-weight: 400; line-height: 14px; color: #8f8f8f; white-space: nowrap; flex-shrink: 0; }';
 css += '\n';
 
 // ─── Response view (hidden by default, shown after send) ───
@@ -532,7 +536,7 @@ css += '\n';
 // ─── User message bubble ───
 css += '.user-msg { display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end; max-width: 708px; width: 100%; padding: 0 0 32px 32px; }';
 css += '\n';
-css += ".user-msg__bubble { background: #f5f5f5; border-radius: 12px; padding: 8px 16px; max-width: 580px; font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #424242; word-wrap: break-word; }";
+css += ".user-msg__bubble { background: #f5f5f5; border-radius: 12px; padding: 8px 16px; max-width: 580px; font-family: var(--f-typography-fontFamily-functional); font-size: 16px; line-height: 28px; color: #424242; word-wrap: break-word; }";
 css += '\n';
 
 // ─── Thinking indicator ───
@@ -540,7 +544,7 @@ css += '.thinking { display: flex; gap: 8px; align-items: center; padding: 0; }'
 css += '\n';
 css += '.thinking__gif { width: 20px; height: 20px; flex-shrink: 0; }';
 css += '\n';
-css += ".thinking__text { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #242424; }";
+css += ".thinking__text { font-family: var(--f-typography-fontFamily-functional); font-size: 16px; line-height: 28px; color: #242424; }";
 css += '\n';
 
 // ─── Disclaimer text ───
@@ -572,15 +576,22 @@ css += '.b--stop svg { width: 20px; height: 20px; display: block; }';
 css += '\n';
 
 // ─── Skip Thinking button (secondary) ───
-css += ".skip-thinking { display: none; height: 32px; padding: 6px 10px; border-radius: 12px; border: none; background: #f5f5f5; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s; outline: none; margin-top: 4px; }";
+css += ".skip-thinking { display: none; height: 32px; padding: 6px 10px; border-radius: 12px; border: none; background: #f5f5f5; color: #242424; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s; outline: none; margin-top: 4px; position: relative; overflow: hidden; isolation: isolate; }";
 css += '\n';
 css += '.skip-thinking:hover { background: #ebebeb; }';
 css += '\n';
 css += '.skip-thinking--visible { display: inline-flex; }';
 css += '\n';
+// Loader fill: a left→right wipe behind the label that fills over 4s while the auto-skip timer counts down.
+css += '.skip-thinking::before { content: ""; position: absolute; inset: 0; background: #ebebeb; transform: translateX(-100%); transform-origin: left center; z-index: -1; pointer-events: none; }';
+css += '\n';
+css += '.skip-thinking--loading::before { animation: skipLoaderFill 4000ms linear forwards; }';
+css += '\n';
+css += '@keyframes skipLoaderFill { from { transform: translateX(-100%); } to { transform: translateX(0); } }';
+css += '\n';
 
 // ─── Response content ───
-css += ".response-text { display: none; font-family: Aptos, 'Segoe UI', sans-serif; font-size: 16px; line-height: 28px; color: #242424; max-width: 708px; width: 100%; }";
+css += ".response-text { display: none; font-family: var(--f-typography-fontFamily-functional); font-size: 16px; line-height: 28px; color: #242424; max-width: 708px; width: 100%; }";
 css += '\n';
 css += '.response-text--visible { display: block; }';
 css += '\n';
@@ -719,17 +730,17 @@ css += '.nav--collapsed .ni.nav__pin-collapsed { display: flex; }';
 css += '\n';
 
 // ─── Back bar (hover to navigate to catalog) ───
-css += '.bebop-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
+css += '.copilot-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
 css += '\n';
-css += '.bebop-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
+css += '.copilot-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
 css += '\n';
-css += '.bebop-shell-hover:hover ~ .bebop-shell-bar, .bebop-shell-bar:hover { transform: translateY(0); }';
+css += '.copilot-shell-hover:hover ~ .copilot-shell-bar, .copilot-shell-bar:hover { transform: translateY(0); }';
 css += '\n';
-css += ".bebop-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
+css += ".copilot-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; transition: background 0.1s; }";
 css += '\n';
-css += '.bebop-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
+css += '.copilot-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += '.bebop-shell-bar a svg { width: 16px; height: 16px; }';
+css += '.copilot-shell-bar a svg { width: 16px; height: 16px; }';
 css += '\n';
 
 // ─── HTML ───────────────────────────────────────────────────────────
@@ -741,12 +752,13 @@ html += '<meta charset="utf-8"/>';
 html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
 html += '<title>Connectors Golden Flow \u2014 Interactive Preview</title>';
 html += '<style>' + css + '</style>';
+html += compareEntryRuntime;
 html += '</head>';
 html += '<body>';
 
 // Back bar (hover top edge to show)
-html += '<div class="bebop-shell-hover"></div>';
-html += '<div class="bebop-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
+html += '<div class="copilot-shell-hover"></div>';
+html += '<div class="copilot-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
 
 // ─── Shell container ───
 html += '<div class="shell">';
@@ -1430,17 +1442,23 @@ html += '  document.getElementById("skipThinking").classList.remove("skip-thinki
 html += '  document.getElementById("responseText").classList.remove("response-text--visible");';
 html += '  document.getElementById("thinkingRow").style.display = "";';
 html += '  shell.classList.add("shell--sent");';
+// Clear inline padding-top set by positionZQ so the sent-state CSS padding takes effect
+html += '  contentInner.style.paddingTop = "";';
 html += '\n';
 html += '  setTimeout(function() { var ct = document.querySelector(".content"); var msg = document.getElementById("userMsg"); ct.scrollTop = msg.offsetTop - ct.offsetTop; }, 100);';
 html += '\n';
 html += '  clearTimeout(window._skipTimer);';
 html += '  clearTimeout(window._autoSkipTimer);';
+html += '  document.getElementById("skipThinking").classList.remove("skip-thinking--loading");';
 html += '  window._skipTimer = setTimeout(function() {';
-html += '    document.getElementById("skipThinking").classList.add("skip-thinking--visible");';
-html += '  }, 2000);';
+html += '    var sb = document.getElementById("skipThinking");';
+html += '    sb.classList.add("skip-thinking--visible");';
+html += '    void sb.offsetWidth;';
+html += '    sb.classList.add("skip-thinking--loading");';
+html += '  }, 1000);';
 html += '  window._autoSkipTimer = setTimeout(function() {';
 html += '    document.getElementById("skipThinking").click();';
-html += '  }, 10000);';
+html += '  }, 5000);';
 html += '}';
 html += '\n';
 
@@ -1548,12 +1566,15 @@ html += '  respText.classList.remove("response-text--visible");';
 html += '  ta2.value = "";';
 html += '  setFooterBtn("stop");';
 // Show skip thinking after 2s, auto-skip after 10s
+html += '  skipBtn.classList.remove("skip-thinking--loading");';
 html += '  window._skipTimer = setTimeout(function() {';
 html += '    skipBtn.classList.add("skip-thinking--visible");';
-html += '  }, 2000);';
+html += '    void skipBtn.offsetWidth;';
+html += '    skipBtn.classList.add("skip-thinking--loading");';
+html += '  }, 1000);';
 html += '  window._autoSkipTimer = setTimeout(function() {';
 html += '    skipBtn.click();';
-html += '  }, 10000);';
+html += '  }, 5000);';
 html += '}';
 html += '\n';
 
@@ -1618,6 +1639,7 @@ html += '\n';
 html += 'document.getElementById("skipThinking").addEventListener("click", function() {';
 html += '  clearTimeout(window._skipTimer);';
 html += '  clearTimeout(window._autoSkipTimer);';
+html += '  this.classList.remove("skip-thinking--loading");';
 html += '  setFooterBtn("eq");';
 html += '  streamResponse();';
 html += '});';

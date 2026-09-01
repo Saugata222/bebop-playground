@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>MessageBar Preview</title><style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+h2 { font-size: 18px; font-weight: 600; margin: 40px 0 16px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
+.hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
+.wrap { max-width: 920px; margin: 0 auto; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+
+/* ─── MessageBar ─── */
+.mb {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px; border-radius: 16px; border: 1px solid transparent; width: 100%;
+}
+.mb__icon { display: inline-flex; flex-shrink: 0; width: 20px; height: 20px; }
+.mb__icon svg { width: 20px; height: 20px; display: block; }
+.mb__msg {
+  flex: 1 0 0; min-width: 0;
+  font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px; line-height: 20px; letter-spacing: 0;
+  font-weight: 420; font-variation-settings: 'opsz' 8, 'wght' 420;
+  color: #242424;
+}
+.mb__actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* Action button — Button primitive: Subtle, Small (rest label = regular 420) */
+.mb__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 24px; padding: 4px 8px; border: 1px solid transparent; border-radius: 8px;
+  background: transparent; color: #242424; cursor: pointer; white-space: nowrap;
+  font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif;
+  font-size: 12px; line-height: 16px; letter-spacing: 0;
+  font-weight: 420; font-variation-settings: 'opsz' 8, 'wght' 420;
+  transition: background 0.1s;
+}
+.mb__btn:hover { background: rgba(36,36,36,0.04); }
+
+/* Dismiss — Button primitive: Subtle, Icon-only, Medium (32px), circular */
+.mb__dismiss {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 6px; border: none; border-radius: 9999px;
+  background: transparent; color: #242424; cursor: pointer; transition: background 0.1s;
+}
+.mb__dismiss svg { width: 20px; height: 20px; display: block; }
+.mb__dismiss:hover { background: rgba(36,36,36,0.04); }
+
+/* Intents — surface + stroke + icon color (message stays #242424) */
+.mb--neutral { background: #f2f2f2; border-color: #dedede; }
+.mb--neutral .mb__icon { color: #242424; }
+.mb--warning { background: #fff2ee; border-color: #ffd3c4; }
+.mb--warning .mb__icon { color: #a93901; }
+.mb--danger  { background: #fff1f3; border-color: #ffd0d6; }
+.mb--danger  .mb__icon { color: #a62147; }
+.mb--success { background: #e3fcee; border-color: #b1efcc; }
+.mb--success .mb__icon { color: #017048; }
+
+/* Dismiss-out animation */
+.mb.is-dismissed { display: none; }
+
+/* ─── Usage doc ─── */
+.doc { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; padding: 28px 32px; margin-top: 24px; }
+.doc__sec { margin-bottom: 24px; }
+.doc__sec:last-child { margin-bottom: 0; }
+.doc__sec h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 10px; }
+.doc__sec p { font-size: 14px; line-height: 1.55; color: #242424; margin-bottom: 10px; }
+.doc__sec p:last-child { margin-bottom: 0; }
+.doc__sec strong { font-weight: 700; }
+
+/* ─── Bebop page overrides (injected by _inject.ts) ─── */
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
+
+/* Page wrapper */
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
+.bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
+.bp-header__tag--compound { background: #ebebeb; color: #242424; }
+.bp-header__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
+.bp-header__desc { font-size: 15px; color: #6f6f6f; line-height: 1.6; max-width: 600px; margin-bottom: 20px; }
+.bp-header__states { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
+.bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
+
+/* Content area — override all wrapper variants */
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+
+/* Headings */
+h1 { display: none !important; }
+.hint, p.hint { display: none !important; }
+h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
+h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
+/* Rows and cells */
+.row { gap: 24px !important; margin-bottom: 20px !important; }
+.cell { gap: 8px !important; }
+.rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+
+/* ─── Related components ─── */
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+.bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
+.bp-related__card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.bp-related__card-top { display: flex; align-items: center; gap: 8px; }
+.bp-related__card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
+.bp-related__card-arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
+.bp-related__card:hover .bp-related__card-arrow { color: #242424; transform: translateX(2px); }
+.bp-related__card-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
+
+/* ─── Back bar (sticky, frosted) ─── */
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">MessageBar</span><span class="bp-header__tag bp-header__tag--compound">Compound</span></div><p class="bp-header__desc">Inline status notification at the page or section level. Four intents — Information (neutral), Warning, Error (danger), and Success — each with its own subtle surface, stroke, and Fluent status icon. Message stays neutral in every intent; up to two subtle action buttons plus a circular dismiss. Renders full usage guidance.</p><div class="bp-header__states"><span class="bp-header__state">Information</span><span class="bp-header__state">Warning</span><span class="bp-header__state">Error</span><span class="bp-header__state">Success</span><span class="bp-header__state">Dismissed</span></div></div><!-- /INJECT:HEADER --><div class="wrap"><h1>MessageBar — Component Preview</h1><p class="hint">Inline status notification. Four intents — Information, Warning, Error, Success. Click the X to dismiss.</p><div class="bp-stage"><div class="bp-stage__canvas"><div style="width:100%;max-width:560px"><div class="mb mb--neutral">
+<span class="mb__icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4921 8.91012C10.4497 8.67687 10.2456 8.49999 10.0001 8.49999C9.72397 8.49999 9.50011 8.72385 9.50011 8.99999V13.5021L9.50817 13.592C9.55051 13.8253 9.75465 14.0021 10.0001 14.0021C10.2763 14.0021 10.5001 13.7783 10.5001 13.5021V8.99999L10.4921 8.91012ZM10.7988 6.74999C10.7988 6.33578 10.463 5.99999 10.0488 5.99999C9.63461 5.99999 9.29883 6.33578 9.29883 6.74999C9.29883 7.16421 9.63461 7.49999 10.0488 7.49999C10.463 7.49999 10.7988 7.16421 10.7988 6.74999ZM18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10ZM3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10Z" fill="currentColor"/></svg></span>
+<p class="mb__msg">Message providing information with actionable insights.</p>
+<div class="mb__actions"><button class="mb__btn">Button</button><button class="mb__btn">Button</button><button class="mb__dismiss" aria-label="Dismiss"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/></svg></button></div>
+</div></div></div></div>
+<h2>Status intents</h2>
+<div class="stack">
+<div class="mb mb--neutral">
+<span class="mb__icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4921 8.91012C10.4497 8.67687 10.2456 8.49999 10.0001 8.49999C9.72397 8.49999 9.50011 8.72385 9.50011 8.99999V13.5021L9.50817 13.592C9.55051 13.8253 9.75465 14.0021 10.0001 14.0021C10.2763 14.0021 10.5001 13.7783 10.5001 13.5021V8.99999L10.4921 8.91012ZM10.7988 6.74999C10.7988 6.33578 10.463 5.99999 10.0488 5.99999C9.63461 5.99999 9.29883 6.33578 9.29883 6.74999C9.29883 7.16421 9.63461 7.49999 10.0488 7.49999C10.463 7.49999 10.7988 7.16421 10.7988 6.74999ZM18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10ZM3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10Z" fill="currentColor"/></svg></span>
+<p class="mb__msg">Message providing information with actionable insights.</p>
+<div class="mb__actions"><button class="mb__btn">Button</button><button class="mb__btn">Button</button><button class="mb__dismiss" aria-label="Dismiss"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/></svg></button></div>
+</div>
+<div class="mb mb--warning">
+<span class="mb__icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.56195 3.26181C9.75109 2.91271 10.2521 2.91273 10.4412 3.26186L16.9418 15.2628C17.1222 15.5959 16.881 16.0009 16.5021 16.0009H3.49942C3.12051 16.0009 2.8793 15.5959 3.0598 15.2627L9.56195 3.26181ZM11.3205 2.78557C10.7532 1.73821 9.25014 1.73813 8.68271 2.78544L2.18056 14.7864C1.63905 15.7858 2.3627 17.0009 3.49942 17.0009H16.5021C17.6388 17.0009 18.3624 15.786 17.821 14.7865L11.3205 2.78557ZM10.5 7.50023C10.5 7.22409 10.2761 7.00023 9.99996 7.00023C9.72382 7.00023 9.49996 7.22409 9.49996 7.50023V11.5002C9.49996 11.7764 9.72382 12.0002 9.99996 12.0002C10.2761 12.0002 10.5 11.7764 10.5 11.5002V7.50023ZM10.75 13.7502C10.75 14.1644 10.4142 14.5002 9.99996 14.5002C9.58575 14.5002 9.24996 14.1644 9.24996 13.7502C9.24996 13.336 9.58575 13.0002 9.99996 13.0002C10.4142 13.0002 10.75 13.336 10.75 13.7502Z" fill="currentColor"/></svg></span>
+<p class="mb__msg">Message providing information with actionable insights.</p>
+<div class="mb__actions"><button class="mb__btn">Button</button><button class="mb__btn">Button</button><button class="mb__dismiss" aria-label="Dismiss"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/></svg></button></div>
+</div>
+<div class="mb mb--danger">
+<span class="mb__icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.1194 2.87868C10.9478 1.70711 9.0483 1.70711 7.87673 2.87868L2.87868 7.87673C1.70711 9.0483 1.70711 10.9478 2.87868 12.1194L7.87673 17.1174C9.0483 18.289 10.9478 18.289 12.1194 17.1174L17.1174 12.1194C18.289 10.9478 18.289 9.0483 17.1174 7.87673L12.1194 2.87868ZM8.58384 3.58579C9.36488 2.80474 10.6312 2.80474 11.4123 3.58579L16.4103 8.58384C17.1914 9.36488 17.1914 10.6312 16.4103 11.4123L11.4123 16.4103C10.6312 17.1914 9.36489 17.1914 8.58384 16.4103L3.58579 11.4123C2.80474 10.6312 2.80474 9.36489 3.58579 8.58384L8.58384 3.58579ZM7.85355 7.14645C7.65829 6.95118 7.34171 6.95118 7.14645 7.14645C6.95118 7.34171 6.95118 7.65829 7.14645 7.85355L9.29289 10L7.14645 12.1464C6.95118 12.3417 6.95118 12.6583 7.14645 12.8536C7.34171 13.0488 7.65829 13.0488 7.85355 12.8536L10 10.7071L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L10.7071 10L12.8536 7.85355C13.0488 7.65829 13.0488 7.34171 12.8536 7.14645C12.6583 6.95118 12.3417 6.95118 12.1464 7.14645L10 9.29289L7.85355 7.14645Z" fill="currentColor"/></svg></span>
+<p class="mb__msg">Message providing information with actionable insights.</p>
+<div class="mb__actions"><button class="mb__btn">Button</button><button class="mb__btn">Button</button><button class="mb__dismiss" aria-label="Dismiss"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/></svg></button></div>
+</div>
+<div class="mb mb--success">
+<span class="mb__icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2ZM10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3ZM13.3584 7.64645C13.532 7.82001 13.5513 8.08944 13.4163 8.28431L13.3584 8.35355L9.35355 12.3584C9.17999 12.532 8.91056 12.5513 8.71569 12.4163L8.64645 12.3584L6.64645 10.3584C6.45118 10.1632 6.45118 9.84658 6.64645 9.65131C6.82001 9.47775 7.08944 9.45846 7.28431 9.59346L7.35355 9.65131L9 11.298L12.6513 7.64645C12.8466 7.45118 13.1632 7.45118 13.3584 7.64645Z" fill="currentColor"/></svg></span>
+<p class="mb__msg">Message providing information with actionable insights.</p>
+<div class="mb__actions"><button class="mb__btn">Button</button><button class="mb__btn">Button</button><button class="mb__dismiss" aria-label="Dismiss"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/></svg></button></div>
+</div>
+</div>
+<h2>Without action buttons</h2>
+<div class="stack">
+<div class="mb mb--neutral">
+<span class="mb__icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4921 8.91012C10.4497 8.67687 10.2456 8.49999 10.0001 8.49999C9.72397 8.49999 9.50011 8.72385 9.50011 8.99999V13.5021L9.50817 13.592C9.55051 13.8253 9.75465 14.0021 10.0001 14.0021C10.2763 14.0021 10.5001 13.7783 10.5001 13.5021V8.99999L10.4921 8.91012ZM10.7988 6.74999C10.7988 6.33578 10.463 5.99999 10.0488 5.99999C9.63461 5.99999 9.29883 6.33578 9.29883 6.74999C9.29883 7.16421 9.63461 7.49999 10.0488 7.49999C10.463 7.49999 10.7988 7.16421 10.7988 6.74999ZM18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10ZM3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10Z" fill="currentColor"/></svg></span>
+<p class="mb__msg">A routine system state has changed. No action needed.</p>
+<div class="mb__actions"><button class="mb__dismiss" aria-label="Dismiss"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/></svg></button></div>
+</div>
+<div class="mb mb--success">
+<span class="mb__icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2ZM10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3ZM13.3584 7.64645C13.532 7.82001 13.5513 8.08944 13.4163 8.28431L13.3584 8.35355L9.35355 12.3584C9.17999 12.532 8.91056 12.5513 8.71569 12.4163L8.64645 12.3584L6.64645 10.3584C6.45118 10.1632 6.45118 9.84658 6.64645 9.65131C6.82001 9.47775 7.08944 9.45846 7.28431 9.59346L7.35355 9.65131L9 11.298L12.6513 7.64645C12.8466 7.45118 13.1632 7.45118 13.3584 7.64645Z" fill="currentColor"/></svg></span>
+<p class="mb__msg">Your changes were saved successfully.</p>
+<div class="mb__actions"><button class="mb__dismiss" aria-label="Dismiss"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/></svg></button></div>
+</div>
+</div>
+<h2>Usage</h2>
+<div class="doc">
+<div class="doc__sec"><h3>Types</h3>
+<p>MessageBar has four status types. Each carries a distinct semantic meaning and a different live-region politeness, so the choice changes both how the message reads and how assistive technology announces it. Match the status to the meaning — never use Warning to downplay an Error or Information.</p>
+<p><strong>Information.</strong> A neutral, informational update. Use it for context that’s helpful but not urgent — a new feature, a routine state change, or a non-blocking heads-up.</p>
+<p><strong>Warning.</strong> A non-critical issue that needs attention. Use it when an action might have unintended consequences or a state could become a problem if it isn’t addressed soon.</p>
+<p><strong>Error.</strong> A failure or blocking condition. Use it when something didn’t work, a required action couldn’t complete, or a state prevents someone from continuing.</p>
+<p><strong>Success.</strong> Confirms a positive outcome. Use it after an action completes successfully, like saving changes or finishing a multi-step flow.</p>
+</div>
+<div class="doc__sec"><h3>Behavior</h3>
+<p>MessageBar surfaces the outcome of an action across a full page or section, or communicates a persistent system state that needs attention. Reach for it when feedback is actionable and benefits from one or two inline responses adjacent to the message.</p>
+<p>Apply it at the page or section level — never on individual form fields. For inline validation use a field-level error beneath the input; for persistent help use hint text, a tooltip, or a callout; for destructive confirmations use a Dialog; for floating, ephemeral notifications use a Toast.</p>
+<p>Match the status to the semantic meaning of the message — the status is part of the message, not a stylistic choice. Show no more than two action buttons; if more responses are needed, the situation calls for a Dialog. Always give the dismiss button an accessible name.</p>
+</div>
+<div class="doc__sec"><h3>Layout</h3>
+<p>Never hardcode the container width. The 800px shown in the design source is for layout purposes only — in code, fill the parent.</p>
+</div>
+<div class="doc__sec"><h3>Accessibility</h3>
+<p>Set live-region politeness by status: use role="alert" for Error and Warning so the announcement is assertive, and role="status" for Information and Success so it stays polite. Overusing role="alert" desensitizes people to urgent alerts.</p>
+<p>When someone dismisses a MessageBar, remove it from the DOM rather than hiding it with display: none — a hidden bar with role="alert" can still be announced unexpectedly. Remove all show/hide transitions when prefers-reduced-motion: reduce is set.</p>
+</div>
+</div></div><script>
+document.querySelectorAll('.mb__dismiss').forEach(function (d) {
+  d.addEventListener('click', function () {
+    var mb = d.closest('.mb');
+    if (mb) mb.classList.add('is-dismissed');
+  });
+});
+</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="banner.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Banner</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Contextual banner surface with an optional leading image or icon, a title and bo...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="dialog.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Dialog</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Modal that interrupts the workflow for a critical action requiring explicit ackn...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a></div></div><!-- /INJECT:RELATED --></body></html>

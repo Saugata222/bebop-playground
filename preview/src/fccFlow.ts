@@ -1189,17 +1189,17 @@ css += '.nav--collapsed .ni.nav__pin-collapsed { display: flex; }';
 css += '\n';
 
 // ─── Back bar (hover to navigate to catalog) ───
-css += '.bebop-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
+css += '.copilot-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
 css += '\n';
-css += '.bebop-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
+css += '.copilot-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
 css += '\n';
-css += '.bebop-shell-hover:hover ~ .bebop-shell-bar, .bebop-shell-bar:hover { transform: translateY(0); }';
+css += '.copilot-shell-hover:hover ~ .copilot-shell-bar, .copilot-shell-bar:hover { transform: translateY(0); }';
 css += '\n';
-css += ".bebop-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
+css += ".copilot-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
 css += '\n';
-css += '.bebop-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
+css += '.copilot-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += '.bebop-shell-bar a svg { width: 16px; height: 16px; }';
+css += '.copilot-shell-bar a svg { width: 16px; height: 16px; }';
 css += '\n';
 
 // ─── Settings Modal — Figma node 330:17490 (Source-Discovery) ───
@@ -1348,8 +1348,8 @@ html += '</head>';
 html += '<body>';
 
 // Back bar (hover top edge to show)
-html += '<div class="bebop-shell-hover"></div>';
-html += '<div class="bebop-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
+html += '<div class="copilot-shell-hover"></div>';
+html += '<div class="copilot-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
 
 // ─── Shell container ───
 html += '<div class="shell">';
@@ -2121,7 +2121,7 @@ html += '\n';
 // ─── Cross-page state via localStorage ──────────────────────
 // Shape: { "<key>": <active-boolean> } — presence of a key = CONNECTED.
 // Disconnect writes happen elsewhere (Settings); we listen for changes.
-html += 'var STORAGE_KEY = "bebop:connected-sources";\n';
+html += 'var STORAGE_KEY = "copilot:connected-sources";\n';
 html += 'function loadState(){ try { var v = JSON.parse(localStorage.getItem(STORAGE_KEY) || \'{"m365":true}\'); return (v && typeof v === "object" && !Array.isArray(v)) ? v : {"m365":true}; } catch(e) { return {"m365":true}; } }\n';
 html += 'function saveState(state){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }\n';
 html += 'function syncFromStorage(){\n';
@@ -2825,7 +2825,7 @@ html += '\n';
 // ─── Settings Modal — IIFE keeps state private; exposes window.openCopilotSettings() ───
 // Discovery-variant JS: handles Explore/Connected tabs, search, Connect/Disconnect.
 // State is SHARED with the FCC sources menu via the same localStorage key
-// (`bebop:connected-sources`, shape `{ "<id>": <activeBool> }`). Settings only
+// (`copilot:connected-sources`, shape `{ "<id>": <activeBool> }`). Settings only
 // owns the keys it renders — it preserves m365 and unknown keys so toggle state
 // set by the other surface isn\'t clobbered.
 html += '(function(){\n';

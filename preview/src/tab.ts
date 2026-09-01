@@ -8,11 +8,22 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { stage, segControl } from './_scaffold';
 
-// Image icon (regular 20px)
-const imgR20 = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg>';
-// Image icon (filled 20px)
-const imgF20 = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3C4.34315 3 3 4.34315 3 6V14C3 14.6495 3.20642 15.2509 3.55724 15.7419L8.94759 10.4345C9.53144 9.85964 10.4686 9.85964 11.0524 10.4345L16.4428 15.7419C16.7936 15.2509 17 14.6495 17 14V6C17 4.34315 15.6569 3 14 3H6ZM6 17C5.35372 17 4.75517 16.7956 4.26544 16.448L9.6492 11.1471C9.84381 10.9555 10.1562 10.9555 10.3508 11.1471L15.7346 16.448C15.2448 16.7956 14.6463 17 14 17H6ZM12.5 8.75C11.8096 8.75 11.25 8.19036 11.25 7.5C11.25 6.80964 11.8096 6.25 12.5 6.25C13.1904 6.25 13.75 6.80964 13.75 7.5C13.75 8.19036 13.1904 8.75 12.5 8.75Z" fill="currentColor"/></svg>';
+// ─── Icons — real Fluent System assets (read from src/components/icons) ──────
+
+const iconsDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'src', 'components', 'icons');
+function readIcon(name: string): string {
+  return fs.readFileSync(path.join(iconsDir, name), 'utf-8')
+    .replace(/fill="#[0-9A-Fa-f]{3,6}"/g, 'fill="currentColor"')
+    .replace(/\n/g, '').trim();
+}
+
+// Image icon (Fluent, 20px) — the spec default icon slot
+const imgR20 = readIcon('image-20-regular.svg');
+const imgF20 = readIcon('image-20-filled.svg');
+// Chevron (Fluent, 20px) — end-content overflow affordance
+const chevron20 = readIcon('chevron-down-20-regular.svg');
 // Grid icon (regular 20px)
 const gridR20 = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V9H9V4H6ZM10 4V9H16V6C16 4.89543 15.1046 4 14 4H10ZM16 10H10V16H14C15.1046 16 16 15.1046 16 14V10ZM9 16V10H4V14C4 15.1046 4.89543 16 6 16H9Z" fill="currentColor"/></svg>';
 // Grid icon (filled 20px)
@@ -50,7 +61,7 @@ function iconOnlyTab(icoR: string, icoF: string, extra: string, disabled = false
 
 const css = `
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+body { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
 h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
 h2 { font-size: 18px; font-weight: 600; margin: 40px 0 16px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
 h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
@@ -67,8 +78,8 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 .tab {
   display: inline-flex; align-items: center; justify-content: center;
   position: relative; cursor: pointer; border: none;
-  font-family: 'Segoe UI', 'Segoe Sans', sans-serif;
-  font-size: 14px; font-weight: 400; line-height: 1.4;
+  font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px; font-weight: 420; line-height: 20px;
   letter-spacing: 0; white-space: nowrap;
   transition: background 0.1s;
   outline: none;
@@ -82,11 +93,13 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 .tab .tab__ico-f { display: none; }
 .tab.sel .tab__ico-r { display: none; }
 .tab.sel .tab__ico-f { display: inline-flex; }
+.tab.no-ico .tab__ico-r, .tab.no-ico .tab__ico-f { display: none; }
+.tab.no-label .tab__label { display: none; }
 
 /* ─── Text layout (Icon+Label or Text-only) ─── */
 .tab--text {
   min-height: 32px; min-width: 32px;
-  padding: 6px 10px; gap: 4px;
+  padding: 6px 12px; gap: 4px;
   border-radius: 12px;
 }
 
@@ -97,26 +110,67 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 }
 
 /* ─── Unselected states ─── */
-.tab:hover:not(:disabled):not(.sel) { background: rgba(36,36,36,0.04); color: #1d1d1d; }
+.tab:hover:not(:disabled):not(.sel) { background: rgba(24,24,24,0.04); color: #181818; }
+.tab:active:not(:disabled):not(.sel) { background: rgba(13,13,13,0.08); color: #0d0d0d; }
 
 /* ─── Selected states ─── */
-.tab.sel { background: #242424; color: #fff; font-weight: 600; }
-.tab.sel:hover:not(:disabled) { background: #2b2b2b; color: #fff; }
+.tab.sel { background: #242424; color: #fff; font-weight: 625; }
+.tab.sel:hover:not(:disabled) { background: #313131; color: #fff; }
+.tab.sel:active:not(:disabled) { background: #3e3e3e; color: #fff; }
 
 /* ─── Disabled ─── */
-.tab:disabled { color: #929292; cursor: not-allowed; background: rgba(36,36,36,0); }
-.tab.sel:disabled { background: #ebebeb; color: #929292; }
+.tab:disabled { color: rgba(0,0,0,0.43); cursor: not-allowed; background: rgba(143,143,143,0.5); }
+.tab.sel:disabled { background: rgba(143,143,143,0.5); color: rgba(0,0,0,0.43); }
 
 /* ─── Focus ring ─── */
 .tab:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }
+
+/* ─── Hover/focus demo forcing ─── */
+.hover-demo .tab { background: rgba(24,24,24,0.04); color: #181818; }
+.hover-demo .tab.sel { background: #313131; color: #fff; }
+.focus-demo .tab { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }
+
+/* ─── End content (trailing icon button) ─── */
+.tablist-strip { display: flex; align-items: center; gap: 4px; width: 400px; }
+.tablist-strip .tablist { flex: 1 0 0; min-width: 0; overflow: clip; }
+.tab-end {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 6px; border-radius: 9999px;
+  border: 1px solid rgba(36,36,36,0); background: transparent; color: #242424;
+  cursor: pointer; flex-shrink: 0;
+}
+.tab-end:hover { background: rgba(24,24,24,0.04); }
+.tab-end svg { width: 20px; height: 20px; display: block; }
+
+/* ─── Usage guidance ─── */
+.usage__sec { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px 22px; margin-bottom: 12px; }
+.usage__sec h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; margin: 0 0 10px; color: #242424; }
+.usage__sec p.lead { font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 10px; }
+.usage__sub { font-size: 12px; font-weight: 600; color: #242424; margin: 12px 0 6px; }
+.usage__sec ul { list-style: none; display: flex; flex-direction: column; gap: 7px; margin: 0; }
+.usage__sec li { font-size: 13px; line-height: 1.55; color: #5d5d5d; padding-left: 18px; position: relative; }
+.usage__sec li::before { content: ''; position: absolute; left: 2px; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: #c7c7c7; }
+.usage__sec li b { color: #242424; font-weight: 600; }
 `;
 
 // ─── Sections ───────────────────────────────────────────────
 
+const heroTab = '<button id="heroTab" class="tab tab--text sel">' + icoSlot() + '<span class="tab__label">Tab</span></button>';
+const heroControls =
+  segControl('Layout', 'layout', [
+    { value: 'both', label: 'Icon + text', active: true },
+    { value: 'text', label: 'Text' },
+    { value: 'icon', label: 'Icon' },
+  ]) +
+  segControl('State', 'state', [
+    { value: 'rest', label: 'Rest' },
+    { value: 'selected', label: 'Selected', active: true },
+    { value: 'disabled', label: 'Disabled' },
+  ]);
+
 const body = [
   '<div class="wrap">',
-  '<h1>Tab &amp; TabList — Component Preview</h1>',
-  '<p class="hint">Click tabs to toggle selection. Use Tab key for focus ring. Hover for hover state.</p>',
+  stage(heroTab, heroControls),
 
   // ─── TabList: Text only ───
   '<h2>TabList — Text Only</h2>',
@@ -143,6 +197,19 @@ const body = [
   iconOnlyTab(imgR20, imgF20, ' sel'),
   iconOnlyTab(gridR20, gridF20, ''),
   iconOnlyTab(listR20, listF20, ''),
+  '</div>',
+
+  // ─── TabList: with End content ───
+  '<h2>TabList — With End Content</h2>',
+  '<p class="hint" style="text-align:left;margin:0 0 12px">The trailing action lives in the End content slot, pinned to the trailing edge; the tab strip clips its overflow.</p>',
+  '<div class="tablist-strip">',
+  '<div class="tablist" data-tablist>',
+  textTab(' sel', 'All'),
+  textTab('', 'Files'),
+  textTab('', 'People'),
+  textTab('', 'Chats'),
+  '</div>',
+  '<button class="tab-end" aria-label="More tabs">' + chevron20 + '</button>',
   '</div>',
 
   // ─── Tab States: Unselected ───
@@ -188,10 +255,58 @@ const body = [
   '<div class="cell"><span class="rl">Disabled</span>' + iconTextTab('', 'Tab', true) + '</div>',
   '</div>',
 
+  // ─── Usage guidance ───
+  '<h2>Tab — Usage guidance</h2>',
+  '<div class="usage__sec"><h3>Behavior</h3><ul>',
+  '<li>Use a tab to switch between related content panels within a persistent container (Files, People, Chats) — only one panel is visible at a time.</li>',
+  '<li>A tablist must always have exactly one active tab. Zero or multiple selected tabs is invalid — always keep one Selected=True.</li>',
+  '<li>Don\'t use Disabled to represent an inactive tab. Disabled means unavailable; use Selected=False for the non-active tab.</li>',
+  '<li>When Selected changes, the label weight shifts Regular (420) → Semibold (625). Reserve layout space at the Semibold width (ghost node) so the layout doesn\'t reflow.</li>',
+  '<li>Never use a tab outside of a tablist — it isn\'t a standalone control.</li>',
+  '</ul></div>',
+  '<div class="usage__sec"><h3>Layout</h3>',
+  '<p class="lead">Tab ships in two layouts — choose based on available space and icon recognizability.</p><ul>',
+  '<li><b>Icon + label</b> is the default. The label improves discoverability and is right in most surfaces.</li>',
+  '<li><b>Icon only</b> is for space-constrained contexts where the icon is self-explanatory. The container becomes circular and padding squares up — always provide an aria-label.</li>',
+  '<li>Apply the correct radius token: Icon + label uses base-300 (12px); Icon only uses circular. Don\'t hardcode pixels.</li>',
+  '<li>For the icon slot, use the Fluent Image icon as the default — never placeholder shapes or custom vectors.</li>',
+  '</ul></div>',
+  '<div class="usage__sec"><h3>Accessibility</h3><ul>',
+  '<li><b>aria-label on Icon only tabs:</b> describe the content panel, not the icon — “Settings”, not “Gear icon”.</li>',
+  '<li><b>Reduced motion:</b> when prefers-reduced-motion: reduce is set, tab transitions are instant.</li>',
+  '</ul></div>',
+  '<div class="usage__sec"><h3>Content</h3><ul>',
+  '<li>Always use functional typography on labels. Never apply content-set type — tabs are interactive UI chrome, not editorial content.</li>',
+  '</ul></div>',
+
+  '<h2>TabList — Usage guidance</h2>',
+  '<div class="usage__sec"><h3>Behavior</h3>',
+  '<p class="lead">Tablist groups related tabs into a horizontal navigation strip for switching between mutually exclusive content panels, with an optional trailing end-content action.</p>',
+  '<div class="usage__sub">Selection</div><ul>',
+  '<li>Always keep exactly one tab Selected=true. Zero or multiple selected tabs is invalid state.</li></ul>',
+  '<div class="usage__sub">End content</div><ul>',
+  '<li>Place trailing actions in the End content slot — appending a standalone sibling button breaks alignment and the keyboard model.</li></ul>',
+  '<div class="usage__sub">Container styling</div><ul>',
+  '<li>Never apply a background fill or stroke to the container — tablist is a transparent layout wrapper; visual weight comes from the child tabs.</li>',
+  '</ul></div>',
+  '<div class="usage__sec"><h3>Layout</h3><ul>',
+  '<li>Use the gap token — don\'t hardcode pixel values.</li>',
+  '<li>Don\'t mix tab layouts within one tablist. Use either all Icon + text or all Icon only — mixing breaks rhythm and hit targets.</li>',
+  '</ul></div>',
+  '<div class="usage__sec"><h3>Accessibility</h3><ul>',
+  '<li><b>Roving tabindex:</b> the tablist is a single tab stop with arrow-key navigation between tabs — don\'t make each tab a separate tab stop.</li>',
+  '<li><b>Accessible name:</b> aria-label the container by purpose (“Message categories”), not by listing tab names.</li>',
+  '<li><b>Tabpanels:</b> pair each tab with a role="tabpanel"; hide inactive panels with the hidden attribute rather than removing them from the DOM.</li>',
+  '</ul></div>',
+
   '</div>',
 
   // ─── Script ───
   '<script>',
+  '  (function(){ var hero=document.getElementById("heroTab"); var st={layout:"both",state:"selected"};',
+  '    function paint(){ var cls=["tab"]; if(st.layout==="icon"){cls.push("tab--ico","no-label");} else {cls.push("tab--text"); if(st.layout==="text")cls.push("no-ico");} if(st.state==="selected")cls.push("sel"); hero.className=cls.join(" "); hero.disabled=st.state==="disabled"; }',
+  '    document.querySelectorAll("[data-ctrl]").forEach(function(btn){ btn.addEventListener("click", function(){ var name=btn.getAttribute("data-ctrl"); st[name]=btn.getAttribute("data-value"); var seg=btn.parentNode; seg.querySelectorAll("button").forEach(function(b){ b.classList.toggle("is-active", b===btn); }); paint(); }); });',
+  '    paint(); })();',
   '  // TabList behavior: single-select within each tablist',
   '  document.querySelectorAll("[data-tablist]").forEach(tl => {',
   '    tl.querySelectorAll(".tab").forEach(t => {',

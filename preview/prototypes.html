@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Prototypes — Bebop Playground</title>
+<title>Prototypes — M365 Copilot Playground</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -11,12 +11,13 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 
 /* ─── Top bar ─── */
 .topbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; display: flex; align-items: center; gap: 12px; padding: 0 48px; height: 56px; }
-.topbar__logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #242424; }
+.topbar__logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #242424; flex-shrink: 0; }
 .topbar__logo svg { width: 20px; height: 20px; }
-.topbar__logo span { font-size: 14px; font-weight: 600; }
+.topbar__logo span { font-size: 14px; font-weight: 600; white-space: nowrap; }
 .topbar__spacer { flex: 1; }
-.topbar__nav { display: flex; gap: 4px; }
-.topbar__link { display: inline-flex; align-items: center; height: 32px; padding: 6px 10px; border-radius: 12px; font-size: 14px; font-weight: 400; color: #242424; text-decoration: none; background: transparent; transition: background 0.1s; }
+.topbar__nav { display: flex; gap: 4px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.topbar__nav::-webkit-scrollbar { display: none; }
+.topbar__link { display: inline-flex; align-items: center; height: 32px; padding: 6px 10px; border-radius: 12px; font-size: 14px; font-weight: 400; color: #242424; text-decoration: none; background: transparent; transition: background 0.1s; white-space: nowrap; flex-shrink: 0; }
 .topbar__link:hover { background: rgba(36,36,36,0.04); }
 .topbar__link--active { background: #ebebeb; font-weight: 600; }
 
@@ -58,6 +59,30 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 .card--featured .card__cta:hover { background: #3b3b3b; }
 .card--featured .card__cta svg { width: 16px; height: 16px; }
 
+/* ─── Prototype folder ─── */
+.folder { grid-column: 1 / -1; border: 1px solid #dedede; border-radius: 16px; background: #fff; overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
+.folder:hover { border-color: #c8c8c8; }
+.folder.folder--open { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.folder__head { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; user-select: none; }
+.folder__head:hover { background: #fafafa; }
+.folder__icon { width: 20px; height: 20px; color: #5d5d5d; flex-shrink: 0; transition: color 0.1s; }
+.folder__head:hover .folder__icon, .folder.folder--open .folder__icon { color: #242424; }
+.folder__meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.folder__titlerow { display: flex; align-items: center; gap: 10px; }
+.folder__title { font-size: 16px; font-weight: 600; color: #242424; }
+.folder__count { font-size: 11px; font-weight: 600; color: #6f6f6f; background: #f0f0f0; padding: 2px 8px; border-radius: 9999px; white-space: nowrap; }
+.folder__preview { font-size: 12px; color: #929292; line-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.folder.folder--open .folder__preview { display: none; }
+.folder__chevron { flex-shrink: 0; margin-left: auto; width: 16px; height: 16px; color: #929292; transition: transform 0.2s ease, color 0.1s; }
+.folder__head:hover .folder__chevron { color: #242424; }
+.folder.folder--open .folder__chevron { transform: rotate(90deg); }
+.folder.folder--open .folder__head { border-bottom: 1px solid #ebebeb; }
+.folder__body { display: none; }
+.folder.folder--open .folder__body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px 20px; animation: folderReveal 0.22s ease; }
+.folder__body .card--featured { background: #fcfcfc; border-color: #ebebeb; }
+@keyframes folderReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 780px) { .folder.folder--open .folder__body { grid-template-columns: 1fr; } }
+
 /* ─── 2-per-row featured grid ─── */
 #prototypes .grid { grid-template-columns: repeat(2, 1fr); }
 
@@ -72,12 +97,132 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 /* ─── Footer ─── */
 .footer { border-top: 1px solid #f0f0f0; padding: 24px 48px; text-align: center; font-size: 12px; color: #929292; }
 
-/* ─── Bebop scrollbar ─── */
+/* ─── M365 Copilot scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
 ::-webkit-scrollbar-thumb:hover { border: 0; }
 * { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* REGISTRY:CSS */
+.workspace { margin-bottom: 32px; }
+.workspace__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+.workspace__heading > div { display: flex; flex-direction: column; gap: 4px; }
+.workspace__heading h2 { font-size: 20px; font-weight: 600; line-height: 28px; }
+.workspace__heading p { color: #6f6f6f; font-size: 14px; line-height: 20px; }
+.workspace__count { flex-shrink: 0; color: #5d5d5d; font-size: 12px; line-height: 28px; }
+.workspace__controls { display: flex; align-items: center; gap: 12px; }
+.workspace__search { position: relative; min-width: 0; flex: 1; }
+.workspace__search > svg { position: absolute; top: 50%; left: 12px; width: 18px; height: 18px; color: #5d5d5d; transform: translateY(-50%); pointer-events: none; }
+.workspace__search input { width: 100%; height: 40px; padding: 8px 40px; border: 1px solid #bdbdbd; border-radius: 8px; outline: none; background: #fff; color: #242424; font: inherit; font-size: 14px; }
+.workspace__search input:hover { border-color: #929292; }
+.workspace__search input:focus { border-color: #242424; box-shadow: inset 0 -2px #242424; }
+.workspace__search input::placeholder { color: #6f6f6f; }
+.workspace__clear { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: transparent; color: #5d5d5d; cursor: pointer; }
+.workspace__clear[hidden] { display: none; }
+.workspace__clear:hover { background: #ebebeb; color: #242424; }
+.workspace__clear svg { width: 16px; height: 16px; }
+.workspace__filters { display: inline-flex; flex-shrink: 0; padding: 3px; border: 1px solid #dedede; border-radius: 10px; background: #fff; }
+.workspace__filter { min-height: 32px; padding: 5px 11px; border: 0; border-radius: 7px; background: transparent; color: #5d5d5d; font: inherit; font-size: 13px; cursor: pointer; }
+.workspace__filter:hover { background: #f5f5f5; color: #242424; }
+.workspace__filter.is-active { background: #242424; color: #fff; }
+.workspace__expand { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 10px 0 14px; border: 1px solid #dedede; border-radius: 8px; background: #fff; color: #242424; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.1s, border-color 0.1s; }
+.workspace__expand:hover { background: #f5f5f5; border-color: #c8c8c8; }
+.workspace__expand-chev { width: 16px; height: 16px; color: #6f6f6f; transform: rotate(90deg); transition: transform 0.2s ease; }
+.workspace__expand.is-expanded .workspace__expand-chev { transform: rotate(-90deg); }
+.workspace__expand[hidden] { display: none; }
+#my-prototypes.kind-flat .folder { display: contents; }
+#my-prototypes.kind-flat .folder__head { display: none; }
+#my-prototypes.kind-flat .folder__body { display: contents; }
+.workspace-empty { display: none; padding: 48px 24px; border: 1px dashed #bdbdbd; border-radius: 12px; text-align: center; }
+.workspace-empty.is-visible { display: block; }
+.workspace-empty strong { display: block; margin-bottom: 4px; font-size: 16px; }
+.workspace-empty span { color: #6f6f6f; font-size: 13px; }
+[data-workspace-hidden] { display: none !important; }
+.registry__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+.registry__heading > div { display: flex; flex-direction: column; gap: 5px; }
+.registry__heading p { color: #6f6f6f; font-size: 14px; line-height: 20px; }
+.registry__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.registry-card { min-width: 0; display: flex; flex-direction: column; gap: 18px; padding: 20px; border: 1px solid #dedede; border-radius: 16px; background: #fff; }
+.registry-card__top, .registry-card__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.registry-card__kind { color: #5d5d5d; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.registry-card__status { display: inline-flex; align-items: center; gap: 6px; color: #5d5d5d; font-size: 12px; text-transform: capitalize; }
+.registry-card__status > span { width: 7px; height: 7px; border-radius: 50%; background: #929292; }
+.registry-card__status--ready > span { background: #107c10; }
+.registry-card__status--in-review > span { background: #986f0b; }
+.registry-card h3 { margin-bottom: 6px; font-size: 18px; font-weight: 600; line-height: 24px; }
+.registry-card p { color: #5d5d5d; font-size: 13px; line-height: 19px; }
+.registry-card__evidence { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #ebebeb; border-bottom: 1px solid #ebebeb; }
+.registry-card__evidence span { display: flex; min-width: 0; flex-direction: column; gap: 2px; padding: 12px 8px; color: #6f6f6f; font-size: 11px; line-height: 15px; }
+.registry-card__evidence span + span { border-left: 1px solid #ebebeb; }
+.registry-card__evidence strong { color: #242424; font-size: 16px; line-height: 20px; }
+.registry-card__evidence .registry-card__gap strong { color: #986f0b; }
+.registry-card__gaps { padding: 10px 12px; border-left: 3px solid #986f0b; background: #fff8e8; color: #5d5d5d; font-size: 11px; line-height: 16px; }
+.registry-card__gaps strong { display: block; margin-bottom: 2px; color: #242424; }
+.registry-card__gaps ul { margin: 0; padding-left: 16px; }
+.registry-card__scenarios { display: flex; flex-wrap: wrap; gap: 6px; }
+.registry-card__scenario { display: inline-flex; align-items: center; min-height: 28px; padding: 5px 9px; border-radius: 8px; background: #f5f5f5; color: #242424; font-size: 12px; line-height: 16px; text-decoration: none; }
+.registry-card__scenario:hover { background: #ebebeb; }
+.registry-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.registry-card__tag { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 9px; border-radius: 8px; background: #f5f5f5; color: #5d5d5d; font-size: 12px; line-height: 16px; }
+#quality-tracked .grid { grid-template-columns: repeat(2, 1fr); }
+.tp-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tp-head .card__name { flex: 1; min-width: 0; }
+.tp-meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #929292; }
+.tp-cta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.registry-card__footer { margin-top: auto; color: #6f6f6f; font-size: 11px; }
+.registry-card__open { color: #242424; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.registry-card__open:hover { text-decoration: underline; }
+@media (max-width: 960px) { .registry__grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .topbar { padding: 0 16px; }
+  .topbar__logo { flex-shrink: 0; }
+  .topbar__logo span { display: none; }
+  .topbar__spacer { display: none; }
+  .topbar__nav { flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .topbar__nav::-webkit-scrollbar { display: none; }
+  .topbar__link { flex-shrink: 0; white-space: nowrap; }
+  .hero { padding: 56px 24px 40px; }
+  .main { padding-right: 24px; padding-left: 24px; }
+  .workspace__heading, .workspace__controls { align-items: stretch; flex-direction: column; }
+  .workspace__heading { gap: 4px; }
+  .workspace__count { line-height: 20px; }
+  .workspace__filters { width: 100%; overflow-x: auto; }
+  .workspace__filter { flex: 1; }
+  #prototypes .grid, #quality-tracked .grid { grid-template-columns: 1fr; }
+  .registry-card__footer { align-items: flex-start; flex-direction: column; }
+}
+/* REGISTRY:CSS-END */
 </style>
 </head>
 <body>
@@ -86,13 +231,14 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 <div class="topbar">
   <a class="topbar__logo" href="playground.html">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.92704 2H12.1392C13.1927 2 14.1203 2.69397 14.4176 3.7046L14.8868 5.29901C15.0476 5.84546 15.5266 6.232 16.086 6.28068H16.3751C17.2627 6.28068 17.9479 6.53232 18.4023 7.04832C18.8449 7.55084 18.9913 8.21838 19.0009 8.88707C19.02 10.208 18.5033 11.849 18.0916 13.1554C17.7333 14.2924 17.273 15.4729 16.6552 16.3777C16.0399 17.2788 15.1999 18.0006 14.073 18.0006H7.87484L7.86695 18.0005H7.86063C6.80716 18.0005 5.87959 17.3066 5.58222 16.296L5.11309 14.7015C4.95237 14.1553 4.47368 13.7689 3.91456 13.7199H3.62488C2.73727 13.7199 2.05209 13.4683 1.59766 12.9523C1.15509 12.4498 1.00872 11.7822 0.999049 11.1135C0.979951 9.7926 1.49665 8.15165 1.90838 6.84517C2.26667 5.70826 2.72694 4.52772 3.34477 3.62288C3.96005 2.72178 4.80007 2 5.92704 2ZM2.86214 7.14574C2.43465 8.50224 1.98267 9.97352 1.99894 11.0991C2.00696 11.6536 2.12929 12.0429 2.34812 12.2914C2.55509 12.5264 2.924 12.7199 3.62488 12.7199H6.25213C6.8614 12.7199 7.39814 12.3195 7.57212 11.7352C8.04172 10.158 8.83794 7.4963 9.46637 5.45934L9.49937 5.35233C9.64852 4.86841 9.79284 4.40016 9.94826 3.98475C10.0807 3.63087 10.2289 3.29335 10.4095 3H5.92704C5.28311 3 4.70642 3.40208 4.17062 4.18678C3.63737 4.96774 3.2122 6.03493 2.86214 7.14574ZM5.73445 13.7199C5.88192 13.9288 5.99729 14.1639 6.07243 14.4193L6.54156 16.0137C6.71371 16.5988 7.25073 17.0005 7.86063 17.0005H7.88678C8.24574 16.9969 8.48955 16.8275 8.64066 16.6226C8.80779 16.3959 8.96035 16.0792 9.11514 15.6654C9.25974 15.2789 9.39567 14.8381 9.5478 14.3446L9.57806 14.2465C9.64307 14.0357 9.70989 13.8183 9.77797 13.596C9.543 13.6733 9.29325 13.7147 9.03611 13.7147H6.41074C6.35823 13.7182 6.30534 13.7199 6.25213 13.7199H5.73445ZM8.1935 12.7147H9.03611C9.58916 12.7147 10.0832 12.3842 10.2986 11.8846C10.7359 10.4387 11.1692 8.98844 11.4694 7.98005C11.5449 7.72668 11.6599 7.4933 11.8065 7.28588H10.9638C10.4111 7.28588 9.91739 7.61592 9.70178 8.11487C9.26432 9.56118 8.83086 11.0119 8.53054 12.0206C8.45511 12.2739 8.34011 12.5073 8.1935 12.7147ZM10.2221 6.40449C10.457 6.32723 10.7067 6.28588 10.9638 6.28588H13.5902C13.6424 6.28243 13.695 6.28068 13.7479 6.28068H14.2655C14.118 6.07183 14.0026 5.83666 13.9274 5.58128L13.4583 3.98687C13.2862 3.40177 12.7491 3 12.1392 3H12.1244C11.7593 3.00023 11.512 3.17099 11.3593 3.37803C11.1922 3.60467 11.0396 3.92146 10.8848 4.33517C10.7402 4.72167 10.6043 5.16256 10.4522 5.65601L10.4219 5.75415C10.3569 5.96483 10.2901 6.18225 10.2221 6.40449ZM17.1379 12.8549C17.5653 11.4984 18.0173 10.0271 18.001 8.90153C17.993 8.34698 17.8707 7.95771 17.6519 7.70923C17.4449 7.47423 17.076 7.28068 16.3751 7.28068H13.7479C13.1386 7.28068 12.6018 7.68108 12.4279 8.26541C11.9583 9.84263 11.1621 12.5043 10.5336 14.5413L10.5006 14.6483C10.3515 15.1322 10.2072 15.6005 10.0517 16.0159C9.91933 16.3697 9.77114 16.7073 9.59044 17.0006H14.073C14.7169 17.0006 15.2936 16.5985 15.8294 15.8138C16.3626 15.0329 16.7878 13.9657 17.1379 12.8549Z" fill="currentColor"/></svg>
-    <span>Bebop Playground</span>
+    <span>M365 Copilot Playground</span>
   </a>
   <div class="topbar__spacer"></div>
   <nav class="topbar__nav">
     <a class="topbar__link" href="playground.html">Get Started</a>
     <a class="topbar__link topbar__link--active" href="prototypes.html">Prototypes</a>
     <a class="topbar__link" href="tokens.html">Design System Tokens</a>
+    <a class="topbar__link" href="archive.html">Archive</a>
   </nav>
 </div>
 
@@ -105,102 +251,201 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 <!-- Main -->
 <div class="main">
 
-  <!-- My Prototypes -->
-  <div class="section" id="my-prototypes">
+  <!-- REGISTRY:START --><section class="workspace"><div class="workspace__controls"><div class="workspace__search"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m14.3 13.6 3.55 3.55-.7.7-3.55-3.55a6.5 6.5 0 1 1 .7-.7ZM9.5 15a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z" fill="currentColor"/></svg><input id="workspaceSearch" type="search" autocomplete="off" aria-label="Search prototypes" placeholder="Search prototypes, owners, or tags"/><button class="workspace__clear" id="workspaceClear" type="button" aria-label="Clear search" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.15 3.85a.5.5 0 0 1 .7-.7L8 7.3l4.15-4.15a.5.5 0 0 1 .7.7L8.7 8l4.15 4.15a.5.5 0 0 1-.7.7L8 8.7l-4.15 4.15a.5.5 0 0 1-.7-.7L7.3 8 3.15 3.85Z" fill="currentColor"/></svg></button></div><div class="workspace__filters" role="group" aria-label="Artifact type"><button class="workspace__filter is-active" type="button" data-workspace-kind="all" aria-pressed="true">All</button><button class="workspace__filter" type="button" data-workspace-kind="prototype" aria-pressed="false">Prototypes</button><button class="workspace__filter" type="button" data-workspace-kind="deck" aria-pressed="false">Decks</button></div><button class="workspace__expand" id="workspaceExpand" type="button"><span>Expand all</span><svg class="workspace__expand-chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></section><!-- REGISTRY:END -->
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <!-- My Prototypes (empty state) -->
+  <div class="section" id="user-prototypes">
     <div class="section-head">
       <span class="section-title">My Prototypes</span>
     </div>
-    <!-- EMPTY STATE -->
     <div class="empty-state">
-      <span class="empty-state__title">No experiments yet</span>
-      <span class="empty-state__desc">Start your own experiment by forking the Copilot Shell. Your prototypes will appear here.</span>
-      <a class="empty-state__cta" href="start-experimenting.html">Start Experimenting <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <div class="empty-state__title">No prototypes yet</div>
+      <div class="empty-state__desc">This is where your own experiments will live. Fork the Copilot Shell in your workspace, make a change, and build it &mdash; your prototype shows up here once you preview it. New to this? The step-by-step guide walks you through your first one.</div>
+      <a class="empty-state__cta" href="start-experimenting.html">Create your first prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
-    <!-- /EMPTY STATE -->
   </div>
 
   <!-- Community Prototypes -->
-  <div class="section" id="prototypes">
+  <div class="section" id="my-prototypes">
     <div class="section-head">
       <span class="section-title">Community Prototypes</span>
-      <span class="section-count">5</span>
+      <span class="section-count"></span>
     </div>
     <div class="grid">
-      <div class="card card--featured" style="cursor:default">
-        <div class="card__info">
-          <span class="card__name">Connectors Golden Flow</span>
-          <span class="card__desc">Exploration branched from the Copilot Shell to prototype the Connectors golden path experience.</span>
-          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
-            <span>Forked from <strong style="color:#6f6f6f;">Copilot Shell</strong> &middot; 10 Mar 2026</span>
+      <!-- TRACKED:START --><div class="folder" data-folder><div class="folder__head"><svg class="folder__icon" viewBox="0 0 20 20" fill="none"><path d="M2.75 6A1.75 1.75 0 0 1 4.5 4.25h2.63c.46 0 .9.18 1.23.51l.88.88c.14.14.32.22.52.22H15.5A1.75 1.75 0 0 1 17.25 7.6v6.65A1.75 1.75 0 0 1 15.5 16H4.5a1.75 1.75 0 0 1-1.75-1.75V6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><div class="folder__meta"><div class="folder__titlerow"><span class="folder__title">Connector discovery</span><span class="folder__count">1 experiments</span></div><span class="folder__preview">Intent Detection</span></div><svg class="folder__chevron" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="folder__body"><article class="card card--featured" style="cursor:default" data-workspace-item data-kind="prototype" data-status="ready" data-search="intent detection connector discovery triggered by high-intent prompts. bebop playground prototype ready connectors discovery intent"><div class="card__info"><div class="tp-head"><span class="card__name">Intent Detection</span><span class="registry-card__status registry-card__status--ready"><span></span>ready</span></div><span class="card__desc">Connector discovery triggered by high-intent prompts.</span><div class="registry-card__tags"><span class="registry-card__tag">connectors</span><span class="registry-card__tag">discovery</span><span class="registry-card__tag">intent</span></div><div class="tp-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="#929292" stroke-width="1.2"/><path d="M3.5 13c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg><span>Bebop Playground · Aug 25, 2026</span></div><div class="tp-cta"><a class="card__cta" href="dist/intentDetection.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div></article></div></div><div class="folder" data-folder><div class="folder__head"><svg class="folder__icon" viewBox="0 0 20 20" fill="none"><path d="M2.75 6A1.75 1.75 0 0 1 4.5 4.25h2.63c.46 0 .9.18 1.23.51l.88.88c.14.14.32.22.52.22H15.5A1.75 1.75 0 0 1 17.25 7.6v6.65A1.75 1.75 0 0 1 15.5 16H4.5a1.75 1.75 0 0 1-1.75-1.75V6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><div class="folder__meta"><div class="folder__titlerow"><span class="folder__title">Connector Skills</span><span class="folder__count">4 experiments</span></div><span class="folder__preview">Skills P0 · Connectors Admin Center · Deck for Deepak · Skills in Excel Agent</span></div><svg class="folder__chevron" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="folder__body"><article class="card card--featured" style="cursor:default" data-workspace-item data-kind="prototype" data-status="in-review" data-search="skills p0 end-to-end connector skills exploration across discovery, settings, ciq, and disconnected response states. saugata pramanik prototype in-review connectors skills settings ciq zero state settings and sources attach a connector skill disconnected discovery response"><div class="card__info"><div class="tp-head"><span class="card__name">Skills P0</span><span class="registry-card__status registry-card__status--in-review"><span></span>in review</span></div><span class="card__desc">End-to-end connector skills exploration across discovery, settings, CIQ, and disconnected response states.</span><div class="registry-card__tags"><span class="registry-card__tag">connectors</span><span class="registry-card__tag">skills</span><span class="registry-card__tag">settings</span><span class="registry-card__tag">ciq</span></div><div class="tp-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="#929292" stroke-width="1.2"/><path d="M3.5 13c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg><span>Saugata Pramanik · Aug 25, 2026</span></div><div class="tp-cta"><a class="card__cta" href="dist/connectorSkillsP0.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div></article><article class="card card--featured" style="cursor:default" data-workspace-item data-kind="prototype" data-status="in-review" data-search="connectors admin center administrator connector inventory, details, tools, skills, and governance exploration. saugata pramanik prototype in-review connectors admin governance connector inventory"><div class="card__info"><div class="tp-head"><span class="card__name">Connectors Admin Center</span><span class="registry-card__status registry-card__status--in-review"><span></span>in review</span></div><span class="card__desc">Administrator connector inventory, details, tools, skills, and governance exploration.</span><div class="registry-card__tags"><span class="registry-card__tag">connectors</span><span class="registry-card__tag">admin</span><span class="registry-card__tag">governance</span></div><div class="tp-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="#929292" stroke-width="1.2"/><path d="M3.5 13c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg><span>Saugata Pramanik · Aug 25, 2026</span></div><div class="tp-cta"><a class="card__cta" href="dist/connectorSkillsAdminX.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div></article><article class="card card--featured" style="cursor:default" data-workspace-item data-kind="deck" data-status="in-review" data-search="deck for deepak stakeholder narrative combining figma-authored slides with live end-user and admin scenarios. saugata pramanik deck in-review connectors skills presentation cover live settings story live admin story claude skill awareness openai skill awareness claude skill invocation"><div class="card__info"><div class="tp-head"><span class="card__name">Deck for Deepak</span><span class="registry-card__status registry-card__status--in-review"><span></span>in review</span></div><span class="card__desc">Stakeholder narrative combining Figma-authored slides with live end-user and admin scenarios.</span><div class="registry-card__tags"><span class="registry-card__tag">connectors</span><span class="registry-card__tag">skills</span><span class="registry-card__tag">presentation</span></div><div class="tp-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="#929292" stroke-width="1.2"/><path d="M3.5 13c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg><span>Saugata Pramanik · Aug 25, 2026</span></div><div class="tp-cta"><a class="card__cta" href="dist/connectorSkillsDeck.html">Open Deck <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div></article><article class="card card--featured" style="cursor:default" data-workspace-item data-kind="prototype" data-status="in-review" data-search="skills in excel agent the excel + copilot surface from the connector skills figma — a static q3 financials workbook on the left and the interactive copilot pane on the right: greeting, composer, suggestion chips, and the sources picker popover (web / work / confluence / github / moody&#039;s / canva). fluent 2 web styling. saugata pramanik prototype in-review connectors skills excel"><div class="card__info"><div class="tp-head"><span class="card__name">Skills in Excel Agent</span><span class="registry-card__status registry-card__status--in-review"><span></span>in review</span></div><span class="card__desc">The Excel + Copilot surface from the Connector Skills Figma — a static Q3 Financials workbook on the left and the interactive Copilot pane on the right: greeting, composer, suggestion chips, and the sources picker popover (Web / Work / Confluence / Github / Moody&#039;s / Canva). Fluent 2 web styling.</span><div class="registry-card__tags"><span class="registry-card__tag">connectors</span><span class="registry-card__tag">skills</span><span class="registry-card__tag">excel</span></div><div class="tp-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="#929292" stroke-width="1.2"/><path d="M3.5 13c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg><span>Saugata Pramanik · Jul 9, 2026</span></div><div class="tp-cta"><a class="card__cta" href="dist/excelAgentSkills.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div></article></div></div><!-- TRACKED:END -->
+      <div class="folder" data-folder>
+        <div class="folder__head">
+          <svg class="folder__icon" viewBox="0 0 20 20" fill="none"><path d="M2.75 6A1.75 1.75 0 0 1 4.5 4.25h2.63c.46 0 .9.18 1.23.51l.88.88c.14.14.32.22.52.22H15.5A1.75 1.75 0 0 1 17.25 7.6v6.65A1.75 1.75 0 0 1 15.5 16H4.5a1.75 1.75 0 0 1-1.75-1.75V6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          <div class="folder__meta"><div class="folder__titlerow"><span class="folder__title">Connector e2e flows</span><span class="folder__count">3 experiments</span></div><span class="folder__preview">User sync e2e · One Copilot shell · FCC e2e</span></div>
+          <svg class="folder__chevron" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="folder__body">
+          <div class="card card--featured" style="cursor:default">
+            <div class="card__info">
+              <span class="card__name">User sync e2e</span>
+              <span class="card__desc">A clone of the ConnectorSkills P0 experiment as a fresh starting point for the user-sync end-to-end exploration &mdash; carrying over the full source-discovery shell, connector skill procedures, Agents &amp; skills tab, Settings L1/L2 source details, and CIQ palette.</span>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span>Forked from <strong style="color:#6f6f6f;">ConnectorSkills P0</strong> &middot; 31 Jul 2026</span>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <a class="card__cta" href="dist/userSyncV2.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              </div>
+            </div>
           </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <a class="card__cta" href="dist/connectorsGoldenFlow.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="card card--featured" style="cursor:default">
+            <div class="card__info">
+              <span class="card__name">One Copilot shell</span>
+              <span class="card__desc">One Copilot zero state prototype &mdash; Side Nav with mode switcher, Work IQ header, serif greeting, Composer, and suggested-prompt chips that reveal their prompt list on select.</span>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span>Base One Copilot shell &middot; zero state</span>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <a class="card__cta" href="dist/oneCopilotShell.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              </div>
+            </div>
+          </div>
+          <div class="card card--featured" style="cursor:default">
+            <div class="card__info">
+              <span class="card__name">FCC e2e</span>
+              <span class="card__desc">A copy of the One Copilot shell as a fresh starting point for the FCC end-to-end flow exploration.</span>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span>Forked from <strong style="color:#6f6f6f;">One Copilot shell</strong> &middot; 1 Sep 2026</span>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <a class="card__cta" href="dist/oneCopilotShell.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="card card--featured" style="cursor:default">
-        <div class="card__info">
-          <span class="card__name">Seamless Connect</span>
-          <span class="card__desc">Exploring batch-connect for enterprise sources via Azure AD auto-discovery, reducing setup friction from N steps to one.</span>
-          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
-            <span>Forked from <strong style="color:#6f6f6f;">Connectors Golden Flow</strong> &middot; 18 Mar 2026</span>
+      <div class="folder" data-folder>
+        <div class="folder__head">
+          <svg class="folder__icon" viewBox="0 0 20 20" fill="none"><path d="M2.75 6A1.75 1.75 0 0 1 4.5 4.25h2.63c.46 0 .9.18 1.23.51l.88.88c.14.14.32.22.52.22H15.5A1.75 1.75 0 0 1 17.25 7.6v6.65A1.75 1.75 0 0 1 15.5 16H4.5a1.75 1.75 0 0 1-1.75-1.75V6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          <div class="folder__meta"><div class="folder__titlerow"><span class="folder__title">Error states</span><span class="folder__count">2 experiments</span></div><span class="folder__preview">User Sync auth-fail · FCC auth-fail</span></div>
+          <svg class="folder__chevron" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="folder__body">
+          <div class="card card--featured" style="cursor:default">
+            <div class="card__info">
+              <span class="card__name">User Sync auth-fail</span>
+              <span class="card__desc">A clone of the userSyncv2 experiment as a starting point for the user-sync auth-failure exploration &mdash; carrying over the full source-discovery shell, connector skill procedures, Agents &amp; skills tab, Settings L1/L2 source details, and CIQ palette.</span>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span>Forked from <strong style="color:#6f6f6f;">userSyncv2</strong> &middot; 31 Jul 2026</span>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <a class="card__cta" href="dist/userSyncAuthFail.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              </div>
+            </div>
           </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <a class="card__cta" href="dist/seamlessConnect.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="card card--featured" style="cursor:default">
+            <div class="card__info">
+              <span class="card__name">FCC auth-fail</span>
+              <span class="card__desc">A copy of the ConnectorSkills P0 experiment focused on the auth-failed / reconnect flow: the LSEG connector starts in an auth-failed state, surfaced with the amber warning glyph and a Reconnect action across the Change-sources menu, Settings L1, and the Settings L2 source-details page, plus Disconnect-without-reconnect.</span>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span>Forked from <strong style="color:#6f6f6f;">ConnectorSkills P0</strong> &middot; 31 Jul 2026</span>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <a class="card__cta" href="dist/authFailed.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="card card--featured" style="cursor:default">
-        <div class="card__info">
-          <span class="card__name">Store — Model 1: All-in-One</span>
-          <span class="card__desc">Unified store with three tabs (Agents, Skills, Sources) in a single browsing experience. Compact cards, detail modal, and search.</span>
-          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
-            <span>Forked from <strong style="color:#6f6f6f;">Copilot Shell</strong> &middot; 14 Apr 2026</span>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <a class="card__cta" href="dist/store1.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <div class="folder" data-folder>
+        <div class="folder__head">
+          <svg class="folder__icon" viewBox="0 0 20 20" fill="none"><path d="M2.75 6A1.75 1.75 0 0 1 4.5 4.25h2.63c.46 0 .9.18 1.23.51l.88.88c.14.14.32.22.52.22H15.5A1.75 1.75 0 0 1 17.25 7.6v6.65A1.75 1.75 0 0 1 15.5 16H4.5a1.75 1.75 0 0 1-1.75-1.75V6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          <div class="folder__meta"><div class="folder__titlerow"><span class="folder__title">Connectors as plugins</span><span class="folder__count">1 experiment</span></div><span class="folder__preview">Pluginsv1</span></div>
+          <svg class="folder__chevron" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="folder__body">
+          <div class="card card--featured" style="cursor:default">
+            <div class="card__info">
+              <span class="card__name">Pluginsv1</span>
+              <span class="card__desc">A clone of the ConnectorSkills P0 experiment as a fresh starting point for the Plugins v1 exploration &mdash; carrying over the full source-discovery shell, connector skill procedures, Agents &amp; skills tab, Settings L1/L2 source details, and CIQ palette.</span>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span>Forked from <strong style="color:#6f6f6f;">ConnectorSkills P0</strong> &middot; 31 Jul 2026</span>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <a class="card__cta" href="dist/pluginsV1.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="card card--featured" style="cursor:default">
+      <div class="card card--featured" style="grid-column:1 / -1; cursor:default">
         <div class="card__info">
-          <span class="card__name">Store — Model 2: Store + Settings</span>
-          <span class="card__desc">Agents &amp; Skills in a store view with two tabs; Sources managed separately in a settings panel with toggles.</span>
-          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
-            <span>Forked from <strong style="color:#6f6f6f;">Store Model 1</strong> &middot; 14 Apr 2026</span>
-          </div>
+          <span class="card__name">Copilot Shell</span>
+          <span class="card__desc">The reusable Copilot shell &mdash; the interaction baseline that new experiments are forked from.</span>
           <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <a class="card__cta" href="dist/store2.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          </div>
-        </div>
-      </div>
-      <div class="card card--featured" style="cursor:default">
-        <div class="card__info">
-          <span class="card__name">Store — Model 3: Agents Only</span>
-          <span class="card__desc">Cleanest store: agent-only catalog with no tabs. Skills (as Capability Packs) and Sources (as Connected Apps) live in Settings.</span>
-          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
-            <span>Forked from <strong style="color:#6f6f6f;">Store Model 1</strong> &middot; 14 Apr 2026</span>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <a class="card__cta" href="dist/store3.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          </div>
-        </div>
-      </div>
-      <div class="card card--featured" style="cursor:default">
-        <div class="card__info">
-          <span class="card__name">Copilot Extensions</span>
-          <span class="card__desc">Standalone Extensions management page with acquired agents grid, store card discovery, tab filtering, and context menu interactions.</span>
-          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:#929292;">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM5 10.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM11 5a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 11 5Z" fill="#929292"/><path d="M5 6.5v3M5 6.5c1.5 0 3.5.5 4.75 2" stroke="#929292" stroke-width="1.2" stroke-linecap="round"/></svg>
-            <span>Standalone page &middot; 15 Apr 2026</span>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <a class="card__cta" href="dist/copilotExtensions.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="card__cta" href="dist/copilotShell.html">Open Prototype <svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </div>
       </div>
@@ -209,7 +454,140 @@ body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-ser
 
 </div>
 
-<div class="footer">Bebop Playground &middot; TypeScript tokens + Fluent UI System Icons &middot; Built by Saugata Pramanik</div>
+<div class="footer">M365 Copilot Playground &middot; TypeScript tokens + Fluent UI System Icons &middot; Built by Saugata Pramanik</div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- REGISTRY:JS --><script>
+(function(){
+  var input = document.getElementById('workspaceSearch');
+  var clear = document.getElementById('workspaceClear');
+  var count = document.getElementById('workspaceCount');
+  var filters = Array.from(document.querySelectorAll('[data-workspace-kind]'));
+  var sections = Array.from(document.querySelectorAll('#my-prototypes, #prototypes'));
+  var expandBtn = document.getElementById('workspaceExpand');
+  if (!input || !clear) return;
+
+  document.querySelectorAll('#my-prototypes .card, #prototypes .card').forEach(function(card){
+    card.setAttribute('data-workspace-item', '');
+    var action = card.querySelector('.card__cta');
+    var kind = action && /deck/i.test(action.textContent || '') ? 'deck' : 'prototype';
+    card.setAttribute('data-kind', kind);
+    card.setAttribute('data-status', 'untracked');
+  });
+
+  var items = Array.from(document.querySelectorAll('[data-workspace-item]'));
+  var params = new URLSearchParams(location.search);
+  var activeKind = params.get('type') || 'all';
+  if (!filters.some(function(button){ return button.getAttribute('data-workspace-kind') === activeKind; })) activeKind = 'all';
+  input.value = params.get('q') || '';
+
+  var empty = document.createElement('div');
+  empty.className = 'workspace-empty';
+  empty.innerHTML = '<strong>No artifacts found</strong><span>Try another term or artifact type.</span>';
+  document.querySelector('.workspace').insertAdjacentElement('afterend', empty);
+
+  function normalized(value){ return value.toLowerCase().trim().replace(/\s+/g, ' '); }
+  function syncUrl(query){
+    var next = new URL(location.href);
+    query ? next.searchParams.set('q', query) : next.searchParams.delete('q');
+    activeKind === 'all' ? next.searchParams.delete('type') : next.searchParams.set('type', activeKind);
+    history.replaceState(null, '', next.pathname + next.search + next.hash);
+  }
+  function apply(){
+    var query = normalized(input.value);
+    var visible = 0;
+    items.forEach(function(item){
+      var haystack = normalized(item.getAttribute('data-search') || item.textContent || '');
+      var kindMatch = activeKind === 'all' || item.getAttribute('data-kind') === activeKind;
+      var searchMatch = !query || query.split(' ').every(function(term){ return haystack.includes(term); });
+      var show = kindMatch && searchMatch;
+      item.toggleAttribute('data-workspace-hidden', !show);
+      if (show) visible++;
+    });
+    sections.forEach(function(section){
+      var sectionItems = Array.from(section.querySelectorAll('[data-workspace-item]'));
+      var visibleItems = sectionItems.filter(function(item){ return !item.hasAttribute('data-workspace-hidden'); });
+      var sectionCount = section.querySelector('.section-count');
+      section.toggleAttribute('data-workspace-hidden', sectionItems.length > 0 && visibleItems.length === 0);
+      if (sectionCount) sectionCount.textContent = String(visibleItems.length);
+    });
+    document.querySelectorAll('[data-folder]').forEach(function(folder){
+      var kids = Array.from(folder.querySelectorAll('[data-workspace-item]'));
+      var anyVisible = kids.some(function(k){ return !k.hasAttribute('data-workspace-hidden'); });
+      folder.toggleAttribute('data-workspace-hidden', kids.length > 0 && !anyVisible);
+      if (query) { folder.classList.toggle('folder--open', anyVisible); } else { folder.classList.remove('folder--open'); }
+    });
+    filters.forEach(function(button){
+      var active = button.getAttribute('data-workspace-kind') === activeKind;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    var mp = document.getElementById('my-prototypes');
+    if (mp) mp.classList.toggle('kind-flat', activeKind !== 'all');
+    if (expandBtn) expandBtn.hidden = activeKind !== 'all';
+    updateExpandLabel();
+    clear.hidden = !input.value;
+    if (count) count.textContent = visible + (visible === 1 ? ' artifact' : ' artifacts');
+    empty.classList.toggle('is-visible', visible === 0);
+    syncUrl(input.value.trim());
+  }
+
+  input.addEventListener('input', apply);
+  input.addEventListener('keydown', function(event){
+    if (event.key === 'Escape' && input.value) { input.value = ''; apply(); }
+  });
+  clear.addEventListener('click', function(){ input.value = ''; input.focus(); apply(); });
+  filters.forEach(function(button){
+    button.addEventListener('click', function(){ activeKind = button.getAttribute('data-workspace-kind') || 'all'; apply(); });
+  });
+  document.addEventListener('keydown', function(event){
+    if (event.key === '/' && !/input|textarea|select/i.test(document.activeElement && document.activeElement.tagName || '')) {
+      event.preventDefault(); input.focus();
+    }
+  });
+  document.querySelectorAll('.folder__head').forEach(function(head){
+    head.addEventListener('click', function(){ head.parentElement.classList.toggle('folder--open'); updateExpandLabel(); });
+  });
+  function updateExpandLabel(){
+    if (!expandBtn) return;
+    var folders = Array.from(document.querySelectorAll('[data-folder]'));
+    var allOpen = folders.length > 0 && folders.every(function(f){ return f.classList.contains('folder--open'); });
+    var lbl = expandBtn.querySelector('span');
+    if (lbl) lbl.textContent = allOpen ? 'Collapse all' : 'Expand all';
+    expandBtn.classList.toggle('is-expanded', allOpen);
+  }
+  if (expandBtn) expandBtn.addEventListener('click', function(){
+    var folders = Array.from(document.querySelectorAll('[data-folder]'));
+    var allOpen = folders.length > 0 && folders.every(function(f){ return f.classList.contains('folder--open'); });
+    folders.forEach(function(f){ f.classList.toggle('folder--open', !allOpen); });
+    updateExpandLabel();
+  });
+  apply();
+})();
+</script><!-- /REGISTRY:JS -->
 </body>
 </html>

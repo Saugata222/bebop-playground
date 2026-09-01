@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Share Your Experiment — M365 Copilot Playground</title>
+<style>
+@font-face { font-family: 'Segoe Sans'; src: url('fonts/Segoe-sans.woff2') format('woff2-variations'), url('fonts/Segoe-sans.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Segoe Sans'; src: url('fonts/Segoe-sans-Italic.woff2') format('woff2-variations'), url('fonts/Segoe-sans-Italic.woff2') format('woff2'); font-weight: 100 900; font-style: italic; font-display: swap; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #1a1a1a; color: #e0e0e0; min-height: 100vh; }
+
+.topbar { position: sticky; top: 0; z-index: 50; background: rgba(26,26,26,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #333; display: flex; align-items: center; gap: 12px; padding: 0 48px; height: 56px; }
+.topbar__back { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #e0e0e0; font-size: 14px; transition: background 0.1s; }
+.topbar__back:hover { background: rgba(255,255,255,0.06); }
+.topbar__back svg { width: 16px; height: 16px; }
+
+.page { max-width: 708px; margin: 0 auto; padding: 60px 48px 100px; }
+.page h1 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; line-height: 1.2; margin-bottom: 8px; color: #fff; }
+.page h1 strong { font-weight: 400; }
+.page > .subtitle { font-size: 15px; color: #999; line-height: 1.6; margin-bottom: 48px; }
+
+.step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 36px; }
+.step__num { width: 32px; height: 32px; border-radius: 9999px; background: #fff; color: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+.step__body { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.step__title { font-size: 16px; font-weight: 600; color: #fff; }
+.step__text { font-size: 14px; color: #999; line-height: 1.6; }
+.step__text a { color: #e0e0e0; text-decoration: none; }
+.step__text a:hover { text-decoration: underline; }
+
+.prompt-box { background: #2a2a2a; padding: 14px 18px; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; }
+.prompt-item { display: flex; align-items: flex-start; gap: 8px; }
+.prompt-item__text { font-size: 13px; font-style: italic; color: #ccc; line-height: 1.5; flex: 1; }
+.prompt-item .copy-btn { width: 24px; height: 24px; margin-top: 1px; }
+.prompt-item .copy-btn svg { width: 14px; height: 14px; }
+
+.copy-btn { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; background: transparent; color: #777; cursor: pointer; border-radius: 6px; transition: background 0.1s, color 0.1s; flex-shrink: 0; }
+.copy-btn:hover { background: #333; color: #e0e0e0; }
+.copy-btn svg { width: 16px; height: 16px; }
+
+.section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #666; margin-bottom: 20px; }
+
+.detail-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding-left: 4px; }
+.detail-list li { font-size: 14px; color: #999; line-height: 1.6; list-style: none; padding-left: 18px; position: relative; }
+.detail-list li::before { content: ''; position: absolute; left: 0; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: #555; }
+
+.back-footer { text-align: center; padding: 20px 0; }
+.back-footer a { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 8px 16px; border-radius: 12px; background: #fff; color: #1a1a1a; font-size: 14px; text-decoration: none; transition: background 0.1s; }
+.back-footer a:hover { background: #e0e0e0; }
+.back-footer a svg { width: 16px; height: 16px; }
+
+.divider { height: 1px; background: #333; margin: 48px 0; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #555 transparent; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar__back" href="playground.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Playground
+  </a>
+</div>
+
+<div class="page">
+  <h1><strong>Share Your Experiment</strong></h1>
+  <p class="subtitle">Ready to show your work? A live, shareable link takes just seconds &mdash; the AI handles all the git plumbing behind the scenes, so you never have to think about it.</p>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Sharing your work</div>
+
+  <!-- Step 1: Share -->
+  <div class="step">
+    <span class="step__num">1</span>
+    <div class="step__body">
+      <span class="step__title">Share your experiment</span>
+      <span class="step__text">When you&rsquo;re ready to share, just paste this one prompt. The AI makes a personal copy, publishes it, and hands you a link &mdash; every git step happens for you.</span>
+      <div class="prompt-box" style="margin-top:8px">
+        <div class="prompt-item"><span class="prompt-item__text">"Share my experiment so anyone can view it, then tell me in plain, non-technical language what you did and give me the shareable link."</span><button class="copy-btn" onclick="copy(this,'Share my experiment so anyone can view it, then tell me in plain, non-technical language what you did and give me the shareable link.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+      <span class="step__text" style="margin-top:12px;">The AI will automatically:</span>
+      <ul class="detail-list">
+        <li>Create a personal copy of the project on your GitHub (a &ldquo;fork&rdquo;)</li>
+        <li>Push your experiment to it</li>
+        <li>Enable a live preview site (GitHub Pages)</li>
+        <li>Give you a shareable URL that anyone in the org can view</li>
+      </ul>
+      <span class="step__text" style="margin-top:12px;">The first share may take 1&ndash;2 minutes for GitHub Pages to build. After that, updates are near-instant.</span>
+    </div>
+  </div>
+
+  <!-- Step 2: Update -->
+  <div class="step">
+    <span class="step__num">2</span>
+    <div class="step__body">
+      <span class="step__title">Update your shared experiment</span>
+      <span class="step__text">Made more changes? Push again &mdash; your link stays the same and the live preview updates on its own.</span>
+      <div class="prompt-box" style="margin-top:8px">
+        <div class="prompt-item"><span class="prompt-item__text">"Push my latest changes to my shared link."</span><button class="copy-btn" onclick="copy(this,'Push my latest changes to my shared link.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Contributing back</div>
+
+  <!-- Step 3: Contribute -->
+  <div class="step">
+    <span class="step__num">3</span>
+    <div class="step__body">
+      <span class="step__title">Add your experiment to the main playground</span>
+      <span class="step__text">Want your prototype on the official <a href="prototypes.html">Prototypes</a> page so everyone can see it? Ask the AI to open a pull request &mdash; it handles the branching, commit, and PR for you.</span>
+      <div class="prompt-box" style="margin-top:8px">
+        <div class="prompt-item"><span class="prompt-item__text">"Raise a PR to add my experiment to the main prototypes page, then tell me in plain language what happens next."</span><button class="copy-btn" onclick="copy(this,'Raise a PR to add my experiment to the main prototypes page, then tell me in plain language what happens next.')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+      <span class="step__text" style="margin-top:12px;">A maintainer reviews your PR, may suggest changes, and merges it &mdash; then it&rsquo;s available to everyone using the playground.</span>
+    </div>
+  </div>
+
+  <!-- Step 4: Contribute components -->
+  <div class="step">
+    <span class="step__num">4</span>
+    <div class="step__body">
+      <span class="step__title">Contribute new components</span>
+      <span class="step__text">Built a handy UI pattern along the way? Add it back to the design system so the whole team can use it too.</span>
+      <div class="prompt-box" style="margin-top:8px">
+        <div class="prompt-item"><span class="prompt-item__text">"I've built a notification toast in myExperiment. Add it as a new component to the design system with a token file, preview, and catalog entry."</span><button class="copy-btn" onclick="copy(this,&quot;I've built a notification toast in myExperiment. Add it as a new component to the design system with a token file, preview, and catalog entry.&quot;)" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="back-footer">
+    <a href="playground.html">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Playground
+    </a>
+  </div>
+</div>
+
+<script>
+function copy(btn, text) {
+  navigator.clipboard.writeText(text).then(function() {
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%"><path d="M13.8639 3.65511C14.0533 3.85606 14.0439 4.17251 13.8429 4.36191L5.91309 11.8358C5.67573 12.0595 5.30311 12.0526 5.07417 11.8203L2.39384 9.09995C2.20003 8.90325 2.20237 8.58667 2.39907 8.39286C2.59578 8.19905 2.91235 8.2014 3.10616 8.3981L5.51192 10.8398L13.1571 3.63419C13.358 3.44479 13.6745 3.45416 13.8639 3.65511Z" fill="currentColor"/></svg>';
+    setTimeout(function() { btn.innerHTML = orig; }, 1500);
+  });
+}
+</script>
+
+</body>
+</html>

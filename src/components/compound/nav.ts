@@ -1,24 +1,32 @@
 /**
- * Component: Nav
+ * Component: Nav (Side Nav)
  *
- * Bebop Design System — Sidebar navigation shell.
+ * One Copilot / Bebop Design System — the single shared navigation shell.
  *
- * The nav is the primary wayfinding surface. It supports two modes:
- *   Expanded — full-width items with labels, sections, and me control
- *   Collapsed — icon-only vertical rail; pinned items collapse to a single
- *               Pin icon, chat items are hidden, waffle button is hidden,
- *               only Copilot logo remains in header
+ * One Copilot navigation organizes the product around a small set of top-level
+ * modes rather than a long list of features. Users switch between four primary
+ * pivots — Chat is the default entry and session history. It supports two modes:
+ *   Expanded  — full-width items with labels, sections, and me control
+ *   Collapsed — icon-only vertical rail; hovering an item opens a flyout
  *
  * Sub-components:
- *   Nav (container)         — sidebar shell with header + scrollable body + me control
- *   Nav Item                — primary navigation row (icon + label + right slots)
- *   Nav Item Split          — nav item with separate secondary action button
- *   Nav Section Header      — section title / filter bar
- *   Nav Header Button       — icon button in the header (collapse, waffle, notification, more)
- *   Nav Me Control           — user profile + license at bottom
- *   Nav Notification Badge  — count badge on header buttons
+ *   Nav (container)     — header + tab pivot + scrollable body + me control
+ *   Header              — Copilot wordmark + open / apps (grid-dots) / collapse
+ *   Tab pivot           — Chat | Tasks (reuses Segmented Switch) + right tool icons
+ *   Nav Item            — primary row (icon + label + right slots)
+ *   Section (Pinned/Chats) — caption header + rows
+ *   Flyout              — popover menu opened from an item (reuses Menu/Popover)
+ *   Me Control          — avatar footer + profile menu (Settings, Recent pages,
+ *                          Scheduled prompts, Give feedback, Download apps)
+ *
+ * Reused primitives: Segmented Switch, Button, Avatar, Menu/menuListItem,
+ * Divider, Popover.
  *
  * Prefix: --c-nav-{property}
+ *
+ * Figma: One-Copilot-Desktop-UI-Kit — Side Nav (page 318:24131; expanded
+ *        4227:63888, collapsed 4227:105674, flyouts 4227:96245, me control
+ *        4227:100223). Work variant.
  */
 
 // ─── Container Tokens ───────────────────────────────────────
@@ -279,10 +287,49 @@ export const navCollapsed = {
   mePadding: '8px',
 } as const;
 
+// ─── Tab Pivot (Chat | Tasks) ───────────────────────────────
+
+/** Primary pivot at the top of the nav body. Reuses the Segmented Switch primitive. */
+export const navTabs = {
+  tabs: ['Chat', 'Tasks'],
+  selected: 'Chat',
+  /** Trailing tool icons (settings, refiner, copilot, code) */
+  toolIcons: ['settings-20-regular', 'panel-left-20-regular', 'bot-20-regular', 'code-20-regular'],
+  primitive: 'segmentedSwitch',
+} as const;
+
+// ─── Flyout (popover from a nav item) ───────────────────────
+
+/**
+ * Hovering or clicking certain nav items (Notebooks, Tasks, Agents, More)
+ * opens a flyout popover beside the rail. Reuses the Popover surface + Menu
+ * / menuListItem rows.
+ */
+export const navFlyout = {
+  /** --gnrc-color-surface-neutral-nearer */
+  background: '#ffffff',
+  /** --gnrc-border-radius-base-300 (12px) */
+  borderRadius: '12px',
+  border: '1px solid #dedede',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.12), 0 0 2px rgba(0,0,0,0.06)',
+  padding: '4px',
+  itemPrimitive: 'menuListItem',
+} as const;
+
+// ─── Me Control Menu (profile flyout) ───────────────────────
+
+export const navMeControlMenu = {
+  items: ['Settings', 'Recent pages', 'Scheduled prompts', 'Give feedback'],
+  submenu: 'Download apps',
+  footerLinks: ['Privacy', 'Terms', 'FAQ'],
+  primitive: 'menu',
+} as const;
+
 // ─── Aggregate Export ───────────────────────────────────────
 
 export const nav = {
   container: navContainer,
+  tabs: navTabs,
   item: {
     size: navItemSize,
     typography: navItemTypography,
@@ -297,6 +344,8 @@ export const nav = {
   sectionHeader: navSectionHeader,
   headerButton: navHeaderButton,
   notificationBadge: navNotificationBadge,
+  flyout: navFlyout,
   meControl: navMeControl,
+  meControlMenu: navMeControlMenu,
   collapsed: navCollapsed,
 } as const;

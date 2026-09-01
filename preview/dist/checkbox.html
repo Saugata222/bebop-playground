@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Checkbox Preview</title><style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+h2 { font-size: 18px; font-weight: 600; margin: 40px 0 16px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
+h3 { font-size: 13px; font-weight: 600; margin: 20px 0 10px; color: #5d5d5d; }
+.hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
+.wrap { max-width: 860px; margin: 0 auto; }
+
+/* Matrix */
+.matrix { display: grid; grid-template-columns: 120px repeat(4, 1fr); gap: 4px 12px; align-items: center; background: #fff; border: 1px solid #ececec; border-radius: 12px; padding: 20px; }
+.matrix__col { font-size: 10px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.8px; text-align: left; padding-bottom: 4px; }
+.matrix__rl { font-size: 11px; font-weight: 600; color: #5d5d5d; }
+
+/* ─── Checkbox ─── */
+.cb { display: inline-flex; align-items: center; gap: 4px; position: relative; cursor: pointer; user-select: none; outline: none; border: none; background: none; font-family: inherit; }
+.cb--disabled { cursor: not-allowed; }
+.cb:focus-visible { border-radius: 12px; outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 3px #fff; }
+
+.cb__ind { display: flex; align-items: center; justify-content: center; padding: 8px; flex-shrink: 0; }
+.cb__box { width: 16px; height: 16px; border: 1px solid transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.12s, border-color 0.12s; overflow: hidden; }
+.cb--standard .cb__box { border-radius: 4px; }
+.cb--circular .cb__box { border-radius: 9999px; }
+.cb__box svg { width: 12px; height: 12px; display: none; }
+
+.cb__label { display: flex; align-items: center; padding: 6px 8px 6px 0; flex-shrink: 0; }
+.cb__label span { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 20px; letter-spacing: 0; white-space: nowrap; }
+
+/* Glyph visibility */
+.cb--checked .cb__box .cb-check { display: block; }
+.cb--indeterminate .cb__box .cb-dash { display: block; }
+
+/* Unchecked box */
+.cb--unchecked .cb__box { background: rgba(36,36,36,0); border-color: #242424; }
+.cb--unchecked .cb__label span { color: #5d5d5d; }
+
+/* Selected (checked / indeterminate) box */
+.cb--checked .cb__box, .cb--indeterminate .cb__box { background: #242424; border-color: rgba(36,36,36,0); color: #fff; }
+.cb--checked .cb__label span, .cb--indeterminate .cb__label span { color: #242424; }
+
+/* Static state modifiers (showcase matrix) */
+.cb--hover.cb--unchecked .cb__box { background: rgba(36,36,36,0.04); border-color: #313131; }
+.cb--hover.cb--unchecked .cb__label span { color: #555555; }
+.cb--pressed.cb--unchecked .cb__box { background: rgba(36,36,36,0.08); border-color: #3e3e3e; }
+.cb--pressed.cb--unchecked .cb__label span { color: #4c4c4c; }
+.cb--hover.cb--checked .cb__box, .cb--hover.cb--indeterminate .cb__box { background: #313131; }
+.cb--hover.cb--checked .cb__label span, .cb--hover.cb--indeterminate .cb__label span { color: #181818; }
+.cb--pressed.cb--checked .cb__box, .cb--pressed.cb--indeterminate .cb__box { background: #3e3e3e; }
+.cb--pressed.cb--checked .cb__label span, .cb--pressed.cb--indeterminate .cb__label span { color: #0d0d0d; }
+
+/* Disabled */
+.cb--disabled.cb--unchecked .cb__box { background: rgba(36,36,36,0); border-color: #dedede; }
+.cb--disabled.cb--checked .cb__box, .cb--disabled.cb--indeterminate .cb__box { background: #ebebeb; border-color: rgba(36,36,36,0); color: #929292; }
+.cb--disabled .cb__label span { color: #929292; }
+
+/* Interactive (real hover/active) */
+.cb--interactive.cb--unchecked:hover .cb__box { background: rgba(36,36,36,0.04); border-color: #313131; }
+.cb--interactive.cb--unchecked:hover .cb__label span { color: #555555; }
+.cb--interactive:is(.cb--checked,.cb--indeterminate):hover .cb__box { background: #313131; }
+.cb--interactive:is(.cb--checked,.cb--indeterminate):hover .cb__label span { color: #181818; }
+.cb--interactive.cb--unchecked:active .cb__box { background: rgba(36,36,36,0.08); border-color: #3e3e3e; }
+.cb--interactive:is(.cb--checked,.cb--indeterminate):active .cb__box { background: #3e3e3e; }
+
+/* ─── Usage guidance ─── */
+.usage { background: #fff; border: 1px solid #ececec; border-radius: 12px; padding: 28px 32px; margin-top: 24px; }
+.usage h3 { font-size: 16px; font-weight: 600; color: #242424; margin: 22px 0 10px; }
+.usage h3:first-child { margin-top: 0; }
+.usage p { font-size: 14px; line-height: 1.55; color: #424242; margin-bottom: 12px; }
+.usage ul { margin: 0 0 4px 20px; }
+.usage li { font-size: 14px; line-height: 1.55; color: #424242; margin-bottom: 8px; }
+.usage li b { color: #242424; }
+.usage code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ─── Bebop page overrides (injected by _inject.ts) ─── */
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
+
+/* Page wrapper */
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
+.bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
+.bp-header__tag--compound { background: #ebebeb; color: #242424; }
+.bp-header__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
+.bp-header__desc { font-size: 15px; color: #6f6f6f; line-height: 1.6; max-width: 600px; margin-bottom: 20px; }
+.bp-header__states { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
+.bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
+
+/* Content area — override all wrapper variants */
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+
+/* Headings */
+h1 { display: none !important; }
+.hint, p.hint { display: none !important; }
+h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
+h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
+/* Rows and cells */
+.row { gap: 24px !important; margin-bottom: 20px !important; }
+.cell { gap: 8px !important; }
+.rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+
+/* ─── Related components ─── */
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+.bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
+.bp-related__card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.bp-related__card-top { display: flex; align-items: center; gap: 8px; }
+.bp-related__card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
+.bp-related__card-arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
+.bp-related__card:hover .bp-related__card-arrow { color: #242424; transform: translateX(2px); }
+.bp-related__card-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
+
+/* ─── Back bar (sticky, frosted) ─── */
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Checkbox</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Selection control for deferred, multi-select decisions. Unchecked, Checked, and Indeterminate statuses across Rest, Hover, Pressed, and Disabled states, in Standard (4px) and Circular styles, with the intentional secondary→primary label shift.</p><div class="bp-header__states"><span class="bp-header__state">Unchecked</span><span class="bp-header__state">Checked</span><span class="bp-header__state">Indeterminate</span><span class="bp-header__state">Hover</span><span class="bp-header__state">Pressed</span><span class="bp-header__state">Disabled</span></div></div><!-- /INJECT:HEADER --><div class="bp-stage"><div class="bp-stage__canvas"><button id="heroCb" class="cb cb--checked cb--standard" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Include this source</span></span></button></div><div class="bp-controls"><div class="bp-control"><span class="bp-lbl">Status</span><div class="bp-seg" data-seg="status"><button type="button" data-ctrl="status" data-value="unchecked">Unchecked</button><button type="button" data-ctrl="status" data-value="checked" class="is-active">Checked</button><button type="button" data-ctrl="status" data-value="indeterminate">Mixed</button></div></div><div class="bp-control"><span class="bp-lbl">Style</span><div class="bp-seg" data-seg="style"><button type="button" data-ctrl="style" data-value="standard" class="is-active">Standard</button><button type="button" data-ctrl="style" data-value="circular">Circular</button></div></div><div class="bp-control"><span class="bp-lbl">Disabled</span><div class="bp-seg" data-seg="dis"><button type="button" data-ctrl="dis" data-value="off" class="is-active">Off</button><button type="button" data-ctrl="dis" data-value="on">On</button></div></div></div></div>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Standard</span><span class="bp-section__hint">Status × Rest / Hover / Pressed / Disabled</span></div><div class="bp-matrix-wrap"><table class="bp-matrix"><thead><tr><th></th><th>Rest</th><th>Hover</th><th>Pressed</th><th>Disabled</th></tr></thead><tbody><tr><th>Unchecked</th><td><button class="cb cb--unchecked cb--standard" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--unchecked cb--standard cb--hover" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--unchecked cb--standard cb--pressed" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--unchecked cb--standard cb--disabled" role="checkbox" aria-checked="false" disabled aria-disabled="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td></tr><tr><th>Checked</th><td><button class="cb cb--checked cb--standard" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--checked cb--standard cb--hover" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--checked cb--standard cb--pressed" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--checked cb--standard cb--disabled" role="checkbox" aria-checked="true" disabled aria-disabled="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td></tr><tr><th>Indeterminate</th><td><button class="cb cb--indeterminate cb--standard" role="checkbox" aria-checked="mixed"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--indeterminate cb--standard cb--hover" role="checkbox" aria-checked="mixed"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--indeterminate cb--standard cb--pressed" role="checkbox" aria-checked="mixed"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--indeterminate cb--standard cb--disabled" role="checkbox" aria-checked="mixed" disabled aria-disabled="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td></tr></tbody></table></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Circular</span></div><div class="bp-matrix-wrap"><table class="bp-matrix"><thead><tr><th></th><th>Rest</th><th>Hover</th><th>Pressed</th><th>Disabled</th></tr></thead><tbody><tr><th>Unchecked</th><td><button class="cb cb--unchecked cb--circular" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--unchecked cb--circular cb--hover" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--unchecked cb--circular cb--pressed" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--unchecked cb--circular cb--disabled" role="checkbox" aria-checked="false" disabled aria-disabled="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td></tr><tr><th>Checked</th><td><button class="cb cb--checked cb--circular" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--checked cb--circular cb--hover" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--checked cb--circular cb--pressed" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--checked cb--circular cb--disabled" role="checkbox" aria-checked="true" disabled aria-disabled="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td></tr><tr><th>Indeterminate</th><td><button class="cb cb--indeterminate cb--circular" role="checkbox" aria-checked="mixed"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--indeterminate cb--circular cb--hover" role="checkbox" aria-checked="mixed"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--indeterminate cb--circular cb--pressed" role="checkbox" aria-checked="mixed"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td><td><button class="cb cb--indeterminate cb--circular cb--disabled" role="checkbox" aria-checked="mixed" disabled aria-disabled="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Label</span></span></button></td></tr></tbody></table></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Interactive group</span><span class="bp-section__hint">Parent reflects the mixed state when some — but not all — children are selected</span></div><div id="parentRow" style="margin-bottom:8px"><button class="cb cb--indeterminate cb--standard cb--interactive" role="checkbox" aria-checked="mixed"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Data sources</span></span></button></div><div id="childGroup" style="display:flex;flex-direction:column;gap:4px;padding-left:24px"><button class="cb cb--checked cb--standard cb--interactive" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Chats</span></span></button><button class="cb cb--unchecked cb--standard cb--interactive" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Emails</span></span></button><button class="cb cb--checked cb--standard cb--interactive" role="checkbox" aria-checked="true"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Meetings</span></span></button><button class="cb cb--unchecked cb--standard cb--interactive" role="checkbox" aria-checked="false"><span class="cb__ind"><span class="cb__box"><svg class="cb-check" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.03212 13.9072L3.56056 10.0017C3.28538 9.69214 2.81132 9.66425 2.50174 9.93944C2.19215 10.2146 2.16426 10.6887 2.43945 10.9983L6.43945 15.4983C6.72614 15.8208 7.2252 15.8355 7.53034 15.5303L18.0303 5.03033C18.3232 4.73744 18.3232 4.26256 18.0303 3.96967C17.7374 3.67678 17.2626 3.67678 16.9697 3.96967L7.03212 13.9072Z" fill="currentColor"/></svg><svg class="cb-dash" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8C3 7.58579 3.33579 7.25 3.75 7.25H12.25C12.6642 7.25 13 7.58579 13 8C13 8.41421 12.6642 8.75 12.25 8.75H3.75C3.33579 8.75 3 8.41421 3 8Z" fill="currentColor"/></svg></span></span><span class="cb__label"><span>Files</span></span></button></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Specs</span></div><div class="bp-specs"><div class="bp-spec"><div class="bp-spec__k">Box</div><div class="bp-spec__v">16 × 16 px</div></div><div class="bp-spec"><div class="bp-spec__k">Standard radius</div><div class="bp-spec__v">4 px</div></div><div class="bp-spec"><div class="bp-spec__k">Circular radius</div><div class="bp-spec__v">9999</div></div><div class="bp-spec"><div class="bp-spec__k">Checked bg</div><div class="bp-spec__v">#242424</div></div><div class="bp-spec"><div class="bp-spec__k">Glyph</div><div class="bp-spec__v">check / subtract · #fff</div></div><div class="bp-spec"><div class="bp-spec__k">Gap</div><div class="bp-spec__v">4 px</div></div><div class="bp-spec"><div class="bp-spec__k">Label</div><div class="bp-spec__v">Segoe Sans 14/20</div></div><div class="bp-spec"><div class="bp-spec__k">Label shift</div><div class="bp-spec__v">secondary → primary</div></div></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Usage guidance</span></div><div class="bp-usage"><div class="bp-usage__card"><div class="bp-usage__sec"><h4>Behavior</h4><p>Checkbox is for deferred decisions. The change you make doesn't take effect until the surrounding form is submitted, so reach for it in settings panels, filters, and preference lists where someone reviews their choices before applying them.</p><p>If you need an immediate-effect toggle — like turning a feature on or off the moment someone interacts with it — use Switch instead. And if a group of options is mutually exclusive, with exactly one valid choice, use Radio. Checkbox allows zero, one, or many selections within a group.</p><ul><li><strong>Always associate a label with the checkbox.</strong> Every checkbox needs an identifiable name, whether a visible label or a programmatic association.</li><li><strong>Always use the Indeterminate status for parent checkboxes in a group.</strong> When some but not all children are selected, the parent must reflect the mixed state — not Checked or Unchecked.</li><li><strong>Never use Disabled to represent Unchecked.</strong> Disabled means the control is unavailable. Unchecked means the option exists but isn't selected.</li><li><strong>Never override the label foreground shift.</strong> The shift from secondary to primary color between Unchecked and Checked is intentional — it de-emphasizes unselected options and draws attention to selected ones.</li><li><strong>Always apply the correct radius token per Style.</strong> Standard uses <code>--gnrc-border-radius-base-100</code>; Circular uses <code>--gnrc-border-radius-circular</code>. Don't hardcode pixel values.</li></ul></div><div class="bp-usage__sec"><h4>Layout</h4><p>The space between the indicator and the label is governed by the gap token — don't add padding on the label's start edge to widen it. Padding belongs on the label wrapper's outer edges (the end side and the vertical axis), not between the indicator and label.</p></div><div class="bp-usage__sec"><h4>Accessibility</h4><ul><li><strong>Hidden label fallback.</strong> When the visible label is hidden, give the checkbox a programmatic accessible name so screen readers can announce the option. A checkbox with no accessible name is inaccessible.</li></ul></div></div></div></section>
+
+<script>
+(function () {
+  function setStatus(el, status) {
+    el.classList.remove('cb--unchecked', 'cb--checked', 'cb--indeterminate');
+    el.classList.add('cb--' + status);
+    el.setAttribute('aria-checked', status === 'indeterminate' ? 'mixed' : (status === 'checked' ? 'true' : 'false'));
+  }
+  function statusOf(el) {
+    if (el.classList.contains('cb--checked')) return 'checked';
+    if (el.classList.contains('cb--indeterminate')) return 'indeterminate';
+    return 'unchecked';
+  }
+  function syncSeg(name, val) {
+    var seg = document.querySelector('[data-seg="' + name + '"]');
+    if (seg) seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-active', b.getAttribute('data-value') === val); });
+  }
+  var hero = document.getElementById('heroCb');
+  var st = { status: 'checked', style: 'standard', dis: false };
+  function paintHero() {
+    var cls = ['cb', 'cb--' + st.status, 'cb--' + st.style];
+    if (st.dis) cls.push('cb--disabled');
+    hero.className = cls.join(' ');
+    hero.setAttribute('aria-checked', st.status === 'indeterminate' ? 'mixed' : (st.status === 'checked' ? 'true' : 'false'));
+    hero.disabled = st.dis;
+  }
+  document.querySelectorAll('[data-ctrl]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var name = btn.getAttribute('data-ctrl');
+      var val = btn.getAttribute('data-value');
+      if (name === 'status') st.status = val;
+      else if (name === 'style') st.style = val;
+      else if (name === 'dis') st.dis = val === 'on';
+      var seg = document.querySelector('[data-seg="' + name + '"]');
+      if (seg) seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+      paintHero();
+    });
+  });
+  paintHero();
+  hero.addEventListener('click', function () {
+    if (st.dis) return;
+    st.status = st.status === 'checked' ? 'unchecked' : 'checked';
+    syncSeg('status', st.status);
+    paintHero();
+  });
+  var parent = document.querySelector('#parentRow .cb');
+  var children = Array.prototype.slice.call(document.querySelectorAll('#childGroup .cb'));
+  function syncParent() {
+    var checked = children.filter(function (c) { return statusOf(c) === 'checked'; }).length;
+    if (checked === 0) setStatus(parent, 'unchecked');
+    else if (checked === children.length) setStatus(parent, 'checked');
+    else setStatus(parent, 'indeterminate');
+  }
+  children.forEach(function (c) {
+    c.addEventListener('click', function () {
+      setStatus(c, statusOf(c) === 'checked' ? 'unchecked' : 'checked');
+      syncParent();
+    });
+  });
+  parent.addEventListener('click', function () {
+    var next = statusOf(parent) === 'checked' ? 'unchecked' : 'checked';
+    children.forEach(function (c) { setStatus(c, next); });
+    setStatus(parent, next);
+  });
+})();
+</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="toggle.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Toggle</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Small toggle switch for binary on/off states. Supports checked and unchecked wit...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="sourcesMenu.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Sources Menu</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">"Change sources" modal (Figma Source Discovery node 943:19731). Composes a Popov...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a></div></div><!-- /INJECT:RELATED --></body></html>

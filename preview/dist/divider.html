@@ -1,12 +1,12 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Divider Preview</title><style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+body { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
 h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
 h2 { font-size: 14px; font-weight: 600; margin: 32px 0 12px; }
 .hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
-.wrap { max-width: 700px; margin: 0 auto; }
+.wrap { max-width: 760px; margin: 0 auto; }
 .hrow { display: flex; flex-direction: column; gap: 24px; margin-bottom: 16px; }
-.vrow { display: flex; gap: 48px; margin-bottom: 16px; height: 120px; }
+.vrow { display: flex; gap: 48px; margin-bottom: 16px; height: 140px; }
 .vlabel { font-size: 10px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.8px; text-align: center; margin-bottom: 6px; }
 .vcell { display: flex; flex-direction: column; align-items: center; }
 .rl { font-size: 10px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
@@ -17,39 +17,51 @@ h2 { font-size: 14px; font-weight: 600; margin: 32px 0 12px; }
 .dv--v { flex-direction: column; height: 100%; }
 
 /* === Horizontal line (flex-grow) === */
-.dv__line { flex: 1; height: 1px; background: #dedede; min-width: 0; }
-/* Short stub (8px) for start/end layouts */
-.dv__stub { width: 8px; height: 1px; background: #dedede; flex-shrink: 0; }
+.dv__line { flex: 1; height: 1px; background: rgba(189,189,189,0.5); min-width: 0; }
+/* Short stub (4px) for start/end layouts */
+.dv__stub { width: 4px; height: 1px; background: rgba(189,189,189,0.5); flex-shrink: 0; }
 
 /* === Vertical line (flex-grow) === */
-.dv__line-v { flex: 1; width: 1px; background: #dedede; min-height: 0; }
-/* Short stub (8px) for start/end vertical layouts */
-.dv__stub-v { height: 8px; width: 1px; background: #dedede; flex-shrink: 0; }
+.dv__line-v { flex: 1; width: 1px; background: rgba(189,189,189,0.5); min-height: 0; }
+/* Short stub (4px) for start/end vertical layouts */
+.dv__stub-v { height: 4px; width: 1px; background: rgba(189,189,189,0.5); flex-shrink: 0; }
 
 /* === Content (horizontal) === */
 .dv__content {
   display: flex; gap: 6px; align-items: center; justify-content: center;
-  padding: 0 12px; flex-shrink: 0; height: 20px;
+  padding: 0 12px; flex-shrink: 0;
 }
-
 /* === Content (vertical) === */
-.dv__content-v {
-  display: flex; gap: 6px; align-items: center; justify-content: center;
-  padding: 12px 0; flex-shrink: 0;
-}
+.dv__content--v { flex-direction: column; padding: 12px 0; }
 
-/* === Text label === */
+/* === Icon === */
+.dv__icon { display: inline-flex; width: 20px; height: 20px; color: #5d5d5d; flex-shrink: 0; }
+
+/* === Text label — Functional / Body Small (Segoe Sans) === */
 .dv__text {
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 12px; font-weight: 400; line-height: 1.4;
+  font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif;
+  font-size: 12px; font-weight: 420; line-height: 16px; letter-spacing: 0;
   color: #5d5d5d; white-space: nowrap;
 }
+
+/* === Usage guidance === */
+.usage { margin-top: 8px; }
+.usage__sec { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px 22px; margin-bottom: 12px; }
+.usage__sec h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 10px; }
+.usage__sec p.lead { font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 12px; }
+.usage__sub { font-size: 12px; font-weight: 600; color: #242424; margin: 12px 0 6px; }
+.usage__sec ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.usage__sec li { font-size: 13px; line-height: 1.55; color: #5d5d5d; padding-left: 18px; position: relative; }
+.usage__sec li::before { content: ''; position: absolute; left: 2px; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: #c7c7c7; }
+.usage__sec li b { color: #242424; font-weight: 600; }
+.usage__sec--dos li::before { background: #0f7b0f; }
+.usage__sec--donts li::before { background: #b10e1c; }
 
 /* ─── Bebop page overrides (injected by _inject.ts) ─── */
 body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
 
 /* Page wrapper */
-.bp-header { max-width: 900px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
 .bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
 .bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
@@ -60,7 +72,7 @@ body { background: #fff !important; padding: 0 !important; margin: 0 !important;
 .bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
 
 /* Content area — override all wrapper variants */
-.wrap, .page, .section { max-width: 900px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
 
 /* Headings */
 h1 { display: none !important; }
@@ -68,13 +80,125 @@ h1 { display: none !important; }
 h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
 h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
 /* Rows and cells */
 .row { gap: 24px !important; margin-bottom: 20px !important; }
 .cell { gap: 8px !important; }
 .rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
 
 /* ─── Related components ─── */
-.bp-related { max-width: 900px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
 .bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
 .bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
 .bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
@@ -87,10 +211,10 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 .bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
 
 /* ─── Back bar (sticky, frosted) ─── */
-.bebop-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
-.bebop-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
-.bebop-backbar a:hover { background: rgba(36,36,36,0.04); }
-.bebop-backbar a svg { width: 16px; height: 16px; }
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; }
@@ -99,17 +223,38 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 ::-webkit-scrollbar-thumb:hover { border: 0; }
 * { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
 
-</style></head><body><!-- INJECT:BACKBAR --><div class="bebop-backbar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Divider</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Horizontal and vertical divider lines with optional inline content label. Supports center, start, and end alignment.</p><div class="bp-header__states"><span class="bp-header__state">Horizontal</span><span class="bp-header__state">Vertical</span><span class="bp-header__state">With Content</span></div></div><!-- /INJECT:HEADER --><div class="wrap"><h1>Divider — Component Preview</h1><p class="hint">Horizontal and vertical dividers with Center, Start, End text positioning.</p><h2>Horizontal</h2>
-<div class="hrow">
-<div><span class="rl">No text</span><div class="dv dv--h"><div class="dv__line"></div></div></div>
-<div><span class="rl">Center</span><div class="dv dv--h"><div class="dv__line"></div><div class="dv__content"><span class="dv__text">Text</span></div><div class="dv__line"></div></div></div>
-<div><span class="rl">Start</span><div class="dv dv--h"><div class="dv__stub"></div><div class="dv__content"><span class="dv__text">Text</span></div><div class="dv__line"></div></div></div>
-<div><span class="rl">End</span><div class="dv dv--h"><div class="dv__line"></div><div class="dv__content"><span class="dv__text">Text</span></div><div class="dv__stub"></div></div></div>
-</div>
-<h2>Vertical</h2>
-<div class="vrow">
-<div class="vcell"><span class="vlabel">No text</span><div class="dv dv--v"><div class="dv__line-v"></div></div></div>
-<div class="vcell"><span class="vlabel">Center</span><div class="dv dv--v"><div class="dv__line-v"></div><div class="dv__content-v"><span class="dv__text">Text</span></div><div class="dv__line-v"></div></div></div>
-<div class="vcell"><span class="vlabel">Start</span><div class="dv dv--v"><div class="dv__stub-v"></div><div class="dv__content-v"><span class="dv__text">Text</span></div><div class="dv__line-v"></div></div></div>
-<div class="vcell"><span class="vlabel">End</span><div class="dv dv--v"><div class="dv__line-v"></div><div class="dv__content-v"><span class="dv__text">Text</span></div><div class="dv__stub-v"></div></div></div>
-</div></div><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="toolbar.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Toolbar</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Formatting toolbar with icon buttons, dividers, and selected state toggling for ...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a><a class="bp-related__card" href="tab.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Tab & TabList</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Pill-style tabs and tablist. Supports text and icon-only layouts, selected and u...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="tag.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Tag</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Dismissible chip with primary style, small and medium sizes, optional leading ic...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a></div></div><!-- /INJECT:RELATED --></body></html>
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Divider</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Non-interactive separator. Horizontal and vertical lines with an optional content slot (20px icon + short label). Supports center, start, and end alignment; renders full usage guidance.</p><div class="bp-header__states"><span class="bp-header__state">Horizontal</span><span class="bp-header__state">Vertical</span><span class="bp-header__state">With Content</span></div></div><!-- /INJECT:HEADER --><div class="bp-stage"><div class="bp-stage__canvas"><div style="width:360px"><div class="dv dv--h"><div class="dv__line"></div><div class="dv__content"><span class="dv__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="dv__text">Label</span></div><div class="dv__line"></div></div></div></div></div>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Horizontal</span></div><div class="bp-card" style="padding:28px 32px"><div class="hrow"><div><span class="rl">No content</span><div class="dv dv--h"><div class="dv__line"></div></div></div><div><span class="rl">Center · label</span><div class="dv dv--h"><div class="dv__line"></div><div class="dv__content"><span class="dv__text">Label</span></div><div class="dv__line"></div></div></div><div><span class="rl">Center · icon + label</span><div class="dv dv--h"><div class="dv__line"></div><div class="dv__content"><span class="dv__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="dv__text">Label</span></div><div class="dv__line"></div></div></div><div><span class="rl">Start</span><div class="dv dv--h"><div class="dv__stub"></div><div class="dv__content"><span class="dv__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="dv__text">Label</span></div><div class="dv__line"></div></div></div><div><span class="rl">End</span><div class="dv dv--h"><div class="dv__line"></div><div class="dv__content"><span class="dv__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="dv__text">Label</span></div><div class="dv__stub"></div></div></div></div></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Vertical</span></div><div class="bp-card" style="padding:28px 32px"><div class="vrow"><div class="vcell"><span class="vlabel">No content</span><div class="dv dv--v"><div class="dv__line-v"></div></div></div><div class="vcell"><span class="vlabel">Center</span><div class="dv dv--v"><div class="dv__line-v"></div><div class="dv__content dv__content--v"><span class="dv__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="dv__text">Label</span></div><div class="dv__line-v"></div></div></div><div class="vcell"><span class="vlabel">Start</span><div class="dv dv--v"><div class="dv__stub-v"></div><div class="dv__content dv__content--v"><span class="dv__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="dv__text">Label</span></div><div class="dv__line-v"></div></div></div><div class="vcell"><span class="vlabel">End</span><div class="dv dv--v"><div class="dv__line-v"></div><div class="dv__content dv__content--v"><span class="dv__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="dv__text">Label</span></div><div class="dv__stub-v"></div></div></div></div></div></section>
+<div class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Usage guidance</span></div>
+<div class="usage" style="max-width:none">
+<div class="usage__sec"><h3>Behavior</h3><ul>
+<li>Never use a Divider when spacing alone communicates the boundary. A Divider is explicit visual reinforcement — if gap tokens or typographic hierarchy already separate content, adding a Divider creates visual noise.</li>
+<li>Never use a Divider as an interactive element. It has no states, no focus behavior, and no select behavior. If you need a selectable separator, use a different pattern.</li>
+<li>Always use semantic separator markup. Don't implement Dividers as purely visual &lt;div&gt; elements — the platform's separator primitive must be used so assistive technology can announce the thematic break.</li>
+<li>Always let the Divider stretch to fill its parent container. Don't set a fixed width or height on the Divider itself — the parent layout controls extent.</li>
+<li>Use the Content slot visibility to toggle between labeled and plain dividers. Don't hide the label by setting it to an empty string — toggle the Content slot or Text boolean instead.</li>
+</ul></div>
+<div class="usage__sec"><h3>Layout</h3>
+<p class="lead">Use a Divider when spacing and typographic hierarchy alone are insufficient to separate distinct content groups within a surface.</p>
+<div class="usage__sub">When to use</div><ul class="usage__sec--dos">
+<li>To visually separate distinct content groups within a surface when spacing and typographic hierarchy alone are insufficient.</li>
+<li>To break a long vertical list or form into logical sections with optional section labels.</li>
+<li>To create a vertical boundary between side-by-side content regions, like panel edges or column separators.</li>
+<li>To add a labeled section break where the label provides contextual orientation, like “Or”, a date, or a category name.</li>
+</ul>
+<div class="usage__sub">When not to use</div><ul class="usage__sec--donts">
+<li>Don't use a Divider purely for decoration — if content groups are already visually distinct through spacing, background color, or type hierarchy, a Divider adds clutter.</li>
+<li>Don't use a Divider between every item in a list — prefer spacing. Reserve Dividers for grouping boundaries.</li>
+<li>Don't use a Divider as an interactive element — it has no states, no focus behavior, and no interactive role.</li>
+</ul></div>
+<div class="usage__sec"><h3>Accessibility</h3><ul>
+<li><b>Semantic markup:</b> Use the native &lt;hr&gt; element for horizontal dividers, or role="separator" for vertical and non-&lt;hr&gt; implementations. Purely visual &lt;div&gt; elements with no semantic role are inaccessible.</li>
+<li><b>Orientation attribute:</b> When Vertical=True, set aria-orientation="vertical". Omitting this causes assistive technology to assume horizontal, misrepresenting the layout.</li>
+<li><b>Decorative dividers:</b> When the separation is already communicated by heading structure, apply aria-hidden="true" to reduce screen reader verbosity.</li>
+</ul></div>
+<div class="usage__sec"><h3>Content</h3><ul>
+<li>Never place long-form text in the label slot. Divider labels are short navigational cues — a word or brief phrase. If you need more than a few words, use a heading instead.</li>
+<li>Always use functional typography for labels. Never apply content-set type (Segoe Serif, editorial styles) to divider labels — they're UI chrome, not editorial content.</li>
+</ul></div>
+</div></div><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="accordion.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Accordion</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Expand-and-collapse section primitive. A 24px header (chevron, leading icon, tit...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="toolbar.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Toolbar</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Formatting toolbar with icon buttons, dividers, and selected state toggling for ...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a><a class="bp-related__card" href="tab.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Tab & TabList</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Pill-style tabs and tablist. Supports text and icon-only layouts, selected and u...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a></div></div><!-- /INJECT:RELATED --></body></html>

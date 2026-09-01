@@ -11,6 +11,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { stage } from './_scaffold';
 
 // ─── Icons ──────────────────────────────────────────────────
 
@@ -199,6 +200,7 @@ function splitItem(opts: {
 
 const body = [
   '<div class="wrap">',
+  stage('<div class="menu">' + menuItem({ label: 'Chat with', sectionHeader: true }) + menuItem({ label: 'Researcher', icon: planetR20, selected: true }) + menuItem({ label: 'Analyst', icon: dataR20 }) + menuItem({ label: 'New agent', icon: agentR20 }) + '</div>'),
   '<h1>Menu — Component Preview</h1>',
   '<p class="hint">Hover items for hover state. Click to toggle selected. Tab for focus ring.</p>',
 

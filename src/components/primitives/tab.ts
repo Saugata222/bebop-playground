@@ -1,30 +1,34 @@
 /**
  * Component: Tab
  *
- * Bebop Design System — Pill-style tab for use inside a TabList.
+ * One Copilot / Bebop Design System — Pill-style tab for use inside a TabList.
  *
  * A tab allows people to switch between categories of related information.
- * Uses a filled-backplate affordance: selected tabs receive a neutral-heavy
+ * Uses a filled-backplate affordance: the selected tab receives a neutral-heavy
  * background with white foreground, while unselected tabs are transparent.
+ * A tab is never standalone — it must live inside a TabList, which must always
+ * have exactly one Selected tab.
  *
  * Properties:
  *   Layout:   Icon + label | Icon only
- *   State:    Rest | Hover | Disabled
+ *   State:    Rest | Hover | Pressed | Disabled
  *   Selected: true | false
  *   Focused:  true | false (keyboard focus ring overlay)
  *
  * Selected affordance (container/singleSelect):
  *   - Background shifts to neutral-heavy (#242424)
- *   - Text becomes white, weight shifts to semibold (600)
+ *   - Text becomes white, weight shifts Regular (420) -> Semibold (625)
  *   - Icon variant shifts from Regular to Filled
  *
- * Focus ring: 2px black outer border + 1px white inner border
- *   (identical to button/tag focus ring)
+ * Font — EXACT: Segoe Sans (functional), body-medium 14 / 20.
+ * Focus ring: 2px black outer border + 1px white inner border.
  *
  * Prefix: --c-tab-{property}
+ *
+ * Figma: One-Copilot-Desktop-UI-Kit — Tab (node 1413:25925)
  */
 
-// ─── Size Tokens ────────────────────────────────────────────
+// ─── Size Tokens ─────────────────────────────────────
 
 /**
  * Icon + Label layout — single size (medium) matching the Figma spec.
@@ -37,21 +41,21 @@ export const tabSize = {
   minWidth: '32px',
   /** Icon size (leading icon) */
   iconSize: '20px',
-  /** Font size — body-medium default (14px) */
+  /** Font size — --gnrc-font-size-functional-body-medium (14px) */
   fontSize: '14px',
-  /** Font weight — regular (unselected) */
-  fontWeight: '400',
-  /** Font weight — semibold (selected) */
-  fontWeightSelected: '600',
-  /** Line height — 1.4 */
-  lineHeight: '1.4',
-  /** Horizontal padding — padding/tight/large (10px) */
-  paddingInline: '10px',
-  /** Vertical padding — padding/tight/medium (6px) */
+  /** Font weight — --gnrc-font-weight-functional-regular (unselected) */
+  fontWeight: '420',
+  /** Font weight — --gnrc-font-weight-functional-bold (selected, semibold) */
+  fontWeightSelected: '625',
+  /** Line height — --gnrc-line-height-functional-body-medium */
+  lineHeight: '20px',
+  /** Horizontal padding — --gnrc-spacing-component-base-300 (12px) */
+  paddingInline: '12px',
+  /** Vertical padding — --gnrc-spacing-component-base-150 (6px) */
   paddingBlock: '6px',
-  /** Gap between icon and label — gap/atomic/small (4px) */
+  /** Gap between icon and label — --gnrc-spacing-component-base-100 (4px) */
   gap: '4px',
-  /** Border radius — atomic/medium (12px) */
+  /** Border radius — --gnrc-border-radius-base-300 (12px) */
   borderRadius: '12px',
 } as const;
 
@@ -72,42 +76,50 @@ export const tabIconOnly = {
 // ─── Style Tokens — Unselected ──────────────────────────────
 
 export const tabStyleUnselected = {
-  /** Rest: fully transparent */
+  /** Rest: fully transparent — --gnrc-color-background-neutral-transparent */
   backgroundRest: 'rgba(36, 36, 36, 0)',
-  /** Hover: 4% black overlay */
-  backgroundHover: 'rgba(36, 36, 36, 0.04)',
+  /** Hover: transparent + alpha-hover overlay (rgba(24,24,24,0.04)) */
+  backgroundHover: 'rgba(24, 24, 24, 0.04)',
+  /** Pressed: transparent + alpha-press overlay (rgba(13,13,13,0.08)) */
+  backgroundPressed: 'rgba(13, 13, 13, 0.08)',
   /** Text color — foreground/neutral/primary */
   colorRest: '#242424',
-  /** Hover text — slightly darker */
-  colorHover: '#1d1d1d',
+  /** Hover text — primary + lightness-hover */
+  colorHover: '#181818',
+  /** Pressed text — primary + lightness-press */
+  colorPressed: '#0d0d0d',
   /** Icon variant — Regular (outline) */
   iconVariant: 'Regular',
 } as const;
 
-// ─── Style Tokens — Selected ────────────────────────────────
+// ─── Style Tokens — Selected ───────────────────────────
 
 export const tabStyleSelected = {
   /** Rest: neutral-heavy */
   backgroundRest: '#242424',
-  /** Hover: slightly lighter */
-  backgroundHover: '#2b2b2b',
+  /** Hover: neutral-heavy - lightness-hover */
+  backgroundHover: '#313131',
+  /** Pressed: neutral-heavy - lightness-press */
+  backgroundPressed: '#3e3e3e',
   /** Text color — foreground/neutral/onLoud (white) */
   colorRest: '#ffffff',
   /** Hover text — stays white */
   colorHover: '#ffffff',
+  /** Pressed text — stays white */
+  colorPressed: '#ffffff',
   /** Icon variant — Filled */
   iconVariant: 'Filled',
 } as const;
 
-// ─── State Tokens ───────────────────────────────────────────
+// ─── State Tokens ────────────────────────────────
 
 export const tabStateDisabled = {
-  /** Unselected disabled background — transparent */
-  backgroundUnselected: 'rgba(36, 36, 36, 0)',
-  /** Selected disabled background — muted */
-  backgroundSelected: '#ebebeb',
+  /** Disabled background (selected + unselected) — --gnrc-color-background-neutral-disabled */
+  backgroundUnselected: 'rgba(143, 143, 143, 0.5)',
+  /** Selected disabled background — same neutral-disabled fill */
+  backgroundSelected: 'rgba(143, 143, 143, 0.5)',
   /** Foreground/neutral/disabled */
-  color: '#929292',
+  color: 'rgba(0, 0, 0, 0.43)',
   /** Cursor */
   cursor: 'not-allowed',
 } as const;
@@ -126,7 +138,8 @@ export const tabFocusRing = {
 // ─── Typography ─────────────────────────────────────────────
 
 export const tabTypography = {
-  fontFamily: 'var(--f-typography-fontFamily-body)',
+  /** Functional — --gnrc-font-family-functional (Segoe Sans / display) */
+  fontFamily: 'var(--f-typography-fontFamily-display)',
   letterSpacing: '0px',
 } as const;
 

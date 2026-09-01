@@ -66,6 +66,7 @@ h2 { font-size: 14px; font-weight: 600; margin: 24px 0 12px; }
 .tb__btn:hover { background: rgba(36,36,36,0.04); }
 .tb__btn:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }
 .tb__btn svg { display: block; width: 16px; height: 16px; }
+.tb__btn--lg svg { width: 20px; height: 20px; }
 
 /* Icon swap: regular vs filled */
 .tb__btn .ico-r { display: inline-flex; }
@@ -103,6 +104,7 @@ const html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta 
   + '<div class="wrap"><h1>Toolbar \u2014 Component Preview</h1>'
   + '<p class="hint">Click buttons to toggle <strong>selected</strong> state.<br>'
   + 'Selected: icon \u2192 Filled + backplate (#ebebeb) per typographic/icon affordance principles.</p>'
+  + '<div class="bp-stage"><div class="bp-stage__canvas">' + toolbar('lg') + '</div></div>'
   + '<h2>Large</h2><div class="row">' + toolbar('lg') + '</div>'
   + '<h2>Small</h2><div class="row">' + toolbar('sm') + '</div>'
   + '<h2>Pre-selected (Bold + Bullet List)</h2><div class="row">'

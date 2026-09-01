@@ -1,107 +1,246 @@
 /**
- * Sources Menu — Interactive HTML Preview
+ * Sources Menu — Interactive HTML Preview  ("Change data sources")
  *
- * Shows the sources dropdown with toggle switches and connect buttons.
- * Reuses toggle primitive styling.
+ * Aligned to the One Copilot Desktop UI Kit (Figma node 4096:12750).
+ * Composes existing One Copilot primitives: Popover surface, header close
+ * Button, search Input, MenuListItem rows (Source Menu item), Toggle switch,
+ * and a footer MenuListItem — inside a 664×520 modal popover.
+ *
+ * Note: connector brand logos are not bundled as assets; where a real asset
+ * isn't available a neutral colored logo tile stands in. Row geometry, type,
+ * colors, and the toggle are exact to Figma.
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { stage } from './_scaffold';
 
-// M365 icon (using apps icon as stand-in for product icons)
-const appsIco20 = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 17.0009C3.7203 17.0009 3.07955 16.406 3.00687 15.6454L3 15.5009V4.50092C3 3.72122 3.59489 3.08047 4.35554 3.00778L4.5 3.00092H9C9.7797 3.00092 10.4204 3.5958 10.4931 4.35646L10.5 4.50092V4.75534L12.6886 2.48609C13.2276 1.92691 14.0959 1.8766 14.6956 2.34798L14.8118 2.44922L17.5694 5.17386C18.1219 5.71976 18.1614 6.5886 17.68 7.18505L17.5767 7.30053L15.266 9.50034L15.5 9.50092C16.2797 9.50092 16.9204 10.0958 16.9931 10.8565L17 11.0009V15.5009C17 16.2806 16.4051 16.9214 15.6445 16.994L15.5 17.0009H4.5ZM9.5 10.5009H4V15.5009C4 15.7157 4.13542 15.8988 4.32553 15.9696L4.41012 15.9929L4.5 16.0009H9.5V10.5009ZM15.5 10.5009H10.5V16.0009H15.5C15.7455 16.0009 15.9496 15.824 15.9919 15.5908L16 15.5009V11.0009C16 10.7555 15.8231 10.5513 15.5899 10.509L15.5 10.5009ZM10.5 7.71034V9.50034H12.29L10.5 7.71034ZM9 4.00092H4.5C4.25454 4.00092 4.05039 4.17779 4.00806 4.41104L4 4.50092V9.50092H9.5V4.50092C9.5 4.28614 9.36458 4.10299 9.17447 4.0322L9.08988 4.00897L9 4.00092ZM14.1222 3.17357C13.9396 2.99744 13.6692 2.98247 13.4768 3.12096L13.4086 3.18007L10.7926 5.89421C10.6271 6.06592 10.6086 6.32593 10.7356 6.51736L10.799 6.59475L13.4147 9.21046C13.5826 9.37838 13.8409 9.40226 14.0345 9.28022L14.1131 9.21898L16.8708 6.59231C17.0433 6.4177 17.061 6.14817 16.9248 5.95411L16.8665 5.88521L14.1222 3.17357Z" fill="currentColor"/></svg>';
+// ─── Glyphs (Fluent UI System Icons, read from src/components/icons) ─────────
+
+const iconsDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'src', 'components', 'icons');
+function icon(file: string, size: number): string {
+  return fs.readFileSync(path.join(iconsDir, file), 'utf-8')
+    .replace(/<\?xml[^>]*>/, '')
+    .replace(/width="\d+"/, 'width="' + size + '"')
+    .replace(/height="\d+"/, 'height="' + size + '"')
+    .replace(/fill="#[0-9A-Fa-f]{3,8}"/g, 'fill="currentColor"')
+    .trim();
+}
+const ICON_SEARCH = icon('search-20-regular.svg', 20);
+const ICON_DISMISS = icon('dismiss-20-regular.svg', 20);
+const ICON_MORE = icon('more-horizontal-20-regular.svg', 20);
+const ICON_SETTINGS = icon('settings-20-regular.svg', 20);
+
+// ─── Connector logos ────────────────────────────────────────
+// Neutral colored tiles stand in for brand logos not bundled as assets.
+
+function tile(bg: string, fg: string, initials: string): string {
+  return '<span class="logo" style="background:' + bg + ';color:' + fg + '">' + initials + '</span>';
+}
+const LOGO = {
+  m365: tile('linear-gradient(135deg,#e64a19 0 50%,#7cb342 50% 100%)', '#fff', ''),
+  vscode: tile('#0a6cbc', '#fff', 'VS'),
+  viva: tile('#7719aa', '#fff', 'Vi'),
+  powerbi: tile('#e6a610', '#fff', 'BI'),
+  figma: tile('#1e1e1e', '#fff', 'Fi'),
+  gdrive: tile('#1fa463', '#fff', 'GD'),
+};
+
+// Real brand logos (PNGs bundled in src/components/icons) for the live modal.
+function logoImg(file: string): string {
+  return '<span class="logo"><img src="data:image/png;base64,' + fs.readFileSync(path.join(iconsDir, file)).toString('base64') + '" alt=""/></span>';
+}
+function glyphLogo(svg: string): string {
+  return '<span class="logo logo--glyph">' + svg + '</span>';
+}
+type Conn = { logo: string; name: string; meta: string | null; t: Trailing };
+const CONN: Conn[] = [
+  { logo: glyphLogo(icon('apps-20-filled.svg', 20)), name: 'Microsoft 365 apps', meta: 'Chats, Emails, Meetings and more', t: { kind: 'toggle', on: true } },
+  { logo: logoImg('hubspot-logo.png'), name: 'Hubspot', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('moodys-logo.png'), name: 'Moody\u2019s', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('lseg-logo.png'), name: 'London Stock Exchange Group', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('canva-logo.png'), name: 'Canva', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('google-calendar-logo.png'), name: 'Google Calendar', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('google-contacts-logo.png'), name: 'Google Contacts', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('notion-logo.png'), name: 'Notion', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('linear-logo.png'), name: 'Linear', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('intercom-logo.png'), name: 'Intercom', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('slack-logo.png'), name: 'Slack', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('github-logo.png'), name: 'GitHub', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('jira-logo.png'), name: 'Jira', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('confluence-logo.png'), name: 'Confluence', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('servicenow-logo.png'), name: 'ServiceNow', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('google-drive-logo.png'), name: 'Google Drive', meta: null, t: { kind: 'connect' } },
+  { logo: logoImg('sp-global-logo.png'), name: 'S&P Global', meta: null, t: { kind: 'connect' } },
+];
+
+// ─── CSS ────────────────────────────────────────────────────
 
 const css = `
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; background: #ececec; padding: 48px 24px; color: #242424; }
 h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
-h2 { font-size: 18px; font-weight: 600; margin: 40px 0 16px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
+h2 { font-size: 18px; font-weight: 600; margin: 48px 0 16px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
 .hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
-.wrap { max-width: 900px; margin: 0 auto; }
+.wrap { max-width: 760px; margin: 0 auto; }
+.stage { display: flex; justify-content: center; }
 
-/* ─── Sources container ─── */
-.src { display: flex; flex-direction: column; width: 820px; max-width: 100%; padding: 0 56px; }
+/* ─── Popover (modal) ─── */
+.pop { width: 598px; min-height: 586px; background: #fff; border: 1px solid rgba(36,36,36,0); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 0 1px 0 rgba(0,0,0,0.08), 0 8px 16px 0 rgba(0,0,0,0.03), 0 32px 48px 0 rgba(0,0,0,0.08); }
 
-/* ─── Source item (default size) ─── */
-.si { display: flex; align-items: center; width: 100%; height: 44px; padding: 4px 0; }
-.si__inner { display: flex; flex: 1 0 0; align-items: center; gap: 8px; min-height: 1px; min-width: 1px; padding: 8px 12px; border-radius: 12px; background: rgba(36,36,36,0); transition: background 0.1s; cursor: default; }
-.si__inner:hover { background: rgba(36,36,36,0.04); }
-.si__icon { width: 20px; height: 20px; flex-shrink: 0; color: #242424; }
-.si__icon svg { display: block; width: 20px; height: 20px; }
-.si__label { flex: 1 0 0; min-width: 1px; min-height: 1px; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }
+/* Header */
+.hdr { height: 32px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.hdr__title { font-family: 'Segoe Sans','Segoe UI',system-ui,sans-serif; font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -0.15px; color: #242424; }
+.hdr__actions { display: flex; align-items: center; gap: 4px; }
+.hdr__manage { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border: none; background: none; border-radius: 8px; font-family: 'Segoe Sans','Segoe UI',system-ui,sans-serif; font-size: 14px; line-height: 20px; font-weight: 420; color: #242424; cursor: pointer; transition: background 0.1s; }
+.hdr__manage:hover { background: rgba(36,36,36,0.04); }
+.hdr__manage svg { display: block; width: 20px; height: 20px; }
+.hdr__close { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: none; background: none; border-radius: 8px; color: #242424; cursor: pointer; transition: background 0.1s; }
+.hdr__close:hover { background: rgba(36,36,36,0.04); }
+.hdr__close svg { display: block; }
 
-/* ─── Toggle switch area ─── */
-.si__toggle-area { display: flex; align-items: center; gap: 6px; padding: 2px; flex-shrink: 0; }
-.si__toggle-label { font-size: 12px; line-height: 16px; color: #5d5d5d; white-space: nowrap; }
+/* Search (Input primitive) */
+.search { height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid rgba(189,189,189,0.5); border-radius: 9999px; flex-shrink: 0; color: #6f6f6f; }
+.search:focus-within { border-color: #242424; }
+.search svg { display: block; flex-shrink: 0; }
+.search input { flex: 1; border: none; outline: none; background: none; font-family: 'Segoe Sans','Segoe UI',system-ui,sans-serif; font-size: 14px; line-height: 20px; color: #242424; }
+.search input::placeholder { color: #6f6f6f; }
 
-/* ─── Toggle track+thumb (reused from toggle primitive) ─── */
-.tgl-track { width: 32px; height: 16px; border-radius: 9999px; position: relative; cursor: pointer; transition: background 0.15s, border-color 0.15s; flex-shrink: 0; }
-.tgl-thumb { width: 12px; height: 12px; border-radius: 9999px; position: absolute; top: 50%; transform: translateY(-50%); transition: left 0.15s, background 0.15s; }
+/* Sub-header: source counter + Turn off all */
+.subhdr { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; padding: 2px 0; min-height: 28px; }
+.subhdr__count { font-size: 12px; line-height: 16px; font-weight: 600; color: #5d5d5d; }
+.subhdr__turnoff { font-size: 12px; line-height: 16px; font-weight: 420; color: #242424; background: none; border: none; padding: 4px 8px; border-radius: 8px; cursor: pointer; font-family: 'Segoe Sans','Segoe UI',system-ui,sans-serif; }
+.subhdr__turnoff:hover { background: rgba(36,36,36,0.04); }
+.subhdr__turnoff:disabled { color: #929292; cursor: not-allowed; background: none; }
 
-/* Unchecked */
-.tgl-track:not(.tgl-track--on) { background: #fff; border: 1px solid #dedede; }
-.tgl-track:not(.tgl-track--on) .tgl-thumb { background: #6f6f6f; left: 2px; }
-.tgl-track:not(.tgl-track--on):hover { background: #f5f5f5; }
+/* List — 6 rows visible; the rest load on an infinite lazy scroll */
+.list { display: flex; flex-direction: column; overflow-y: auto; max-height: 360px; margin: 0 -4px; padding: 0 4px; }
+.loader { display: flex; align-items: center; justify-content: center; height: 56px; flex-shrink: 0; }
+.loader[hidden] { display: none; }
+.spin { width: 20px; height: 20px; border: 2px solid rgba(36,36,36,0.15); border-top-color: #242424; border-radius: 9999px; animation: smSpin 0.7s linear infinite; }
+@keyframes smSpin { to { transform: rotate(360deg); } }
 
-/* Checked */
-.tgl-track--on { background: #242424; border: 1px solid transparent; }
-.tgl-track--on .tgl-thumb { background: #fff; left: 16px; }
-.tgl-track--on:hover { background: #2b2b2b; }
+/* Source Menu item row (MenuListItem geometry) */
+.smi { height: 56px; display: flex; align-items: center; flex-shrink: 0; border-bottom: 1px solid rgba(189,189,189,0.5); }
+.smi__inner { flex: 1; display: flex; align-items: center; gap: 6px; min-width: 0; padding: 10px 12px; border-radius: 12px; background: rgba(36,36,36,0); transition: background 0.1s; }
+.smi__inner:hover { background: rgba(36,36,36,0.04); }
+.smi__label { flex: 1; min-width: 0; font-size: 14px; line-height: 20px; font-weight: 420; color: #242424; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.smi__meta { font-size: 12px; line-height: 16px; color: #5d5d5d; white-space: nowrap; flex-shrink: 0; }
+.smi__connect { font-size: 14px; line-height: 20px; font-weight: 420; color: #242424; background: none; border: none; padding: 4px 8px; border-radius: 8px; cursor: pointer; flex-shrink: 0; }
+.smi__connect:hover { background: rgba(36,36,36,0.04); }
 
-/* ─── Connect button ─── */
-.si__connect { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 6px 10px; border-radius: 12px; border: none; background: transparent; color: #242424; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s; outline: none; white-space: nowrap; flex-shrink: 0; }
-.si__connect:hover { background: rgba(36,36,36,0.04); }
-.si__connect:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }
+/* Connector logo tile */
+.logo { width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; letter-spacing: 0; overflow: hidden; }
+.logo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Toggle (Toggle primitive: 32×16 track, 12 thumb) */
+.tgl { width: 32px; height: 16px; border-radius: 9999px; position: relative; cursor: pointer; flex-shrink: 0; transition: background 0.15s, border-color 0.15s; border: 1px solid transparent; }
+.tgl__thumb { width: 12px; height: 12px; border-radius: 9999px; position: absolute; top: 50%; transform: translateY(-50%); transition: left 0.15s, background 0.15s; }
+.tgl--on { background: #242424; }
+.tgl--on .tgl__thumb { background: #fff; left: 18px; }
+.tgl--off { background: #fff; border-color: #dedede; }
+.tgl--off .tgl__thumb { background: #6f6f6f; left: 2px; }
+
+/* Footer MenuListItem */
+.footer { height: 40px; display: flex; align-items: center; flex-shrink: 0; }
+.footer__inner { flex: 1; display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-radius: 12px; color: #242424; cursor: pointer; transition: background 0.1s; }
+.footer__inner:hover { background: rgba(36,36,36,0.04); }
+.footer__label { font-size: 14px; line-height: 20px; color: #242424; }
+.footer svg { display: block; color: #242424; }
+
+/* Variant grid */
+.vgrid { display: grid; grid-template-columns: 180px 1fr; gap: 10px 16px; align-items: center; background: #fff; border: 1px solid #ececec; border-radius: 12px; padding: 24px; }
+.vgrid__rl { font-size: 11px; font-weight: 600; color: #5d5d5d; }
+.vcell { width: 100%; }
+.logo--glyph { background: none !important; align-items: center; justify-content: center; color: #242424; }
+.logo--glyph svg { width: 20px; height: 20px; }
 `;
 
-function sourceItem(opts: { label: string; toggleOn?: boolean; toggleLabel?: string; connect?: boolean }): string {
-  let action = '';
-  if (opts.connect) {
-    action = '<button class="si__connect">Connect</button>';
-  } else {
-    const trackCls = 'tgl-track' + (opts.toggleOn ? ' tgl-track--on' : '');
-    action = '<div class="si__toggle-area">';
-    if (opts.toggleLabel) action += '<span class="si__toggle-label">' + opts.toggleLabel + '</span>';
-    action += '<div class="' + trackCls + '"><div class="tgl-thumb"></div></div>';
-    action += '</div>';
-  }
-  return '<div class="si"><div class="si__inner">'
-    + '<span class="si__icon">' + appsIco20 + '</span>'
-    + '<span class="si__label">' + opts.label + '</span>'
-    + action
-    + '</div></div>';
+// ─── Builders ───────────────────────────────────────────────
+
+function toggle(on: boolean): string {
+  return '<span class="tgl tgl--' + (on ? 'on' : 'off') + '" role="switch" aria-checked="' + on + '" tabindex="0"><span class="tgl__thumb"></span></span>';
 }
+
+type Trailing = { kind: 'toggle'; on: boolean } | { kind: 'connect' };
+function smi(logo: string, name: string, meta: string | null, trailing: Trailing): string {
+  let inner = '<span class="logo-wrap">' + logo + '</span>';
+  inner += '<span class="smi__label">' + name + '</span>';
+  if (meta) inner += '<span class="smi__meta">' + meta + '</span>';
+  if (trailing.kind === 'toggle') inner += toggle(trailing.on);
+  else inner += '<button class="smi__connect">Connect</button>';
+  return '<div class="smi"><div class="smi__inner">' + inner + '</div></div>';
+}
+
+// ─── Live modal ─────────────────────────────────────────────
+
+const SM_MODEL = CONN.map(function (c) { return { n: c.name, logo: c.logo, meta: c.meta || '', state: c.t.kind === 'connect' ? 'connect' : (c.t.on ? 'on' : 'off') }; });
+
+const modal = [
+  '<div class="stage"><div class="pop" role="dialog" aria-label="Change sources">',
+  '<div class="hdr"><span class="hdr__title">Change sources</span>',
+  '<div class="hdr__actions">',
+  '<button class="hdr__manage">' + ICON_SETTINGS + '<span>Manage sources</span></button>',
+  '<button class="hdr__close" aria-label="Close">' + ICON_DISMISS + '</button></div></div>',
+  '<div class="search">' + ICON_SEARCH + '<input type="text" id="smSearch" placeholder="Search" aria-label="Search sources"/></div>',
+  '<div class="subhdr"><span class="subhdr__count" id="smCount">0 sources are on</span>',
+  '<button class="subhdr__turnoff" id="smTurnOff">Turn off all</button></div>',
+  '<div class="list" id="ciqList"><div class="loader" id="ciqLoader"><span class="spin"></span></div></div>',
+  '</div></div>',
+].join('\n');
+
+// ─── Variant grid (Source Menu item states) ─────────────────
+
+const variants = [
+  '<div class="vgrid">',
+  '<div class="vgrid__rl">On · with metadata</div>',
+  '<div class="vcell">' + smi(LOGO.m365, 'Connector', 'Metadata', { kind: 'toggle', on: true }) + '</div>',
+  '<div class="vgrid__rl">On · no metadata</div>',
+  '<div class="vcell">' + smi(LOGO.vscode, 'Connector', null, { kind: 'toggle', on: true }) + '</div>',
+  '<div class="vgrid__rl">Off · with metadata</div>',
+  '<div class="vcell">' + smi(LOGO.viva, 'Connector', 'Metadata', { kind: 'toggle', on: false }) + '</div>',
+  '<div class="vgrid__rl">Off · no metadata</div>',
+  '<div class="vcell">' + smi(LOGO.powerbi, 'Connector', null, { kind: 'toggle', on: false }) + '</div>',
+  '<div class="vgrid__rl">Not connected</div>',
+  '<div class="vcell">' + smi(LOGO.figma, 'Connector', null, { kind: 'connect' }) + '</div>',
+  '</div>',
+].join('\n');
+
+// ─── Page ───────────────────────────────────────────────────
 
 const body = [
   '<div class="wrap">',
-  '<h1>Sources Menu — Component Preview</h1>',
-  '<p class="hint">Click toggles to switch on/off. Hover items for hover state.</p>',
-
-  '<h2>Sources List</h2>',
-  '<div class="src">',
-  sourceItem({ label: 'Microsoft 365 apps', toggleOn: true, toggleLabel: 'Chats, Emails, Meetings' }),
-  sourceItem({ label: 'Viva Sales', toggleOn: true }),
-  sourceItem({ label: 'Adobe', toggleOn: false }),
-  sourceItem({ label: 'Canva', connect: true }),
-  sourceItem({ label: 'Azure DevOps', connect: true }),
-  '</div>',
-
-  '<h2>Individual States</h2>',
-  '<div class="src">',
-  sourceItem({ label: 'Enabled with label', toggleOn: true, toggleLabel: 'Files, Teams' }),
-  sourceItem({ label: 'Enabled without label', toggleOn: true }),
-  sourceItem({ label: 'Disabled', toggleOn: false }),
-  sourceItem({ label: 'Not connected', connect: true }),
-  '</div>',
-
+  '<h1>Sources Menu \u2014 Component Preview</h1>',
+  '<p class="hint">"Change sources" modal, matching Figma Source Discovery (node 943:19731). Composes Popover + header Manage button + Input + source counter + MenuListItem rows + Toggle. Type to search; click a switch to toggle; click Connect to enable; Turn off all disables every source.</p>',
+  stage(modal),
+  '<h2>Source Menu item \u2014 states</h2>',
+  variants,
+  '<p class="hint" style="text-align:left;margin:12px 2px 0">6 sources are visible in the 360px viewport; the rest load on an infinite lazy scroll. Real brand logos are bundled from src/components/icons. Row geometry, type, colors, and the toggle match Figma exactly.</p>',
   '</div>',
 
   '<script>',
-  '  document.querySelectorAll(".tgl-track").forEach(function(el) {',
-  '    el.addEventListener("click", function() {',
-  '      el.classList.toggle("tgl-track--on");',
-  '    });',
+  '  document.querySelectorAll(".vgrid .tgl").forEach(function(t){',
+  '    function flip(){ var on = t.classList.toggle("tgl--on"); t.classList.toggle("tgl--off", !on); t.setAttribute("aria-checked", on); }',
+  '    t.addEventListener("click", flip);',
+  '    t.addEventListener("keydown", function(e){ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); flip(); } });',
   '  });',
+  '  (function(){',
+  '    var SM = ' + JSON.stringify(SM_MODEL) + ';',
+  '    var list = document.getElementById("ciqList"); var loader = document.getElementById("ciqLoader");',
+  '    var count = document.getElementById("smCount"); var turnOff = document.getElementById("smTurnOff"); var search = document.getElementById("smSearch");',
+  '    var query = ""; var shown = 6; var loading = false;',
+  '    function trailing(state){ if (state === "connect") return "<button class=\\"smi__connect\\">Connect</button>"; return "<span class=\\"tgl tgl--" + state + "\\" role=\\"switch\\" aria-checked=\\"" + (state === "on") + "\\" tabindex=\\"0\\"><span class=\\"tgl__thumb\\"></span></span>"; }',
+  '    function rowHtml(item){ var meta = item.meta ? "<span class=\\"smi__meta\\">" + item.meta + "</span>" : ""; return "<div class=\\"smi\\" data-name=\\"" + item.n + "\\"><div class=\\"smi__inner\\"><span class=\\"logo-wrap\\">" + item.logo + "</span><span class=\\"smi__label\\">" + item.n + "</span>" + meta + trailing(item.state) + "</div></div>"; }',
+  '    function updateCount(){ var n = 0; SM.forEach(function(x){ if (x.state === "on") n++; }); if (count) count.textContent = n === 1 ? "1 source is on" : n + " sources are on"; if (turnOff) turnOff.disabled = n === 0; }',
+  '    function bind(){ list.querySelectorAll(".tgl").forEach(function(t){ if (t.__b) return; t.__b = 1; t.addEventListener("click", function(){ var row = t.closest(".smi"); var item = SM.filter(function(x){ return x.n === row.getAttribute("data-name"); })[0]; var on = t.classList.toggle("tgl--on"); t.classList.toggle("tgl--off", !on); t.setAttribute("aria-checked", on); if (item) item.state = on ? "on" : "off"; updateCount(); }); }); list.querySelectorAll(".smi__connect").forEach(function(b){ if (b.__b) return; b.__b = 1; b.addEventListener("click", function(){ var row = b.closest(".smi"); var item = SM.filter(function(x){ return x.n === row.getAttribute("data-name"); })[0]; if (item) item.state = "on"; var d = document.createElement("div"); d.innerHTML = trailing("on"); b.replaceWith(d.firstChild); bind(); updateCount(); }); }); }',
+  '    function paint(){ if (!list) return; list.querySelectorAll(".smi").forEach(function(r){ r.remove(); }); var q = query.trim().toLowerCase(); var items = q ? SM.filter(function(x){ return x.n.toLowerCase().indexOf(q) !== -1; }) : SM.slice(0, shown); var frag = items.map(rowHtml).join(""); if (loader) loader.insertAdjacentHTML("beforebegin", frag); else list.insertAdjacentHTML("beforeend", frag); var more = !q && shown < SM.length; if (loader) loader.hidden = !more; bind(); updateCount(); }',
+  '    function loadMore(){ if (loading || query.trim() || shown >= SM.length) return; loading = true; if (loader) loader.hidden = false; setTimeout(function(){ shown = Math.min(SM.length, shown + 3); loading = false; paint(); }, 500); }',
+  '    if (list) list.addEventListener("scroll", function(){ if (list.scrollTop + list.clientHeight >= list.scrollHeight - 48) loadMore(); });',
+  '    if (turnOff) turnOff.addEventListener("click", function(){ SM.forEach(function(x){ if (x.state === "on") x.state = "off"; }); paint(); });',
+  '    if (search) search.addEventListener("input", function(){ query = this.value; if (!query.trim()) shown = 6; paint(); });',
+  '    paint();',
+  '  })();',
   '</script>',
 ].join('\n');
 
@@ -112,6 +251,5 @@ const html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>'
   + body + '</body></html>';
 
 const outDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'dist');
-const outPath = path.join(outDir, 'sourcesMenu.html');
-fs.writeFileSync(outPath, html, 'utf-8');
-console.log('Done: ' + outPath);
+fs.writeFileSync(path.join(outDir, 'sourcesMenu.html'), html, 'utf-8');
+console.log('Done: ' + path.join(outDir, 'sourcesMenu.html'));

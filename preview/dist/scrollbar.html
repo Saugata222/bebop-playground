@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Scrollbar Preview</title><style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+h2 { font-size: 14px; font-weight: 600; margin: 32px 0 12px; }
+.hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
+.wrap { max-width: 760px; margin: 0 auto; }
+.rl { font-size: 10px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+.row { display: flex; gap: 40px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 16px; }
+.cell { display: flex; flex-direction: column; }
+.swatch { background: #fcfcfc; border: 1px solid #ebebeb; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+
+/* ─── Static swatch — track + thumb ─── */
+/* Track: transparent rail, 4px padding, thumb aligned to end edge */
+.sb { display: flex; padding: 4px; }
+.sb--v { flex-direction: column; align-items: flex-end; height: 108px; }
+.sb--h { flex-direction: row; align-items: flex-end; width: 108px; }
+
+/* Thumb: 2px pill filling the long axis, #6f6f6f, circular */
+.sb__thumb { background: #6f6f6f; border-radius: 9999px; }
+.sb--v .sb__thumb { width: 2px; min-height: 0; flex: 1 0 0; }
+.sb--h .sb__thumb { height: 2px; min-width: 0; flex: 1 0 0; }
+/* Hover widens to 6px */
+.sb--v.sb--hover .sb__thumb { width: 6px; }
+.sb--h.sb--hover .sb__thumb { height: 6px; }
+
+/* ─── Live scroll demos — real styled scrollbars ─── */
+.demo-v {
+  width: 300px; height: 200px; overflow-y: auto; background: #fff;
+  border: 1px solid #ebebeb; border-radius: 12px; padding: 16px 20px;
+}
+.demo-v p { font-size: 14px; line-height: 22px; color: #242424; margin-bottom: 12px; }
+
+.demo-h {
+  width: 340px; overflow-x: auto; white-space: nowrap; background: #fff;
+  border: 1px solid #ebebeb; border-radius: 12px; padding: 16px;
+}
+.hcard {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 120px; height: 72px; margin-right: 12px; border-radius: 8px;
+  background: #f5f5f5; color: #242424; font-size: 13px; font-weight: 600;
+}
+
+/* Overlay scrollbar styling (WebKit/Blink) — thin, transparent track, tertiary pill */
+.demo-v::-webkit-scrollbar, .demo-h::-webkit-scrollbar { width: 10px; height: 10px; }
+.demo-v::-webkit-scrollbar-track, .demo-h::-webkit-scrollbar-track { background: transparent; }
+.demo-v::-webkit-scrollbar-thumb, .demo-h::-webkit-scrollbar-thumb {
+  background: #6f6f6f; border-radius: 9999px;
+  border: 4px solid transparent; background-clip: content-box;
+}
+.demo-v::-webkit-scrollbar-thumb { min-height: 24px; }
+.demo-h::-webkit-scrollbar-thumb { min-width: 24px; }
+.demo-v:hover::-webkit-scrollbar-thumb, .demo-h:hover::-webkit-scrollbar-thumb {
+  border-width: 2px; /* widen from 2px to 6px visible thumb on hover */
+}
+/* Firefox */
+.demo-v, .demo-h { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+/* ─── Usage docs ─── */
+.usage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.usage__col { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 16px; }
+.usage__col h3 { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.usage__col--do h3 { color: #0f7b0f; }
+.usage__col--dont h3 { color: #b10e1c; }
+.usage__col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.usage__col li { font-size: 12px; line-height: 1.5; color: #5d5d5d; padding-left: 16px; position: relative; }
+.usage__col li::before { content: ''; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; }
+.usage__col--do li::before { background: #0f7b0f; }
+.usage__col--dont li::before { background: #b10e1c; }
+.when { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 16px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; color: #5d5d5d; }
+.when strong { color: #242424; font-weight: 600; }
+
+/* ─── Bebop page overrides (injected by _inject.ts) ─── */
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
+
+/* Page wrapper */
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
+.bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
+.bp-header__tag--compound { background: #ebebeb; color: #242424; }
+.bp-header__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
+.bp-header__desc { font-size: 15px; color: #6f6f6f; line-height: 1.6; max-width: 600px; margin-bottom: 20px; }
+.bp-header__states { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
+.bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
+
+/* Content area — override all wrapper variants */
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+
+/* Headings */
+h1 { display: none !important; }
+.hint, p.hint { display: none !important; }
+h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
+h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
+/* Rows and cells */
+.row { gap: 24px !important; margin-bottom: 20px !important; }
+.cell { gap: 8px !important; }
+.rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+
+/* ─── Related components ─── */
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+.bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
+.bp-related__card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.bp-related__card-top { display: flex; align-items: center; gap: 8px; }
+.bp-related__card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
+.bp-related__card-arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
+.bp-related__card:hover .bp-related__card-arrow { color: #242424; transform: translateX(2px); }
+.bp-related__card-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
+
+/* ─── Back bar (sticky, frosted) ─── */
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Scrollbar</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Minimal overlay scrollbar. A 2px tertiary (#6f6f6f) pill thumb in a transparent, end-aligned track that widens to 6px on hover. Vertical and horizontal orientation.</p><div class="bp-header__states"><span class="bp-header__state">Vertical</span><span class="bp-header__state">Horizontal</span><span class="bp-header__state">Rest</span><span class="bp-header__state">Hover</span></div></div><!-- /INJECT:HEADER --><div class="wrap"><h1>Scrollbar — Component Preview</h1><p class="hint">Minimal overlay scrollbar. 2px tertiary pill thumb in a transparent end-aligned track, widening to 6px on hover. Scroll the live panels to see it in action.</p><div class="bp-stage"><div class="bp-stage__canvas"><div class="demo-v" style="width:320px"><p>Line 1 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 2 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 3 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 4 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 5 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 6 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 7 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 8 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 9 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 10 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p></div></div></div>
+<h2>Orientation × state</h2>
+<div class="row">
+<div class="cell"><span class="rl">Vertical · rest</span><div class="swatch"><div class="sb sb--v"><div class="sb__thumb"></div></div></div></div>
+<div class="cell"><span class="rl">Vertical · hover</span><div class="swatch"><div class="sb sb--v sb--hover"><div class="sb__thumb"></div></div></div></div>
+<div class="cell"><span class="rl">Horizontal · rest</span><div class="swatch"><div class="sb sb--h"><div class="sb__thumb"></div></div></div></div>
+<div class="cell"><span class="rl">Horizontal · hover</span><div class="swatch"><div class="sb sb--h sb--hover"><div class="sb__thumb"></div></div></div></div>
+</div>
+<h2>Live scroll</h2>
+<div class="row">
+<div class="cell"><span class="rl">Vertical</span><div class="demo-v"><p>Line 1 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 2 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 3 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 4 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 5 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 6 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 7 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 8 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 9 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p><p>Line 10 — the overlay scrollbar sits at the end edge of the surface, thin at rest and wider while you drag.</p></div></div>
+<div class="cell"><span class="rl">Horizontal</span><div class="demo-h"><span class="hcard">Card 1</span><span class="hcard">Card 2</span><span class="hcard">Card 3</span><span class="hcard">Card 4</span><span class="hcard">Card 5</span><span class="hcard">Card 6</span><span class="hcard">Card 7</span><span class="hcard">Card 8</span><span class="hcard">Card 9</span><span class="hcard">Card 10</span><span class="hcard">Card 11</span><span class="hcard">Card 12</span></div></div>
+</div>
+<h2>Usage</h2>
+<div class="when"><strong>When to use.</strong> The scrollbar appears automatically on any surface whose content overflows. It is a passive overlay affordance — thin and unobtrusive at rest, widening on hover so it is easy to grab. Never add explicit scroll arrows or a solid track.</div>
+<div class="usage">
+<div class="usage__col usage__col--do"><h3>Do</h3><ul>
+<li>Keep the thumb tertiary (#6f6f6f) with a circular (pill) radius.</li>
+<li>Rest at 2px and widen to 6px on hover.</li>
+<li>Align the thumb to the end edge over a transparent track.</li>
+<li>Let overflow drive visibility — hide it when content fits.</li>
+</ul></div>
+<div class="usage__col usage__col--dont"><h3>Don't</h3><ul>
+<li>Add a filled track, borders, or scroll-arrow buttons.</li>
+<li>Reserve permanent gutter space that shifts the layout.</li>
+<li>Recolor the thumb per surface — keep it neutral tertiary.</li>
+<li>Use it as a progress or range indicator.</li>
+</ul></div>
+</div></div><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="divider.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Divider</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Non-interactive separator. Horizontal and vertical lines with an optional conten...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="canvasChat.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Canvas Chat</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Floating inline AI card with output area, input field, action buttons, attachmen...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a><a class="bp-related__card" href="menu.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Menu</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Dropdown menu with list items, section headers, secondary content, split items, ...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a></div></div><!-- /INJECT:RELATED --></body></html>

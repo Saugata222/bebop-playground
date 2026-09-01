@@ -8,6 +8,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { section, stage, segControl, variants, matrix, specs } from './_scaffold';
 
 // ─── CSS ────────────────────────────────────────────────────
 
@@ -65,6 +66,11 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 .tgl--dis:not(.tgl--on) .tgl__thumb { background: #929292; }
 .tgl--dis.tgl--on .tgl__track { background: #ebebeb; border-color: transparent; }
 .tgl--dis.tgl--on .tgl__thumb { background: #929292; }
+
+/* Stage / matrix helpers */
+.tgl.no-label .tgl__label { display: none; }
+.tgl:not(.tgl--on).tgl--fh .tgl__track { background: #f5f5f5; }
+.tgl--on.tgl--fh .tgl__track { background: #2b2b2b; }
 `;
 
 // ─── HTML builder ───────────────────────────────────────────
@@ -81,47 +87,112 @@ function toggleSwitch(opts: { label?: string; checked?: boolean; disabled?: bool
 
 // ─── Sections ───────────────────────────────────────────────
 
+const hero =
+  '<button id="heroTgl" class="tgl tgl--on" role="switch" aria-checked="true">' +
+  '<span class="tgl__label">Enable notifications</span>' +
+  '<span class="tgl__track"><span class="tgl__thumb"></span></span></button>';
+
+const controls =
+  segControl('State', 'state', [
+    { value: 'on', label: 'On', active: true },
+    { value: 'off', label: 'Off' },
+  ]) +
+  segControl('Label', 'label', [
+    { value: 'with', label: 'With label', active: true },
+    { value: 'no', label: 'No label' },
+  ]) +
+  segControl('Disabled', 'dis', [
+    { value: 'off', label: 'Off', active: true },
+    { value: 'on', label: 'On' },
+  ]);
+
+const varTiles = [
+  { label: 'With label', html: toggleSwitch({ label: 'Chats, Emails, Meetings', checked: true }) },
+  { label: 'No label', html: toggleSwitch({ checked: true }) },
+];
+
+function mCellTgl(checked: boolean, kind: 'rest' | 'hover' | 'dis'): string {
+  const cls = ['tgl'];
+  if (checked) cls.push('tgl--on');
+  if (kind === 'hover') cls.push('tgl--fh');
+  if (kind === 'dis') cls.push('tgl--dis');
+  return (
+    '<button class="' + cls.join(' ') + '" role="switch" aria-checked="' + (checked ? 'true' : 'false') + '"' +
+    (kind === 'dis' ? ' disabled' : '') + '><span class="tgl__track"><span class="tgl__thumb"></span></span></button>'
+  );
+}
+const statesMatrix = matrix(
+  ['Rest', 'Hover', 'Disabled'],
+  [
+    { label: 'Unchecked', cells: [mCellTgl(false, 'rest'), mCellTgl(false, 'hover'), mCellTgl(false, 'dis')] },
+    { label: 'Checked', cells: [mCellTgl(true, 'rest'), mCellTgl(true, 'hover'), mCellTgl(true, 'dis')] },
+  ],
+);
+
+const specTable = specs([
+  { k: 'Track', v: '32 × 16 px' },
+  { k: 'Thumb', v: '12 px' },
+  { k: 'Corner radius', v: 'pill (9999)' },
+  { k: 'On background', v: '#242424' },
+  { k: 'Off track', v: '#fff · 1px #dedede' },
+  { k: 'Thumb travel', v: '2 → 16 px' },
+  { k: 'Disabled on', v: '#ebebeb' },
+  { k: 'Label font', v: 'Segoe Sans 12/16' },
+]);
+
+const heroScript = `
+<script>
+(function () {
+  var hero = document.getElementById('heroTgl');
+  var st = { on: true, label: 'with', dis: false };
+  function syncSeg(name, val) {
+    var seg = document.querySelector('[data-seg="' + name + '"]');
+    if (!seg) return;
+    seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-active', b.getAttribute('data-value') === val); });
+  }
+  function paint() {
+    var cls = ['tgl'];
+    if (st.on) cls.push('tgl--on');
+    if (st.dis) cls.push('tgl--dis');
+    if (st.label === 'no') cls.push('no-label');
+    hero.className = cls.join(' ');
+    hero.setAttribute('aria-checked', st.on ? 'true' : 'false');
+    hero.disabled = st.dis;
+  }
+  document.querySelectorAll('[data-ctrl]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var name = btn.getAttribute('data-ctrl');
+      var val = btn.getAttribute('data-value');
+      if (name === 'state') st.on = val === 'on';
+      else if (name === 'label') st.label = val;
+      else if (name === 'dis') st.dis = val === 'on';
+      var seg = document.querySelector('[data-seg="' + name + '"]');
+      if (seg) seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+      paint();
+    });
+  });
+  hero.addEventListener('click', function () {
+    if (st.dis) return;
+    st.on = !st.on;
+    syncSeg('state', st.on ? 'on' : 'off');
+    paint();
+  });
+  paint();
+  document.querySelectorAll('.bp-variants .tgl:not(.tgl--dis), .bp-matrix .tgl:not(.tgl--dis)').forEach(function (el) {
+    el.addEventListener('click', function () {
+      el.classList.toggle('tgl--on');
+      el.setAttribute('aria-checked', el.classList.contains('tgl--on') ? 'true' : 'false');
+    });
+  });
+})();
+</script>`;
+
 const body = [
-  '<div class="wrap">',
-  '<h1>Toggle (Switch) — Component Preview</h1>',
-  '<p class="hint">Click to toggle on/off. Hover for hover state.</p>',
-
-  '<h2>With Label</h2>',
-  '<div class="row">',
-  '<div class="cell"><span class="rl">Checked</span>' + toggleSwitch({ label: 'Chats, Emails, Meetings', checked: true }) + '</div>',
-  '<div class="cell"><span class="rl">Unchecked</span>' + toggleSwitch({ label: 'Chats, Emails, Meetings', checked: false }) + '</div>',
-  '</div>',
-
-  '<h2>Without Label</h2>',
-  '<div class="row">',
-  '<div class="cell"><span class="rl">Checked</span>' + toggleSwitch({ checked: true }) + '</div>',
-  '<div class="cell"><span class="rl">Unchecked</span>' + toggleSwitch({ checked: false }) + '</div>',
-  '</div>',
-
-  '<h2>Disabled</h2>',
-  '<div class="row">',
-  '<div class="cell"><span class="rl">Checked + Disabled</span>' + toggleSwitch({ label: 'Disabled on', checked: true, disabled: true }) + '</div>',
-  '<div class="cell"><span class="rl">Unchecked + Disabled</span>' + toggleSwitch({ label: 'Disabled off', checked: false, disabled: true }) + '</div>',
-  '</div>',
-
-  '<h2>Interactive Group</h2>',
-  '<div class="row" style="flex-direction:column;gap:12px;align-items:flex-start">',
-  toggleSwitch({ label: 'Enable notifications', checked: true }),
-  toggleSwitch({ label: 'Dark mode', checked: false }),
-  toggleSwitch({ label: 'Auto-save drafts', checked: true }),
-  toggleSwitch({ label: 'Sound effects', checked: false }),
-  '</div>',
-
-  '</div>',
-
-  '<script>',
-  '  document.querySelectorAll(".tgl:not(.tgl--dis)").forEach(function(el) {',
-  '    el.addEventListener("click", function() {',
-  '      el.classList.toggle("tgl--on");',
-  '      el.setAttribute("aria-checked", el.classList.contains("tgl--on") ? "true" : "false");',
-  '    });',
-  '  });',
-  '</script>',
+  stage(hero, controls),
+  section('Variants', variants(varTiles), 'Optional leading label'),
+  section('States', statesMatrix, 'Hover &amp; pressed are live in the Stage above'),
+  section('Specs', specTable),
+  heroScript,
 ].join('\n');
 
 const html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>'

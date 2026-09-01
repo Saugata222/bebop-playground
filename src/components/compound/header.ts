@@ -1,31 +1,31 @@
 /**
  * Component: Header
  *
- * Bebop Design System — Shell header bar for Copilot experiences.
+ * One Copilot / Bebop Design System — primary anchor bar of the experience.
  *
- * A full-width horizontal bar at the top of the shell containing a left section
- * (model picker / page title) and a right section (action buttons).
- *
- * Properties:
- *   Type:       Chat ZQ | Chat Session | Agent ZQ | Agent Session |
- *               Workspace ZQ | Workspace Session | Artifact | Placeholder
- *   Breakpoint: XXX-Large (1920) | XX-Large (1366) | X-Large (1024) | Small (320)
+ * Surfaces key context and controls with a minimal footprint: a left cluster
+ * (Work IQ badge + model picker) and a right cluster (compliance shield +
+ * temporary chat, plus session controls). A single shared header lets every
+ * team start from a common foundation. This is the COMMERCIAL variant (Work IQ
+ * present); the Consumer variant drops the Work IQ badge and shield.
  *
  * Anatomy:
- *   Left section   — Model picker (icon + label + chevron), or page title
- *   Right section  — Icon-only circular Subtle buttons (action bar)
+ *   Left cluster   — Work IQ badge + Model picker ("Auto" + chevron)
+ *   Right cluster  — Compliance shield + Temporary chat (icon-only Subtle);
+ *                    session context adds Share / More / overflow
  *
- * Action buttons by type:
- *   Chat ZQ:          Temp Chat, Shield, More
- *   Chat Session:     Share, Shield, More
- *   Agent ZQ:         Temp Chat, Shield, More
- *   Agent Session:    Share, Shield, More
- *   Workspace ZQ:     Share, Temp Chat, Shield, More
- *   Workspace Sess:   Share, Shield, More  (+ Back arrow in left)
- *   Artifact:         Open, More, Dismiss
- *   Placeholder:      More
+ * Responsive (fills width; controls collapse as space shrinks):
+ *   1024+       — Work IQ + Auto | shield + temp chat
+ *   480–1023    — Work IQ + Auto | shield + share/temp chat + overflow (…)
+ *   320–479     — hamburger | shield + add + overflow (…)
+ *
+ * Reused primitives: Button (icon-only Medium Subtle actions; Subtle Medium
+ * model picker), Tag/Badge-style Work IQ chip.
  *
  * Prefix: --c-header-{property}
+ *
+ * Figma: One-Copilot-Desktop-UI-Kit — Header (page 3230:49558;
+ *        4202:7003, variants 4202:33244)
  */
 
 // ─── Container ──────────────────────────────────────────────
@@ -78,6 +78,39 @@ export const headerActionButton = {
   padding: '6px',
 } as const;
 
+// ─── Work IQ Badge (left cluster, Commercial only) ──────────
+
+export const headerWorkIqBadge = {
+  /** Compact pill label */
+  text: 'Work IQ',
+  /** Height */
+  height: '24px',
+  /** Inline padding — --gnrc-spacing-component-base-200 (8px) */
+  paddingInline: '8px',
+  /** Radius — --gnrc-border-radius-base-300 (12px) */
+  borderRadius: '12px',
+  /** Surface — neutral soft */
+  background: '#f0f0f0',
+  /** Label — Functional Body Small Strong (12/16, 625) */
+  fontSize: '12px',
+  fontWeight: '625',
+  lineHeight: '16px',
+  /** --gnrc-color-foreground-neutral-primary */
+  color: '#242424',
+} as const;
+
+// ─── Compliance Shield (right cluster, Commercial only) ─────
+
+export const headerComplianceShield = {
+  /** Fluent shield-task glyph */
+  icon: 'shield-task-20-regular',
+  iconSize: '20px',
+  /** Loud success green — --gnrc-color-background-success-loud */
+  color: '#008455',
+  /** Icon-only Subtle Medium, circular */
+  size: '32px',
+} as const;
+
 // ─── Type-Specific Icons ────────────────────────────────────
 
 export const headerTypeIcons = {
@@ -120,6 +153,8 @@ export const headerTypography = {
 export const header = {
   container: headerContainer,
   section: headerSection,
+  workIqBadge: headerWorkIqBadge,
+  complianceShield: headerComplianceShield,
   modelPicker: headerModelPicker,
   actionButton: headerActionButton,
   typeIcons: headerTypeIcons,

@@ -58,9 +58,9 @@ export const menuItemSize = {
   /** Icon size */
   iconSize: '20px',
   /** Font size — body-medium (14px) */
-  fontSize: '14px',
+  fontSize: 'var(--f-typography-fontSize-14)',
   /** Font weight — regular */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Font weight — selected (semibold) */
   fontWeightSelected: '600',
   /** Line height */
@@ -108,9 +108,9 @@ export const menuItemStateDisabled = {
 
 export const menuSectionHeader = {
   /** Font size — body-small (12px) */
-  fontSize: '12px',
+  fontSize: 'var(--f-typography-fontSize-12)',
   /** Font weight — semibold */
-  fontWeight: '600',
+  fontWeight: 'var(--f-typography-fontWeight-semibold)',
   /** Line height */
   lineHeight: '1.4',
   /** Text color */
@@ -125,9 +125,9 @@ export const menuSectionHeader = {
 
 export const menuItemSecondary = {
   /** Font size — body-small (12px) */
-  fontSize: '12px',
+  fontSize: 'var(--f-typography-fontSize-12)',
   /** Font weight — regular */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Font weight — selected (semibold) */
   fontWeightSelected: '600',
   /** Line height */

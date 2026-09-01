@@ -13,6 +13,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { tokensCSS } from './_tokens';
 
 const t = {
   white: '#FFFFFF',
@@ -24,7 +25,7 @@ const t = {
   fgPrimary: '#242424',
   enteredColor: '#1f1f1f',
   radiusCircular: '9999px',
-  fontBody: "'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif",
+  fontBody: "var(--f-typography-fontFamily-functional)",
 } as const;
 
 const icons = {
@@ -42,6 +43,7 @@ const html = `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Chat Input \u2014 Interactive Preview</title>
 <style>
+${tokensCSS}
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -72,7 +74,7 @@ const html = `<!DOCTYPE html>
   .b {
     display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer; position: relative;
-    font-family: 'Segoe UI', sans-serif; letter-spacing: 0; line-height: 1.4;
+    font-family: var(--f-typography-fontFamily-functional); letter-spacing: 0; line-height: 1.4;
     transition: background 0.1s ease; outline: none; white-space: nowrap;
     border: none; flex-shrink: 0;
   }
@@ -178,7 +180,7 @@ const html = `<!DOCTYPE html>
 <h1>Chat Input \u2014 Interactive Preview</h1>
 <p class="hint">Click the input area and start typing. The component transitions between Rest, Focus, and Entered states automatically.<br>Try pasting a long prompt to see multiline behavior.</p>
 
-<div class="wrapper">
+<div class="wrapper bp-stage__canvas">
   <div class="state-badge" id="stateBadge">REST</div>
   <div class="ci" id="chatInput">
     <div class="ci__container">

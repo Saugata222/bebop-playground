@@ -1,40 +1,105 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Banner — Bebop Design System Preview</title><style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; background: #f5f5f5; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
-.page { padding: 40px; display: flex; flex-direction: column; gap: 48px; max-width: 800px; margin: 0 auto; }
-h2 { font-size: 14px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
-.demo { background: #fff; border-radius: 16px; padding: 32px; border: 1px solid #e8e8e8; display: flex; flex-direction: column; gap: 24px; }
-.state-cell { display: flex; flex-direction: column; gap: 8px; }
-.state-label { font-size: 11px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.6px; }
-.bnr { display: flex; align-items: center; justify-content: center; padding: 16px; border: 1px solid #dedede; border-radius: 16px; background: #fff; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; transition: opacity 0.25s ease-out, max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out, border-width 0.3s ease-out; overflow: hidden; }
-.bnr--dismissed { opacity: 0; max-height: 0 !important; padding-block: 0; margin-block: 0; border-width: 0; pointer-events: none; }
-.bnr__row { display: flex; align-items: center; gap: 12px; width: 100%; }
-.bnr__img { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.bnr__img img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; display: block; }
-.bnr__img--multi { display: flex; flex-wrap: wrap; gap: 2px; width: 40px; height: 40px; flex-shrink: 0; align-content: flex-start; }
-.bnr__img--multi img { width: 19px; height: 19px; border-radius: 4px; object-fit: cover; display: block; }
-.bnr__img--multi .bnr__overflow { width: 19px; height: 19px; border-radius: 4px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 400; color: #242424; line-height: 1; }
-.bnr__img--connected { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.bnr__img--connected img { width: 40px; height: 40px; object-fit: contain; display: block; }
-.bnr__main { flex: 1; min-width: 0; overflow: hidden; }
-.bnr__content { display: flex; align-items: center; gap: 20px; width: 100%; }
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Banner Preview</title><style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', 'Segoe Sans', sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+h2 { font-size: 14px; font-weight: 600; margin: 32px 0 16px; }
+.hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 32px; }
+.wrap { max-width: 640px; margin: 0 auto; }
+.rl { font-size: 10px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.8px; }
+.panel { display: flex; flex-direction: column; gap: 20px; border-radius: 16px; padding: 24px; }
+.panel--light { background: #fff; border: 1px solid #ebebeb; }
+.panel--dark { background: #1a1a1a; border: 1px solid #000; }
+.panel--dark .rl { color: #929292; }
+.cell { display: flex; flex-direction: column; gap: 8px; }
+
+/* ─── Banner ─── */
+.bnr {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 16px; border-radius: 24px; border: 1px solid transparent;
+  transition: opacity 0.25s ease, max-height 0.3s ease, padding 0.3s ease, border-width 0.3s ease;
+  overflow: hidden;
+}
+.bnr--light { background: #ffffff; border-color: #dedede; }
+.bnr--dark  { background: #292929; border-color: #484848; }
+.bnr--dismissed { opacity: 0; max-height: 0 !important; padding-block: 0; border-width: 0; pointer-events: none; }
+
+/* Lead */
+.bnr__lead { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.bnr__lead--image { width: 60px; height: 60px; border-radius: 12px; background: #f0f0f0; }
+.bnr--dark .bnr__lead--image { background: #3a3a3a; }
+.bnr__lead--icon { width: 40px; height: 40px; }
+.bnr__lead--icon svg { width: 20px; height: 20px; display: block; }
+.bnr--light .bnr__lead--icon { color: #242424; }
+.bnr--dark .bnr__lead--icon { color: #fffbf8; }
+
+/* Main = text + buttons */
+.bnr__main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 20px; }
 .bnr__text { flex: 1; min-width: 0; }
-.bnr__header { font-size: 14px; font-weight: 600; line-height: 20px; color: #242424; }
-.bnr__body { font-size: 14px; font-weight: 400; line-height: 1.4; color: #242424; }
-.bnr__buttons { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.bnr__btn { height: 32px; padding-inline: 10px; border-radius: 12px; border: none; background: #f5f5f5; color: #242424; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 20px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; transition: background 0.1s ease; outline: none; position: relative; }
-.bnr__btn:hover { background: #ebebeb; }
-.bnr__btn:focus-visible { outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 1px #fff inset; }
-.bnr__dismiss { width: 32px; height: 32px; border-radius: 9999px; border: none; background: transparent; color: #242424; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; transition: background 0.1s ease; outline: none; position: relative; }
-.bnr__dismiss:hover { background: rgba(36, 36, 36, 0.04); }
-.bnr__dismiss:focus-visible { outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 1px #fff inset; }
+.bnr__title { font-family: 'Segoe Sans','Segoe UI',sans-serif; font-size: 14px; line-height: 20px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bnr__body { font-family: 'Segoe Sans','Segoe UI',sans-serif; font-size: 14px; line-height: 20px; font-weight: 420; font-variation-settings: 'opsz' 8, 'wght' 420; }
+.bnr--light .bnr__title { color: #242424; } .bnr--light .bnr__body { color: #242424; }
+.bnr--dark .bnr__title { color: #fffbf8; } .bnr--dark .bnr__body { color: #dedede; }
+
+/* Buttons */
+.bnr__buttons { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.bnr__btn {
+  height: 32px; padding: 0 10px; border-radius: 12px; border: 1px solid transparent; cursor: pointer;
+  font-family: 'Segoe Sans','Segoe UI',sans-serif; font-size: 14px; line-height: 20px;
+  font-weight: 420; font-variation-settings: 'opsz' 8, 'wght' 420;
+  display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;
+  transition: background 0.1s ease; outline: none;
+}
+.bnr__btn--primary { background: rgba(229,229,229,0.5); color: #242424; }
+.bnr__btn--primary:hover { background: #ebebeb; }
+.bnr--dark .bnr__btn--primary { background: rgba(51,51,51,0.5); color: #dedede; }
+.bnr--dark .bnr__btn--primary:hover { background: rgba(51,51,51,0.7); }
+.bnr__btn--secondary { background: #fcfcfc; border-color: #dedede; color: #242424; }
+.bnr__btn--secondary:hover { background: #f5f5f5; }
+.bnr--dark .bnr__btn--secondary { background: #242424; border-color: #484848; color: #dedede; }
+.bnr--dark .bnr__btn--secondary:hover { background: #303030; }
+
+/* Dismiss — 28×28 circular subtle (icon 20 + 4) */
+.bnr__dismiss {
+  width: 28px; height: 28px; border-radius: 9999px; border: none; background: transparent;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;
+  transition: background 0.1s ease; outline: none;
+}
 .bnr__dismiss svg { width: 20px; height: 20px; display: block; }
+.bnr--light .bnr__dismiss { color: #242424; }
+.bnr--light .bnr__dismiss:hover { background: rgba(36,36,36,0.04); }
+.bnr--dark .bnr__dismiss { color: #dedede; }
+.bnr--dark .bnr__dismiss:hover { background: rgba(255,255,255,0.06); }
+
+/* ─── Side pane variant — compact 244px, body-small, 36px lead, dismiss-only ─── */
+.bnr--sp { width: 244px; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 16px; }
+.bnr--sp .bnr__lead--image { width: 36px; height: 36px; border-radius: 8px; background: #f2f2f2; }
+.bnr--dark.bnr--sp .bnr__lead--image { background: #3a3a3a; }
+.bnr--sp .bnr__lead--icon { width: 36px; height: 36px; border-radius: 12px; }
+.bnr--sp .bnr__lead--icon svg { width: 24px; height: 24px; }
+.bnr--sp .bnr__main { align-items: flex-start; gap: 2px; }
+.bnr--sp .bnr__text { padding-left: 4px; display: flex; flex-direction: column; gap: 2px; }
+.bnr--sp .bnr__title { font-size: 12px; line-height: 16px; }
+.bnr--sp .bnr__body { font-size: 12px; line-height: 16px; }
+.bnr--sp .bnr__dismiss { width: 24px; height: 24px; }
+.bnr--sp .bnr__dismiss svg { width: 12px; height: 12px; }
+
+/* ─── Usage docs ─── */
+.when { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 16px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; color: #5d5d5d; }
+.when strong { color: #242424; font-weight: 600; }
+.usage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.usage__col { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 16px; }
+.usage__col h3 { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.usage__col--do h3 { color: #0f7b0f; } .usage__col--dont h3 { color: #b10e1c; }
+.usage__col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.usage__col li { font-size: 12px; line-height: 1.5; color: #5d5d5d; padding-left: 16px; position: relative; }
+.usage__col li::before { content: ''; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; }
+.usage__col--do li::before { background: #0f7b0f; } .usage__col--dont li::before { background: #b10e1c; }
 
 /* ─── Bebop page overrides (injected by _inject.ts) ─── */
 body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
 
 /* Page wrapper */
-.bp-header { max-width: 900px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
 .bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
 .bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
@@ -45,7 +110,7 @@ body { background: #fff !important; padding: 0 !important; margin: 0 !important;
 .bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
 
 /* Content area — override all wrapper variants */
-.wrap, .page, .section { max-width: 900px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
 
 /* Headings */
 h1 { display: none !important; }
@@ -53,13 +118,125 @@ h1 { display: none !important; }
 h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
 h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
 /* Rows and cells */
 .row { gap: 24px !important; margin-bottom: 20px !important; }
 .cell { gap: 8px !important; }
 .rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
 
 /* ─── Related components ─── */
-.bp-related { max-width: 900px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
 .bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
 .bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
 .bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
@@ -72,10 +249,10 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 .bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
 
 /* ─── Back bar (sticky, frosted) ─── */
-.bebop-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
-.bebop-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
-.bebop-backbar a:hover { background: rgba(36,36,36,0.04); }
-.bebop-backbar a svg { width: 16px; height: 16px; }
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; }
@@ -84,31 +261,37 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 ::-webkit-scrollbar-thumb:hover { border: 0; }
 * { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
 
-</style></head><body><!-- INJECT:BACKBAR --><div class="bebop-backbar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Banner</span><span class="bp-header__tag bp-header__tag--compound">Compound</span></div><p class="bp-header__desc">Dismissible contextual banner for the chat thread. Three variants — single source connect prompt, multi source browse prompt, and connected source confirmation.</p><div class="bp-header__states"><span class="bp-header__state">Single Source</span><span class="bp-header__state">Multi Source</span><span class="bp-header__state">Connected</span><span class="bp-header__state">Dismissed</span></div></div><!-- /INJECT:HEADER --><div class="page"><div><h2>Single Source</h2><div class="demo"><div class="state-cell"><span class="state-label">Connect Prompt</span><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global logo" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your S&amp;P Global data to Copilot</div><div class="bnr__body">Connect to S&amp;P Global to access verified, up-to-date financial data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button">Connect</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><div><h2>Multi Source</h2><div class="demo"><div class="state-cell"><span class="state-label">Browse Prompt</span><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--multi"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global" /><img src="../../src/components/icons/lseg-logo.png" alt="LSEG" /><img src="../../src/components/icons/moodys-logo.png" alt="Moody's" /><span class="bnr__overflow" aria-label="and 7 more">+7</span></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your data to get more from Copilot</div><div class="bnr__body">Connect to S&amp;P Global, Moody's, LSEG and more to ground responses in trusted data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button">Try now</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><div><h2>Connected Source</h2><div class="demo"><div class="state-cell"><span class="state-label">Confirmation</span><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--connected"><img src="../../src/components/icons/engineering-hub-logo.png" alt="Engineering Hub" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Your Engineering Hub is now connected to Copilot</div><div class="bnr__body">Access docs and team knowledge from Engineering Hub in your Copilot responses.</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button">Explore</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><div><h2>Interactive — Click Dismiss or Action</h2><div class="demo"><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global logo" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your S&amp;P Global data to Copilot</div><div class="bnr__body">Connect to S&amp;P Global to access verified, up-to-date financial data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button" data-action="connect">Connect</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--multi"><img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global" /><img src="../../src/components/icons/lseg-logo.png" alt="LSEG" /><img src="../../src/components/icons/moodys-logo.png" alt="Moody's" /><span class="bnr__overflow" aria-label="and 7 more">+7</span></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Connect your data to get more from Copilot</div><div class="bnr__body">Connect to S&amp;P Global, Moody's, LSEG and more to ground responses in trusted data</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button" data-action="connect">Try now</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div><div class="bnr" role="status"><div class="bnr__row"><div class="bnr__img--connected"><img src="../../src/components/icons/engineering-hub-logo.png" alt="Engineering Hub" /></div><div class="bnr__main"><div class="bnr__content"><div class="bnr__text"><div class="bnr__header">Your Engineering Hub is now connected to Copilot</div><div class="bnr__body">Access docs and team knowledge from Engineering Hub in your Copilot responses.</div></div><div class="bnr__buttons"><button class="bnr__btn" type="button" data-action="connect">Explore</button><button class="bnr__dismiss" type="button" aria-label="Dismiss banner" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="#212121"/> </svg></button></div></div></div></div></div></div></div></div><script>
-document.querySelectorAll('[data-action="dismiss"]').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var bnr = btn.closest('.bnr');
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Banner</span><span class="bp-header__tag bp-header__tag--compound">Compound</span></div><p class="bp-header__desc">Contextual banner surface with an optional leading image or icon, a title and body, up to two actions, and a dismiss. Composes the Button primitive; available in Light and Dark themes.</p><div class="bp-header__states"><span class="bp-header__state">Default</span><span class="bp-header__state">With image</span><span class="bp-header__state">With icon</span><span class="bp-header__state">With secondary</span><span class="bp-header__state">No dismiss</span><span class="bp-header__state">Dark</span></div></div><!-- /INJECT:HEADER --><div class="wrap"><h1>Banner — Component Preview</h1><p class="hint">Contextual banner surface with optional lead, actions and dismiss — Light and Dark.</p><div class="bp-stage"><div class="bp-stage__canvas"><div style="width:100%;max-width:520px"><div class="bnr bnr--light"><div class="bnr__lead bnr__lead--image"></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--secondary" type="button">Secondary</button><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div></div></div>
+<h2>Light</h2>
+<div class="panel panel--light"><div class="cell"><span class="rl">Default</span><div class="bnr bnr--light"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With image</span><div class="bnr bnr--light"><div class="bnr__lead bnr__lead--image"></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With icon</span><div class="bnr bnr--light"><div class="bnr__lead bnr__lead--icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M11.5 5.50207C11.5 6.0555 11.0514 6.50414 10.4979 6.50414C9.94449 6.50414 9.49585 6.0555 9.49585 5.50207C9.49585 4.94864 9.94449 4.5 10.4979 4.5C11.0514 4.5 11.5 4.94864 11.5 5.50207ZM2 4.5C2 3.11929 3.11929 2 4.5 2H11.5C12.8807 2 14 3.11929 14 4.5V11.5C14 12.8807 12.8807 14 11.5 14H4.5C3.11929 14 2 12.8807 2 11.5V4.5ZM4.5 3C3.67157 3 3 3.67157 3 4.5V11.5C3 11.7316 3.05248 11.9509 3.1462 12.1467L6.79796 8.49499C7.46185 7.8311 8.53823 7.8311 9.20212 8.49499L12.8538 12.1467C12.9475 11.9509 13 11.7316 13 11.5V4.5C13 3.67157 12.3284 3 11.5 3H4.5ZM12.1467 12.8538L8.49501 9.2021C8.22164 8.92873 7.77843 8.92873 7.50506 9.2021L3.85333 12.8538C4.04914 12.9475 4.26844 13 4.5 13H11.5C11.7316 13 11.9509 12.9475 12.1467 12.8538Z" fill="currentColor"/> </svg></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With secondary</span><div class="bnr bnr--light"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--secondary" type="button">Secondary</button><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">No dismiss</span><div class="bnr bnr--light"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button></div></div></div></div><div class="cell"><span class="rl">No CTA</span><div class="bnr bnr--light"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div></div>
+<h2>Dark</h2>
+<div class="panel panel--dark"><div class="cell"><span class="rl">Default</span><div class="bnr bnr--dark"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With image</span><div class="bnr bnr--dark"><div class="bnr__lead bnr__lead--image"></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With icon</span><div class="bnr bnr--dark"><div class="bnr__lead bnr__lead--icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M11.5 5.50207C11.5 6.0555 11.0514 6.50414 10.4979 6.50414C9.94449 6.50414 9.49585 6.0555 9.49585 5.50207C9.49585 4.94864 9.94449 4.5 10.4979 4.5C11.0514 4.5 11.5 4.94864 11.5 5.50207ZM2 4.5C2 3.11929 3.11929 2 4.5 2H11.5C12.8807 2 14 3.11929 14 4.5V11.5C14 12.8807 12.8807 14 11.5 14H4.5C3.11929 14 2 12.8807 2 11.5V4.5ZM4.5 3C3.67157 3 3 3.67157 3 4.5V11.5C3 11.7316 3.05248 11.9509 3.1462 12.1467L6.79796 8.49499C7.46185 7.8311 8.53823 7.8311 9.20212 8.49499L12.8538 12.1467C12.9475 11.9509 13 11.7316 13 11.5V4.5C13 3.67157 12.3284 3 11.5 3H4.5ZM12.1467 12.8538L8.49501 9.2021C8.22164 8.92873 7.77843 8.92873 7.50506 9.2021L3.85333 12.8538C4.04914 12.9475 4.26844 13 4.5 13H11.5C11.7316 13 11.9509 12.9475 12.1467 12.8538Z" fill="currentColor"/> </svg></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With secondary</span><div class="bnr bnr--dark"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--secondary" type="button">Secondary</button><button class="bnr__btn bnr__btn--primary" type="button">Primary</button><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">No dismiss</span><div class="bnr bnr--dark"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__btn bnr__btn--primary" type="button">Primary</button></div></div></div></div><div class="cell"><span class="rl">No CTA</span><div class="bnr bnr--dark"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Banner title</div><div class="bnr__body">Supporting text that explains the message in a sentence or two.</div></div><div class="bnr__buttons"><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div></div>
+<h2>Side pane variant</h2>
+<div class="when" style="margin-bottom:16px">Compact 244px banner for the narrow side pane — radius 16, 10px padding, body-small (12/16) type, 36px lead, and a small 12px dismiss. No CTA buttons.</div>
+<div class="panel panel--light" style="align-items:flex-start"><div class="cell"><span class="rl">With image</span><div class="bnr bnr--light bnr--sp"><div class="bnr__lead bnr__lead--image"></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Main question or action</div><div class="bnr__body">Here is more about the consequences of the main action, if details are needed.</div></div><div class="bnr__buttons"><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With icon</span><div class="bnr bnr--light bnr--sp"><div class="bnr__lead bnr__lead--icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M11.5 5.50207C11.5 6.0555 11.0514 6.50414 10.4979 6.50414C9.94449 6.50414 9.49585 6.0555 9.49585 5.50207C9.49585 4.94864 9.94449 4.5 10.4979 4.5C11.0514 4.5 11.5 4.94864 11.5 5.50207ZM2 4.5C2 3.11929 3.11929 2 4.5 2H11.5C12.8807 2 14 3.11929 14 4.5V11.5C14 12.8807 12.8807 14 11.5 14H4.5C3.11929 14 2 12.8807 2 11.5V4.5ZM4.5 3C3.67157 3 3 3.67157 3 4.5V11.5C3 11.7316 3.05248 11.9509 3.1462 12.1467L6.79796 8.49499C7.46185 7.8311 8.53823 7.8311 9.20212 8.49499L12.8538 12.1467C12.9475 11.9509 13 11.7316 13 11.5V4.5C13 3.67157 12.3284 3 11.5 3H4.5ZM12.1467 12.8538L8.49501 9.2021C8.22164 8.92873 7.77843 8.92873 7.50506 9.2021L3.85333 12.8538C4.04914 12.9475 4.26844 13 4.5 13H11.5C11.7316 13 11.9509 12.9475 12.1467 12.8538Z" fill="currentColor"/> </svg></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Main question or action</div><div class="bnr__body">Here is more about the consequences of the main action, if details are needed.</div></div><div class="bnr__buttons"><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">Text only</span><div class="bnr bnr--light bnr--sp"><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Main question or action</div><div class="bnr__body">Here is more about the consequences of the main action, if details are needed.</div></div><div class="bnr__buttons"><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div></div>
+<div class="panel panel--dark" style="align-items:flex-start"><div class="cell"><span class="rl">With image</span><div class="bnr bnr--dark bnr--sp"><div class="bnr__lead bnr__lead--image"></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Main question or action</div><div class="bnr__body">Here is more about the consequences of the main action, if details are needed.</div></div><div class="bnr__buttons"><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div><div class="cell"><span class="rl">With icon</span><div class="bnr bnr--dark bnr--sp"><div class="bnr__lead bnr__lead--icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M11.5 5.50207C11.5 6.0555 11.0514 6.50414 10.4979 6.50414C9.94449 6.50414 9.49585 6.0555 9.49585 5.50207C9.49585 4.94864 9.94449 4.5 10.4979 4.5C11.0514 4.5 11.5 4.94864 11.5 5.50207ZM2 4.5C2 3.11929 3.11929 2 4.5 2H11.5C12.8807 2 14 3.11929 14 4.5V11.5C14 12.8807 12.8807 14 11.5 14H4.5C3.11929 14 2 12.8807 2 11.5V4.5ZM4.5 3C3.67157 3 3 3.67157 3 4.5V11.5C3 11.7316 3.05248 11.9509 3.1462 12.1467L6.79796 8.49499C7.46185 7.8311 8.53823 7.8311 9.20212 8.49499L12.8538 12.1467C12.9475 11.9509 13 11.7316 13 11.5V4.5C13 3.67157 12.3284 3 11.5 3H4.5ZM12.1467 12.8538L8.49501 9.2021C8.22164 8.92873 7.77843 8.92873 7.50506 9.2021L3.85333 12.8538C4.04914 12.9475 4.26844 13 4.5 13H11.5C11.7316 13 11.9509 12.9475 12.1467 12.8538Z" fill="currentColor"/> </svg></div><div class="bnr__main"><div class="bnr__text"><div class="bnr__title">Main question or action</div><div class="bnr__body">Here is more about the consequences of the main action, if details are needed.</div></div><div class="bnr__buttons"><button class="bnr__dismiss" type="button" aria-label="Dismiss" data-action="dismiss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" fill="currentColor"/> </svg></button></div></div></div></div></div>
+<h2>Usage</h2>
+<div class="when"><strong>When to use.</strong> Surface a contextual message tied to the current view — a prompt to connect data, a status confirmation, or a tip — without interrupting the flow. Pair a clear title with a one-line body and at most one primary action.</div>
+<div class="usage">
+<div class="usage__col usage__col--do"><h3>Do</h3><ul>
+<li>Lead with a scannable title (Body Medium Strong).</li>
+<li>Keep to one primary action; add Secondary only when needed.</li>
+<li>Offer dismiss for non-critical messages.</li>
+<li>Use the Dark theme on dark surfaces.</li>
+</ul></div>
+<div class="usage__col usage__col--dont"><h3>Don't</h3><ul>
+<li>Stack multiple banners or use for blocking errors (use a Dialog).</li>
+<li>Write more than two lines of body copy.</li>
+<li>Use more than two action buttons.</li>
+<li>Mix themes against the wrong background.</li>
+</ul></div>
+</div></div><script>
+document.querySelectorAll('[data-action="dismiss"]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var bnr = b.closest('.bnr');
+    if (!bnr) return;
     bnr.style.maxHeight = bnr.offsetHeight + 'px';
-    requestAnimationFrame(function() {
-      bnr.classList.add('bnr--dismissed');
-    });
+    requestAnimationFrame(function () { bnr.classList.add('bnr--dismissed'); });
   });
 });
-
-document.querySelectorAll('[data-action="connect"]').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var bnr = btn.closest('.bnr');
-    bnr.style.maxHeight = bnr.offsetHeight + 'px';
-    btn.textContent = 'Connected!';
-    btn.style.background = '#dff6dd';
-    btn.style.color = '#107C10';
-    btn.style.pointerEvents = 'none';
-    setTimeout(function() {
-      requestAnimationFrame(function() {
-        bnr.classList.add('bnr--dismissed');
-      });
-    }, 1500);
-  });
-});
-</script>
-<!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="sourceCard.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Source Card</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Compact connector card for the Apps & Sources view. Shows a service icon, name, ...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a></div></div><!-- /INJECT:RELATED --></body></html>
+</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="messageBar.html"><div class="bp-related__card-top"><span class="bp-related__card-name">MessageBar</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Inline status notification at the page or section level. Four intents — Informat...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a><a class="bp-related__card" href="dialog.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Dialog</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Modal that interrupts the workflow for a critical action requiring explicit ackn...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a></div></div><!-- /INJECT:RELATED --></body></html>

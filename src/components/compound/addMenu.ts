@@ -46,9 +46,9 @@ export const addMenuHeader = {
   /** Icon size */
   iconSize: '20px',
   /** Label font size — body-medium (14px) */
-  fontSize: '14px',
+  fontSize: 'var(--f-typography-fontSize-14)',
   /** Label font weight */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Label line height */
   lineHeight: '20px',
   /** Label color */
@@ -101,9 +101,9 @@ export const addMenuItem = {
   /** Icon size */
   iconSize: '20px',
   /** Font size — body-medium (14px) */
-  fontSize: '14px',
+  fontSize: 'var(--f-typography-fontSize-14)',
   /** Font weight */
-  fontWeight: '400',
+  fontWeight: 'var(--f-typography-fontWeight-regular)',
   /** Line height */
   lineHeight: '20px',
   /** Rest background — transparent */

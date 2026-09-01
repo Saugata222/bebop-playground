@@ -11,6 +11,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { renderStatesMatrix, statesMatrixCss, type RowSpec, type StateCol } from './_statesMatrix.js';
+import { tokensCSS } from './_tokens';
 
 const iconsDir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'src', 'components', 'icons');
 function readIcon(name: string): string {
@@ -28,8 +30,9 @@ const checkIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xm
 // ─── CSS ────────────────────────────────────────────────────
 
 let css = '';
+css += tokensCSS;
 css += '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n';
-css += "html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; background: #f5f5f5; }\n";
+css += "html, body { height: 100%; font-family: var(--f-typography-fontFamily-functional); color: #242424; background: #f5f5f5; }\n";
 css += '.page { padding: 40px; display: flex; flex-direction: column; gap: 48px; }\n';
 css += 'h2 { font-size: 14px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }\n';
 css += '.demo { background: #fff; border-radius: 16px; padding: 32px; border: 1px solid #e8e8e8; display: inline-flex; gap: 24px; flex-wrap: wrap; }\n';
@@ -37,8 +40,8 @@ css += '.state-cell { display: flex; flex-direction: column; gap: 8px; }\n';
 css += '.state-label { font-size: 11px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.6px; }\n';
 
 // Source card
-css += ".src-card { display: flex; flex-direction: column; width: 180px; height: 84px; padding: 12px 20px; border: 1px solid #dedede; border-radius: 20px; background: #fff; font-family: 'Segoe UI', sans-serif; cursor: default; transition: border-color 0.15s, opacity 0.2s; }\n";
-css += '.src-card:hover { border-color: #c4c4c4; }\n';
+css += ".src-card { display: flex; flex-direction: column; width: 180px; height: 84px; padding: 12px 20px; border: 1px solid #dedede; border-radius: 20px; background: #fff; font-family: var(--f-typography-fontFamily-functional); cursor: default; transition: border-color 0.15s, opacity 0.2s; }\n";
+css += '.src-card:hover, .src-card.is-hover { border-color: #c4c4c4; }\n';
 css += '.src-card__inner { display: flex; align-items: flex-start; justify-content: space-between; width: 100%; }\n';
 css += '.src-card__left { display: flex; flex-direction: column; gap: 8px; }\n';
 css += '.src-card__icon { width: 32px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }\n';
@@ -62,6 +65,7 @@ css += '.src-card__toggle--off::after { background: #6f6f6f; left: 2px; }\n';
 // Disabled
 css += '.src-card--disabled { opacity: 0.4; }\n';
 css += '.src-card--disabled .src-card__name { color: #929292; }\n';
+css += statesMatrixCss + '\n';
 
 // ─── Helpers ────────────────────────────────────────────────
 
@@ -80,6 +84,30 @@ const checkEl = '<span class="src-card__check">' + checkIco + '</span>';
 const toggleOn = '<div class="src-card__toggle src-card__toggle--on"></div>';
 const toggleOff = '<div class="src-card__toggle src-card__toggle--off"></div>';
 
+function buildStatesMatrix(): string {
+  const rows: RowSpec[] = [
+    { label: 'Add',      meta: { action: addBtn,  disabled: false } },
+    { label: 'Added',    meta: { action: checkEl, disabled: false } },
+    { label: 'Enabled',  meta: { action: toggleOn,  disabled: false } },
+    { label: 'Disabled', meta: { action: toggleOff, disabled: true } },
+  ];
+  const cols: StateCol[] = [
+    { label: 'Rest',  cls: '' },
+    { label: 'Hover', cls: 'is-hover' },
+  ];
+  return renderStatesMatrix({
+    title: 'States Matrix',
+    subtitle: 'All 4 logical states × hover affordance.',
+    rows,
+    cols,
+    render: (rowSpec, col) => {
+      const m = rowSpec.meta as { action: string; disabled: boolean };
+      const extra = (col.cls ? ' ' + col.cls : '') + (m.disabled ? ' src-card--disabled' : '');
+      return card(serviceNowIco, 'ServiceNow', m.action, extra);
+    },
+  });
+}
+
 // ─── HTML ───────────────────────────────────────────────────
 
 let html = '<!DOCTYPE html>';
@@ -87,11 +115,14 @@ html += '<html lang="en">';
 html += '<head>';
 html += '<meta charset="utf-8"/>';
 html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
-html += '<title>Source Card \u2014 Bebop Design System Preview</title>';
+html += '<title>Source Card \u2014 M365 Copilot Design System Preview</title>';
 html += '<style>' + css + '</style>';
 html += '</head>';
 html += '<body>';
 html += '<div class="page">';
+
+// ─── Stage ───
+html += '<div class="bp-stage"><div class="bp-stage__canvas">' + card(serviceNowIco, 'ServiceNow', addBtn) + '</div></div>';
 
 // Section 1: Static states
 html += '<div>';
@@ -126,13 +157,14 @@ html += '</div>';
 html += '<div>';
 html += '<h2>Various Sources</h2>';
 html += '<div class="demo">';
-html += card('<img src="../../src/components/icons/jira-20-color.png" alt="Jira" />', 'Jira', toggleOn);
+html += card('<img src="../../src/components/icons/jira-logo.png" alt="Jira" />', 'Jira', toggleOn);
 html += card(notionIco, 'Notion', addBtn);
 html += card(hubspotIco, 'Hubspot', checkEl);
 html += '</div>';
 html += '</div>';
 
 html += '</div>'; // page
+html += buildStatesMatrix();
 
 // Script
 html += '<script>';

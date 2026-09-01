@@ -13,6 +13,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { renderStatesMatrix, statesMatrixCss, type RowSpec, type StateCol } from './_statesMatrix.js';
+import { tokensCSS } from './_tokens';
 
 // ─── Icons ──────────────────────────────────────────────────
 
@@ -21,9 +23,10 @@ const moreHorizontalIco = '<svg width="20" height="20" viewBox="0 0 20 20" fill=
 // ─── CSS ────────────────────────────────────────────────────
 
 let css = '';
+css += tokensCSS;
 css += '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }';
 css += '\n';
-css += "html, body { height: 100%; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; color: #242424; background: #f5f5f5; }";
+css += "html, body { height: 100%; font-family: var(--f-typography-fontFamily-functional); color: #242424; background: #f5f5f5; }";
 css += '\n';
 css += '.page { padding: 40px; display: flex; flex-direction: column; gap: 48px; }';
 css += '\n';
@@ -39,7 +42,7 @@ css += '.sc { display: flex; align-items: center; gap: 8px; height: 32px; flex-w
 css += '\n';
 
 // ─── Chip ───
-css += ".sc__chip { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 12px; border-radius: 12px; border: 1px solid #dedede; background: transparent; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s, border-color 0.1s; outline: none; white-space: nowrap; }";
+css += ".sc__chip { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 12px; border-radius: 12px; border: 1px solid #dedede; background: transparent; color: #242424; font-family: var(--f-typography-fontFamily-functional); font-size: 14px; font-weight: 400; line-height: 1.4; cursor: pointer; transition: background 0.1s, border-color 0.1s; outline: none; white-space: nowrap; }";
 css += '\n';
 css += '.sc__chip:hover { background: rgba(36,36,36,0.04); border-color: #c4c4c4; }';
 css += '\n';
@@ -74,6 +77,37 @@ css += '.sc__overflow--hover { background: rgba(36,36,36,0.04); border-color: #c
 css += '\n';
 css += '.sc__overflow--focus { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }';
 css += '\n';
+css += statesMatrixCss;
+css += '\n';
+
+// ─── States Matrix ──────────────────────────────────────────
+
+function buildStatesMatrix(): string {
+  const rows: RowSpec[] = [
+    { label: 'Chip',     meta: { kind: 'chip' } },
+    { label: 'Overflow', meta: { kind: 'overflow' } },
+  ];
+  const cols: StateCol[] = [
+    { label: 'Rest',  cls: '' },
+    { label: 'Hover', cls: 'hover' },
+    { label: 'Focus', cls: 'focus' },
+  ];
+  return renderStatesMatrix({
+    title: 'States Matrix',
+    subtitle: 'Every visual state of suggestion chips at rest. Reference, not interactive.',
+    rows,
+    cols,
+    render: (rowSpec, col) => {
+      const m = rowSpec.meta as { kind: 'chip' | 'overflow' };
+      if (m.kind === 'chip') {
+        const extra = col.cls ? ' sc__chip--' + col.cls : '';
+        return '<button class="sc__chip' + extra + '">Get to know Copilot</button>';
+      }
+      const extra = col.cls ? ' sc__overflow--' + col.cls : '';
+      return '<button class="sc__overflow' + extra + '" aria-label="More">' + moreHorizontalIco + '</button>';
+    },
+  });
+}
 
 // ─── HTML ───────────────────────────────────────────────────
 
@@ -82,11 +116,19 @@ html += '<html lang="en">';
 html += '<head>';
 html += '<meta charset="utf-8"/>';
 html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>';
-html += '<title>Suggestion Chips \u2014 Bebop Design System Preview</title>';
+html += '<title>Suggestion Chips \u2014 M365 Copilot Design System Preview</title>';
 html += '<style>' + css + '</style>';
 html += '</head>';
 html += '<body>';
 html += '<div class="page">';
+
+// ─── Stage ───
+html += '<div class="bp-stage"><div class="bp-stage__canvas"><div class="sc">';
+html += '<button class="sc__chip">Get to know Copilot</button>';
+html += '<button class="sc__chip">Prepare for what\u2019s ahead</button>';
+html += '<button class="sc__chip">Create something inspiring</button>';
+html += '<button class="sc__overflow" aria-label="More suggestions">' + moreHorizontalIco + '</button>';
+html += '</div></div></div>';
 
 // ─── Section 1: Full Component (interactive) ───
 html += '<div>';
@@ -201,6 +243,7 @@ html += '</div>';
 html += '</div>';
 
 html += '</div>'; // page
+html += buildStatesMatrix();
 html += '</body>';
 html += '</html>';
 

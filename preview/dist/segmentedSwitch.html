@@ -1,0 +1,276 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Segmented Switch Preview</title><style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+h2 { font-size: 14px; font-weight: 600; margin: 32px 0 12px; }
+.hint { font-size: 13px; color: #6f6f6f; text-align: center; margin-bottom: 28px; }
+.wrap { max-width: 900px; margin: 0 auto; }
+.rl { font-size: 10px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: block; }
+.slot { background: #fcfcfc; border-radius: 16px; padding: 40px; display: flex; justify-content: center; margin-bottom: 16px; }
+.stack { display: flex; flex-direction: column; gap: 20px; }
+
+/* ─── Segmented switch ─── */
+.ss { position: relative; display: inline-flex; align-items: stretch; gap: 4px; padding: 4px; background: rgba(0,0,0,0.05); border-radius: 12px; }
+.ss--equal .ss__seg { flex: 1 0 0; }
+.ss__seg {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  min-width: 0; padding: 6px 12px; border: none; border-radius: 12px; background: transparent; cursor: pointer;
+  color: #5d5d5d; transition: color 0.15s;
+}
+.ss__seg--icon { padding: 6px; }
+
+/* Mode switcher: active segment shows its label (expands to 1fr), inactive
+   segments collapse to a 32px icon-only square. */
+.ss--mode .ss__seg { flex: 0 0 32px; width: 32px; padding: 6px; }
+.ss--mode .ss__seg .ss__label { display: none; }
+.ss--mode .ss__seg--selected { flex: 1 1 auto; width: auto; padding: 6px 12px; }
+.ss--mode .ss__seg--selected .ss__label { display: inline-grid; }
+.ss--mode .ss__seg--selected .ss__icon { display: none; }
+.ss__seg:hover:not(.ss__seg--selected) { color: #242424; }
+.ss__seg--selected { color: #242424; }
+.ss__icon { display: inline-flex; width: 20px; height: 20px; flex-shrink: 0; }
+.ss__icon svg { width: 20px; height: 20px; display: block; }
+
+/* Ghost/real label so semibold selection doesn't reflow */
+.ss__label { position: relative; display: inline-grid; }
+.ss__ghost { visibility: hidden; font-size: 14px; font-weight: 625; line-height: 20px; grid-area: 1 / 1; }
+.ss__real { grid-area: 1 / 1; font-size: 14px; font-weight: 420; line-height: 20px; white-space: nowrap; }
+.ss__seg--selected .ss__real { font-weight: 625; }
+
+/* Sliding white indicator */
+.ss__indicator {
+  position: absolute; z-index: 0; top: 4px; left: 4px; bottom: 4px;
+  background: #fff; border: 1px solid #dedede; border-radius: 12px;
+  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.05);
+  transition: transform 0.22s cubic-bezier(0.2,0,0,1), width 0.22s cubic-bezier(0.2,0,0,1);
+}
+
+/* ─── Dark theme ─── */
+.ss--dark { background: rgba(255,255,255,0.06); }
+.ss--dark .ss__seg { color: #adadad; }
+.ss--dark .ss__seg:hover:not(.ss__seg--selected) { color: #fff; }
+.ss--dark .ss__seg--selected { color: #fff; }
+.ss--dark .ss__indicator { background: #3b3b3b; border-color: rgba(255,255,255,0.08); }
+.dark-slot { background: #242424; }
+
+/* ─── Usage ─── */
+.when { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 16px; margin: 16px 0 12px; font-size: 13px; line-height: 1.6; color: #5d5d5d; }
+.when strong { color: #242424; font-weight: 600; }
+.usage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.usage__col { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 16px; }
+.usage__col h3 { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.usage__col--do h3 { color: #0f7b0f; }
+.usage__col--dont h3 { color: #b10e1c; }
+.usage__col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.usage__col li { font-size: 12px; line-height: 1.5; color: #5d5d5d; padding-left: 16px; position: relative; }
+.usage__col li::before { content: ''; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; }
+.usage__col--do li::before { background: #0f7b0f; }
+.usage__col--dont li::before { background: #b10e1c; }
+
+/* ─── Bebop page overrides (injected by _inject.ts) ─── */
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
+
+/* Page wrapper */
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
+.bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
+.bp-header__tag--compound { background: #ebebeb; color: #242424; }
+.bp-header__tag--primitive { background: #f5f5f5; color: #6f6f6f; }
+.bp-header__desc { font-size: 15px; color: #6f6f6f; line-height: 1.6; max-width: 600px; margin-bottom: 20px; }
+.bp-header__states { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
+.bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
+
+/* Content area — override all wrapper variants */
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+
+/* Headings */
+h1 { display: none !important; }
+.hint, p.hint { display: none !important; }
+h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
+h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
+/* Rows and cells */
+.row { gap: 24px !important; margin-bottom: 20px !important; }
+.cell { gap: 8px !important; }
+.rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+
+/* ─── Related components ─── */
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+.bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
+.bp-related__card:hover { background: #fcfcfc; border-color: #dedede; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.bp-related__card-top { display: flex; align-items: center; gap: 8px; }
+.bp-related__card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
+.bp-related__card-arrow { width: 16px; height: 16px; color: #929292; transition: color 0.1s, transform 0.15s; flex-shrink: 0; }
+.bp-related__card:hover .bp-related__card-arrow { color: #242424; transform: translateX(2px); }
+.bp-related__card-desc { font-size: 13px; color: #6f6f6f; line-height: 1.5; }
+.bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
+
+/* ─── Back bar (sticky, frosted) ─── */
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #6f6f6f; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
+
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Segmented Switch</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Track-based control with 2–5 mutually exclusive segments and a sliding white indicator — Copilot’s Chat/Cowork/Code switcher. Equal and Mixed grid width, label + icon-only segments, light and dark. Semibold-on-select with a ghost node to prevent reflow.</p><div class="bp-header__states"><span class="bp-header__state">2–5 segments</span><span class="bp-header__state">Equal</span><span class="bp-header__state">Mixed</span><span class="bp-header__state">Light</span><span class="bp-header__state">Dark</span></div></div><!-- /INJECT:HEADER --><div class="bp-stage"><div class="bp-stage__canvas"><div style="width:260px"><div class="ss ss--light ss--equal" id="ss0" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__label"><span class="ss__ghost">Chat</span><span class="ss__real">Chat</span></span></button><button class="ss__seg" data-i="1"><span class="ss__label"><span class="ss__ghost">Cowork</span><span class="ss__real">Cowork</span></span></button><button class="ss__seg" data-i="2"><span class="ss__label"><span class="ss__ghost">Code</span><span class="ss__real">Code</span></span></button></div></div></div><div class="bp-controls"><div class="bp-control"><span class="bp-lbl">Theme</span><div class="bp-seg" data-seg="theme"><button type="button" data-ctrl="theme" data-value="light" class="is-active">Light</button><button type="button" data-ctrl="theme" data-value="dark">Dark</button></div></div></div></div>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Nav mode switcher</span><span class="bp-section__hint">Active mode shows its label; the others collapse to icons</span></div><div class="bp-card" style="padding:40px;display:flex;justify-content:center"><div style="width:256px"><div class="ss ss--light ss--mode" id="ss1" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C8.72679 18 7.49591 17.7018 6.38669 17.1393L6.266 17.075L2.62109 17.9851C2.31127 18.0625 2.02622 17.8369 2.00131 17.5438L2.00114 17.4624L2.01493 17.3787L2.925 13.735L2.86169 13.6153C2.4066 12.7186 2.12433 11.7422 2.03275 10.7283L2.00738 10.3463L2 10C2 5.58172 5.58172 2 10 2ZM10 3C6.13401 3 3 6.13401 3 10C3 11.217 3.31054 12.3878 3.89352 13.4249C3.94046 13.5084 3.9621 13.603 3.95692 13.6973L3.94274 13.7912L3.187 16.812L6.21104 16.0583C6.27294 16.0429 6.33662 16.0396 6.39873 16.0479L6.4903 16.0691L6.57701 16.1075C7.61362 16.6898 8.7837 17 10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3ZM10.5 11C10.7761 11 11 11.2239 11 11.5C11 11.7455 10.8231 11.9496 10.5899 11.9919L10.5 12H7.5C7.22386 12 7 11.7761 7 11.5C7 11.2545 7.17688 11.0504 7.41012 11.0081L7.5 11H10.5ZM12.5 8C12.7761 8 13 8.22386 13 8.5C13 8.74546 12.8231 8.94961 12.5899 8.99194L12.5 9H7.5C7.22386 9 7 8.77614 7 8.5C7 8.25454 7.17688 8.05039 7.41012 8.00806L7.5 8H12.5Z" fill="currentColor"/></svg></span><span class="ss__label"><span class="ss__ghost">Chat</span><span class="ss__real">Chat</span></span></button><button class="ss__seg" data-i="1"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3C9.17157 3 8.5 3.67157 8.5 4.5C8.5 5.32843 9.17157 6 10 6C10.8284 6 11.5 5.32843 11.5 4.5C11.5 3.67157 10.8284 3 10 3ZM7.5 4.5C7.5 3.11929 8.61929 2 10 2C11.3807 2 12.5 3.11929 12.5 4.5C12.5 5.88071 11.3807 7 10 7C8.61929 7 7.5 5.88071 7.5 4.5ZM15.5 4C14.9477 4 14.5 4.44772 14.5 5C14.5 5.55228 14.9477 6 15.5 6C16.0523 6 16.5 5.55228 16.5 5C16.5 4.44772 16.0523 4 15.5 4ZM13.5 5C13.5 3.89543 14.3954 3 15.5 3C16.6046 3 17.5 3.89543 17.5 5C17.5 6.10457 16.6046 7 15.5 7C14.3954 7 13.5 6.10457 13.5 5ZM3.5 5C3.5 4.44772 3.94772 4 4.5 4C5.05228 4 5.5 4.44772 5.5 5C5.5 5.55228 5.05228 6 4.5 6C3.94772 6 3.5 5.55228 3.5 5ZM4.5 3C3.39543 3 2.5 3.89543 2.5 5C2.5 6.10457 3.39543 7 4.5 7C5.60457 7 6.5 6.10457 6.5 5C6.5 3.89543 5.60457 3 4.5 3ZM5.09952 14.9976C5.06655 14.9992 5.03337 15 5 15C3.89543 15 3 14.1046 3 13V9.25C3 9.11193 3.11193 9 3.25 9H5.01373C5.05433 8.63279 5.18329 8.29221 5.37889 8H3.25C2.55964 8 2 8.55964 2 9.25V13C2 14.6569 3.34315 16 5 16C5.13712 16 5.27209 15.9908 5.40434 15.973C5.27099 15.6628 5.16813 15.3364 5.09952 14.9976ZM14.5957 15.973C14.7279 15.9908 14.8629 16 15 16C16.6569 16 18 14.6569 18 13V9.25C18 8.55964 17.4404 8 16.75 8H14.6211C14.8167 8.29221 14.9457 8.63279 14.9863 9H16.75C16.8881 9 17 9.11193 17 9.25V13C17 14.1046 16.1046 15 15 15C14.9666 15 14.9334 14.9992 14.9005 14.9976C14.8319 15.3364 14.729 15.6628 14.5957 15.973ZM7.25 8C6.55964 8 6 8.55964 6 9.25V14C6 16.2091 7.79086 18 10 18C12.2091 18 14 16.2091 14 14V9.25C14 8.55964 13.4404 8 12.75 8H7.25ZM7 9.25C7 9.11193 7.11193 9 7.25 9H12.75C12.8881 9 13 9.11193 13 9.25V14C13 15.6569 11.6569 17 10 17C8.34315 17 7 15.6569 7 14V9.25Z" fill="currentColor"/></svg></span><span class="ss__label"><span class="ss__ghost">Cowork</span><span class="ss__real">Cowork</span></span></button><button class="ss__seg" data-i="2"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.9667 3.67962C13.0658 3.42189 12.9372 3.13259 12.6795 3.03346C12.4218 2.93433 12.1325 3.06291 12.0333 3.32065L7.03334 16.3206C6.93421 16.5784 7.06279 16.8677 7.32052 16.9668C7.57826 17.0659 7.86756 16.9374 7.96669 16.6796L12.9667 3.67962ZM5.8254 6.1205C6.03506 6.30021 6.05934 6.61586 5.87963 6.82553L3.15854 10.0001L5.87963 13.1747C6.05934 13.3844 6.03506 13.7 5.8254 13.8798C5.61573 14.0595 5.30008 14.0352 5.12037 13.8255L2.12037 10.3255C1.95988 10.1383 1.95988 9.86198 2.12037 9.67474L5.12037 6.17474C5.30008 5.96507 5.61573 5.94079 5.8254 6.1205ZM14.1746 14.3797C13.9649 14.2 13.9407 13.8844 14.1204 13.6747L16.8415 10.5001L14.1204 7.32551C13.9407 7.11585 13.9649 6.8002 14.1746 6.62048C14.3843 6.44077 14.6999 6.46505 14.8796 6.67472L17.8796 10.1747C18.0401 10.362 18.0401 10.6383 17.8796 10.8255L14.8796 14.3255C14.6999 14.5352 14.3843 14.5595 14.1746 14.3797Z" fill="currentColor"/></svg></span><span class="ss__label"><span class="ss__ghost">Code</span><span class="ss__real">Code</span></span></button><button class="ss__seg" data-i="3"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5.5C11.4477 5.5 11 5.94772 11 6.5C11 7.05228 11.4477 7.5 12 7.5C12.5523 7.5 13 7.05228 13 6.5C13 5.94772 12.5523 5.5 12 5.5ZM7 6.5C7 5.94772 7.44772 5.5 8 5.5C8.55228 5.5 9 5.94772 9 6.5C9 7.05228 8.55228 7.5 8 7.5C7.44772 7.5 7 7.05228 7 6.5ZM10.5 2.5C10.5 2.22386 10.2761 2 10 2C9.72386 2 9.5 2.22386 9.5 2.5V3H6.5C5.67157 3 5 3.67157 5 4.5V8.5C5 9.32843 5.67157 10 6.5 10H13.5C14.3284 10 15 9.32843 15 8.5V4.5C15 3.67157 14.3284 3 13.5 3H10.5V2.5ZM6.5 4H13.5C13.7761 4 14 4.22386 14 4.5V8.5C14 8.77614 13.7761 9 13.5 9H6.5C6.22386 9 6 8.77614 6 8.5V4.5C6 4.22386 6.22386 4 6.5 4ZM10.25 17.9984C12.8656 17.9649 14.4449 17.4031 15.3718 16.5574C16.247 15.7588 16.4607 14.7813 16.4947 14.0019H16.5V13.3124C16.5 12.3131 15.69 11.5031 14.6907 11.5031H11.5V11.5H8.5V11.5031H5.3093C4.31005 11.5031 3.5 12.3131 3.5 13.3124V14.0019H3.50533C3.53931 14.7813 3.75297 15.7588 4.6282 16.5574C5.55506 17.4031 7.13442 17.9649 9.75 17.9984V18H10.25V17.9984ZM5.3093 12.5031H14.6907C15.1377 12.5031 15.5 12.8654 15.5 13.3124V13.75C15.5 14.4396 15.3688 15.2064 14.6978 15.8187C14.0103 16.446 12.6605 17 10 17C7.33946 17 5.98969 16.446 5.30224 15.8187C4.63123 15.2064 4.5 14.4396 4.5 13.75V13.3124C4.5 12.8654 4.86233 12.5031 5.3093 12.5031Z" fill="currentColor"/></svg></span><span class="ss__label"><span class="ss__ghost">Autopilot</span><span class="ss__real">Autopilot</span></span></button></div></div></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Segment count & grid width</span></div><div class="bp-card" style="padding:28px 32px"><div class="stack"><div><span class="rl">2 · Equal</span><div style="width:180px"><div class="ss ss--light ss--equal" id="ss2" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__label"><span class="ss__ghost">Home</span><span class="ss__real">Home</span></span></button><button class="ss__seg" data-i="1"><span class="ss__label"><span class="ss__ghost">Agents</span><span class="ss__real">Agents</span></span></button></div></div></div><div><span class="rl">3 · Equal</span><div style="width:300px"><div class="ss ss--light ss--equal" id="ss3" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__label"><span class="ss__ghost">Chat</span><span class="ss__real">Chat</span></span></button><button class="ss__seg" data-i="1"><span class="ss__label"><span class="ss__ghost">Cowork</span><span class="ss__real">Cowork</span></span></button><button class="ss__seg" data-i="2"><span class="ss__label"><span class="ss__ghost">Code</span><span class="ss__real">Code</span></span></button></div></div></div><div><span class="rl">3 · Mixed (label + icons)</span><div class="ss ss--light ss--mixed" id="ss4" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg ss__seg--icon" data-i="1"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span></button><button class="ss__seg ss__seg--icon" data-i="2"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span></button></div></div><div><span class="rl">4 · Equal</span><div style="width:360px"><div class="ss ss--light ss--equal" id="ss5" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__label"><span class="ss__ghost">Chat</span><span class="ss__real">Chat</span></span></button><button class="ss__seg" data-i="1"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg" data-i="2"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg" data-i="3"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button></div></div></div><div><span class="rl">4 · Mixed</span><div class="ss ss--light ss--mixed" id="ss6" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg ss__seg--icon" data-i="1"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span></button><button class="ss__seg ss__seg--icon" data-i="2"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span></button><button class="ss__seg ss__seg--icon" data-i="3"><span class="ss__icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span></button></div></div><div><span class="rl">5 · Equal</span><div style="width:420px"><div class="ss ss--light ss--equal" id="ss7" data-selected="0"><span class="ss__indicator"></span><button class="ss__seg ss__seg--selected" data-i="0"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg" data-i="1"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg" data-i="2"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg" data-i="3"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button><button class="ss__seg" data-i="4"><span class="ss__label"><span class="ss__ghost">Label</span><span class="ss__real">Label</span></span></button></div></div></div></div></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Specs</span></div><div class="bp-specs"><div class="bp-spec"><div class="bp-spec__k">Track padding</div><div class="bp-spec__v">4 px</div></div><div class="bp-spec"><div class="bp-spec__k">Segment radius</div><div class="bp-spec__v">12 px</div></div><div class="bp-spec"><div class="bp-spec__k">Indicator</div><div class="bp-spec__v">#fff · 1px #dedede</div></div><div class="bp-spec"><div class="bp-spec__k">Slide</div><div class="bp-spec__v">0.22s cubic-bezier</div></div><div class="bp-spec"><div class="bp-spec__k">Segments</div><div class="bp-spec__v">2–5</div></div><div class="bp-spec"><div class="bp-spec__k">Selected weight</div><div class="bp-spec__v">625</div></div><div class="bp-spec"><div class="bp-spec__k">Icon</div><div class="bp-spec__v">20 px</div></div><div class="bp-spec"><div class="bp-spec__k">Dark track</div><div class="bp-spec__v">rgba(255,255,255,0.06)</div></div></div></section>
+<section class="bp-section"><div class="bp-section__head"><span class="bp-section__title">Usage guidance</span></div><div class="bp-usage"><div class="bp-usage__card"><div class="bp-usage__sec"><h4>When to use</h4><p>A segment switch toggles between 2–5 mutually exclusive states of a single setting or mode — in Copilot, the Chat / Cowork / Code switcher. The continuous track reinforces toggling within one control; use Tabs instead when each option reveals a different content panel.</p></div></div></div><div style="height:12px"></div><div class="bp-guidance"><div class="bp-guide bp-guide--do"><div class="bp-guide__head"><span class="bp-guide__dot"></span>Do</div><ul><li>Keep exactly one segment selected; slide the indicator on change.</li><li>Reserve the semibold width (ghost node) so selection doesn't reflow.</li><li>Use Equal width for peer options; Mixed for a label + icon actions.</li><li>Limit to 2–5 short segments.</li></ul></div><div class="bp-guide bp-guide--dont"><div class="bp-guide__head"><span class="bp-guide__dot"></span>Don’t</div><ul><li>Use it to switch between content views — that's Tabs.</li><li>Exceed 5 segments or use long labels that wrap.</li><li>Allow zero or multiple selected segments.</li><li>Fill the track with a heavy color — the white indicator carries the weight.</li></ul></div></div></section><script>
+function layout(ss) {
+  var segs = ss.querySelectorAll('.ss__seg');
+  var sel = parseInt(ss.getAttribute('data-selected'), 10) || 0;
+  var ind = ss.querySelector('.ss__indicator');
+  var t = segs[sel]; if (!t || !ind) return;
+  ind.style.width = t.offsetWidth + 'px';
+  ind.style.transform = 'translateX(' + (t.offsetLeft - 4) + 'px)';
+}
+document.querySelectorAll('.ss').forEach(function (ss) {
+  layout(ss);
+  ss.querySelectorAll('.ss__seg').forEach(function (seg) {
+    seg.addEventListener('click', function () {
+      ss.querySelectorAll('.ss__seg').forEach(function (s) { s.classList.remove('ss__seg--selected'); });
+      seg.classList.add('ss__seg--selected');
+      ss.setAttribute('data-selected', seg.getAttribute('data-i'));
+      layout(ss);
+    });
+  });
+});
+window.addEventListener('resize', function () { document.querySelectorAll('.ss').forEach(layout); });
+</script>
+<script>
+(function () {
+  var canvas = document.querySelector('.bp-stage__canvas');
+  var heroSs = canvas ? canvas.querySelector('.ss') : null;
+  document.querySelectorAll('[data-ctrl="theme"]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var dark = btn.getAttribute('data-value') === 'dark';
+      if (canvas) canvas.classList.toggle('bp-stage__canvas--dark', dark);
+      if (heroSs) heroSs.classList.toggle('ss--dark', dark);
+      var seg = document.querySelector('[data-seg="theme"]');
+      if (seg) seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+    });
+  });
+})();
+</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="tab.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Tab & TabList</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Pill-style tabs and tablist. Supports text and icon-only layouts, selected and u...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="toggle.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Toggle</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Small toggle switch for binary on/off states. Supports checked and unchecked wit...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a></div></div><!-- /INJECT:RELATED --></body></html>

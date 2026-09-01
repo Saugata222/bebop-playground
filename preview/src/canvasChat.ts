@@ -10,6 +10,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { tokensCSS } from './_tokens';
 
 // ─── Resolved foundation values (from Figma) ───────────────
 
@@ -38,8 +39,8 @@ const t = {
   radiusAtomicLarge: '16px',
 
   // Typography
-  fontBody: "'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif",
-  fontFunctional: "'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif",
+  fontBody: "var(--f-typography-fontFamily-functional)",
+  fontFunctional: "var(--f-typography-fontFamily-functional)",
 } as const;
 
 // ─── SVG Icons (Fluent UI System Icons — copied to src/components/icons/) ───
@@ -85,6 +86,7 @@ const html = `<!DOCTYPE html>
   );
 </script>
 <style>
+${tokensCSS}
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -427,7 +429,7 @@ const html = `<!DOCTYPE html>
 <h1>Canvas Chat \u2014 Component Token Preview</h1>
 
 <!-- ======= State 1: Rest (Output=N/A, Input=Rest) ======= -->
-<div class="preview-group">
+<div class="preview-group bp-stage__canvas">
   <div class="state-label">Rest \u2014 No output</div>
   <div class="cc cc--420">
     <fluent-button appearance="stealth" class="cc__expand-btn" title="Expand">${icons.chevronUp}</fluent-button>

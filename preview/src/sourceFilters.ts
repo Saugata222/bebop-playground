@@ -40,6 +40,39 @@ const linearIco = '<img src="../../src/components/icons/linear-logo.png" alt="Li
 const gcalIco = '<img src="../../src/components/icons/google-calendar-logo.png" alt="Google Calendar" width="20" height="20" style="display:block;object-fit:contain" />';
 const gcontactIco = '<img src="../../src/components/icons/google-contacts-logo.png" alt="Google Contacts" width="20" height="20" style="display:block;object-fit:contain" />';
 const spGlobalIco = '<img src="../../src/components/icons/sp-global-logo.png" alt="S&amp;P Global" width="20" height="20" style="display:block;object-fit:contain" />';
+
+// ─── Catalogue connectors without local PNG assets ───────────
+// Each renders as a rounded-square letter avatar in the connector\'s brand
+// color. The rect uses width/height="100%" so the icon16 variant (built by
+// replacing width="20"/height="20" on the outer <svg>) doesn\'t shrink the
+// fill. `fg` defaults to white; pass dark for yellow backgrounds.
+function letterIco(letter: string, bg: string, fg: string = '#FFFFFF'): string {
+  return '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">'
+    + '<rect width="100%" height="100%" rx="4" fill="' + bg + '"/>'
+    + '<text x="10" y="14" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="' + fg + '">' + letter + '</text>'
+    + '</svg>';
+}
+const salesforceIco = letterIco('S', '#00A1E0');
+const slackIco = '<img src="../../src/components/icons/slack-logo.png" alt="Slack" width="20" height="20" style="display:block;object-fit:contain" />';
+const zendeskIco = letterIco('Z', '#03363D');
+const sapIco = letterIco('S', '#0FAAFF');
+const workdayIco = letterIco('W', '#F38B00');
+const boxIco = letterIco('B', '#0061D5');
+const dropboxIco = letterIco('D', '#0061FF');
+const oracleIco = letterIco('O', '#F80000');
+const asanaIco = letterIco('A', '#F06A6A');
+const mondayIco = letterIco('M', '#FF3D57');
+const trelloIco = letterIco('T', '#0079BF');
+const smartsheetIco = letterIco('S', '#0073EC');
+const mailchimpIco = letterIco('M', '#FFE01B', '#1A1A1A');
+const zoomIco = letterIco('Z', '#2D8CFF');
+const docusignIco = letterIco('D', '#FFCC22', '#1A1A1A');
+const miroIco = letterIco('M', '#FFD02F', '#1A1A1A');
+const figmaIco = letterIco('F', '#F24E1E');
+const gitlabIco = letterIco('G', '#FC6D26');
+const snowflakeIco = letterIco('S', '#29B5E8');
+const adobeIco = letterIco('A', '#FA0F00');
+
 const briefcaseOffIco = readIcon('briefcase-off-20-regular.svg');
 const connectedIco = readIcon('connected-20-regular.svg');
 const rocketIco = readIcon('rocket-20-regular.svg');
@@ -163,6 +196,17 @@ const smServiceNowLogo = '../../src/components/icons/servicenow-logo.png';
 // the work source). Initial `connected: false` on every row — runtime state
 // is hydrated from localStorage at boot, not from this seed.
 interface SmConnector { id: string; name: string; desc: string; logo: string; connected: boolean; tenant?: boolean }
+// Letter-avatar logo (32×32) for connectors that don\'t have a local PNG asset.
+// Mirrors the 20×20 variant used in the Source Filter list — same brand
+// colors, same rect/text positioning in viewBox space — but sized to fit
+// the Settings row\'s 32px logo well.
+function smLetterLogo(letter: string, bg: string, fg: string = '#FFFFFF'): string {
+  return '<svg width="32" height="32" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">'
+    + '<rect width="100%" height="100%" rx="4" fill="' + bg + '"/>'
+    + '<text x="10" y="14" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="' + fg + '">' + letter + '</text>'
+    + '</svg>';
+}
+const smSlackLogo = '../../src/components/icons/slack-logo.png';
 const smConnectors: SmConnector[] = [
   { id: 'moodys', name: "Moody's", desc: 'Credit ratings and risk insights', logo: '<img src="' + smMoodysLogo + '" alt=""/>', connected: false },
   { id: 'lseg', name: 'London Stock Exchange Group', desc: 'Market data and financial filings', logo: '<img src="' + smLsegLogo + '" alt=""/>', connected: false },
@@ -174,6 +218,31 @@ const smConnectors: SmConnector[] = [
   { id: 'gcal', name: 'Google Calendar', desc: 'Look up events and availability', logo: '<img src="' + smGcalLogo + '" alt=""/>', connected: false },
   { id: 'gcontact', name: 'Google Contacts', desc: 'Search and manage contact information', logo: '<img src="' + smGcontactLogo + '" alt=""/>', connected: false },
   { id: 'spglobal', name: 'S&P Global', desc: 'Credit research and financial data', logo: '<img src="' + smSpGlobalLogo + '" alt=""/>', connected: false },
+  // Extended catalogue — mirrors the 20 connectors added to the Source
+  // Filter list so both surfaces (Source Filter + Settings → Browse sources)
+  // expose the same browseable catalogue. Slack has a real PNG; the others
+  // use brand-colored letter avatars to keep the Settings rows visually
+  // distinct without requiring 20 logo downloads.
+  { id: 'salesforce', name: 'Salesforce', desc: 'CRM accounts, leads, and opportunities', logo: smLetterLogo('S', '#00A1E0'), connected: false },
+  { id: 'slack', name: 'Slack', desc: 'Channels, DMs, and team messages', logo: '<img src="' + smSlackLogo + '" alt=""/>', connected: false },
+  { id: 'zendesk', name: 'Zendesk', desc: 'Customer support tickets and help articles', logo: smLetterLogo('Z', '#03363D'), connected: false },
+  { id: 'sap', name: 'SAP', desc: 'ERP, finance, and supply chain data', logo: smLetterLogo('S', '#0FAAFF'), connected: false },
+  { id: 'workday', name: 'Workday', desc: 'HR records and people data', logo: smLetterLogo('W', '#F38B00'), connected: false },
+  { id: 'box', name: 'Box', desc: 'Files and shared content', logo: smLetterLogo('B', '#0061D5'), connected: false },
+  { id: 'dropbox', name: 'Dropbox', desc: 'Files and shared folders', logo: smLetterLogo('D', '#0061FF'), connected: false },
+  { id: 'oracle', name: 'Oracle', desc: 'ERP records and operations data', logo: smLetterLogo('O', '#F80000'), connected: false },
+  { id: 'asana', name: 'Asana', desc: 'Project tasks and timelines', logo: smLetterLogo('A', '#F06A6A'), connected: false },
+  { id: 'monday', name: 'monday.com', desc: 'Work boards and project status', logo: smLetterLogo('M', '#FF3D57'), connected: false },
+  { id: 'trello', name: 'Trello', desc: 'Boards, lists, and cards', logo: smLetterLogo('T', '#0079BF'), connected: false },
+  { id: 'smartsheet', name: 'Smartsheet', desc: 'Sheets, projects, and reports', logo: smLetterLogo('S', '#0073EC'), connected: false },
+  { id: 'mailchimp', name: 'Mailchimp', desc: 'Campaigns and audience data', logo: smLetterLogo('M', '#FFE01B', '#1A1A1A'), connected: false },
+  { id: 'zoom', name: 'Zoom', desc: 'Meeting recordings and transcripts', logo: smLetterLogo('Z', '#2D8CFF'), connected: false },
+  { id: 'docusign', name: 'DocuSign', desc: 'eSignatures and agreement status', logo: smLetterLogo('D', '#FFCC22', '#1A1A1A'), connected: false },
+  { id: 'miro', name: 'Miro', desc: 'Boards and brainstorms', logo: smLetterLogo('M', '#FFD02F', '#1A1A1A'), connected: false },
+  { id: 'figma', name: 'Figma', desc: 'Design files and comments', logo: smLetterLogo('F', '#F24E1E'), connected: false },
+  { id: 'gitlab', name: 'GitLab', desc: 'Repos, merge requests, and pipelines', logo: smLetterLogo('G', '#FC6D26'), connected: false },
+  { id: 'snowflake', name: 'Snowflake', desc: 'Data warehouse queries and tables', logo: smLetterLogo('S', '#29B5E8'), connected: false },
+  { id: 'adobe', name: 'Adobe Experience Manager', desc: 'Marketing assets and content', logo: smLetterLogo('A', '#FA0F00'), connected: false },
   // Tenant sources — admin-enabled. Visible only when the tenantSources
   // variant is on. Never appear in Explore (not user-connectable); appear in
   // Connected with no 3-dot menu (no disconnect).
@@ -593,10 +662,6 @@ css += '.sc__chip--source .sc__chip-logo { width: 20px; height: 20px; flex-shrin
 css += '\n';
 css += '.sc__chip--source .sc__chip-logo img, .sc__chip--source .sc__chip-logo svg { width: 100%; height: 100%; object-fit: contain; display: block; }';
 css += '\n';
-// Source-prompt chip + list temporarily hidden — prototype falls back to the
-// original suggestion chips while the source-prompt UX is paused.
-css += '.sc__chip--source, .sc-prompts { display: none !important; }';
-css += '\n';
 // Source-prompt list (Figma 460:71232 / 523:23445) — vertical list of prompts.
 // 20px gap below the chip row (matches Figma\'s outer Frame gap). Same 56px
 // horizontal padding as `.sc` so prompts align with the chips and the input bar text.
@@ -746,6 +811,33 @@ css += '.src-list { display: flex; flex-direction: column; max-height: 192px; ov
 css += '\n';
 // Source item (inline — reusing toggle styles from sourcesMenu preview)
 css += '.si { display: flex; align-items: center; width: 100%; height: 48px; padding: 4px 0; transition: opacity 0.2s; }';
+css += '\n';
+// Lazy-load fade-in. New rows are inserted with .si--enter (opacity 0 +
+// small downward offset) and stripped to .si on the next frame so the
+// transition runs. Duration 180ms — fast enough not to feel sluggish,
+// slow enough to read as "arriving" rather than popping in.
+css += '.si--enter { opacity: 0; transform: translateY(4px); }';
+css += '\n';
+css += '.si { transition: opacity 0.18s ease-out, transform 0.18s ease-out, background 0.1s; }';
+css += '\n';
+// Loading row shown during the synthetic fetch delay. Three pulsing dots
+// keep the row height stable (48px) so the scroll position doesn\'t shift
+// when the row is swapped for real items.
+css += '.si--loading { pointer-events: none; }';
+css += '\n';
+css += '.si--loading .si__inner { justify-content: center; gap: 6px; }';
+css += '\n';
+css += ".si__dot { width: 6px; height: 6px; border-radius: 9999px; background: #c8c8c8; animation: siDot 1s infinite ease-in-out; }";
+css += '\n';
+css += '.si__dot:nth-child(2) { animation-delay: 0.15s; }';
+css += '\n';
+css += '.si__dot:nth-child(3) { animation-delay: 0.3s; }';
+css += '\n';
+css += '@keyframes siDot { 0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); } 40% { opacity: 1; transform: scale(1); } }';
+css += '\n';
+// Sentinel — zero-height anchor watched by IntersectionObserver. Not a real
+// row, so no padding/height. Sits just above the next batch trigger zone.
+css += '.src-lazy-sentinel { flex-shrink: 0; height: 1px; width: 100%; }';
 css += '\n';
 css += '.si--disabled { opacity: 0.4; pointer-events: none; }';
 css += '\n';
@@ -1338,17 +1430,17 @@ css += '.nav--collapsed .ni.nav__pin-collapsed { display: flex; }';
 css += '\n';
 
 // ─── Back bar (hover to navigate to catalog) ───
-css += '.bebop-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
+css += '.copilot-shell-hover { position: fixed; top: 0; left: 0; right: 0; height: 20px; z-index: 9998; }';
 css += '\n';
-css += '.bebop-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
+css += '.copilot-shell-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; transform: translateY(-100%); transition: transform 0.2s ease; }';
 css += '\n';
-css += '.bebop-shell-hover:hover ~ .bebop-shell-bar, .bebop-shell-bar:hover { transform: translateY(0); }';
+css += '.copilot-shell-hover:hover ~ .copilot-shell-bar, .copilot-shell-bar:hover { transform: translateY(0); }';
 css += '\n';
-css += ".bebop-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
+css += ".copilot-shell-bar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }";
 css += '\n';
-css += '.bebop-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
+css += '.copilot-shell-bar a:hover { background: rgba(36,36,36,0.04); }';
 css += '\n';
-css += '.bebop-shell-bar a svg { width: 16px; height: 16px; }';
+css += '.copilot-shell-bar a svg { width: 16px; height: 16px; }';
 css += '\n';
 
 // ─── Settings Modal — Figma node 330:17490 (Source-Discovery) ───
@@ -1492,6 +1584,62 @@ css += '.sm-list__row--m365 { cursor: pointer; }\n';
 css += '.sm-row__chevron { width: 20px; height: 20px; color: #424242; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }\n';
 css += '.sm-row__chevron svg { width: 20px; height: 20px; }\n';
 
+// ─── Source modal — modal-variant of the sources picker (Figma 764:36786) ───
+// Same data + lazy-load logic as the panel; differs visually by being a
+// centered, padded modal (like the Settings modal pattern) instead of a
+// bottom-anchored popover. The "Explore more connectors" row is sticky at
+// the end of the modal — sits below the scrollable list so it\'s always
+// visible.
+css += '.srcm-overlay { position: fixed; inset: 0; z-index: 320; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; padding: 40px; opacity: 0; transition: opacity 0.2s ease; }\n';
+css += '.srcm-overlay--open { display: flex; opacity: 1; }\n';
+// Modal box — 640 wide, capped to viewport. Padding 28, gap 20 between
+// header / search / body. Same drop-shadow contract as settings modal.
+css += '.srcm { width: 640px; max-width: calc(100vw - 80px); max-height: calc(100vh - 80px); background: #ffffff; border-radius: 24px; box-shadow: 0 14px 14px rgba(0,0,0,0.24), 0 0 4px rgba(0,0,0,0.20); display: flex; flex-direction: column; padding: 24px 28px 8px; gap: 16px; transform: scale(0.98); transition: transform 0.2s ease; overflow: hidden; }\n';
+css += '.srcm-overlay--open .srcm { transform: scale(1); }\n';
+// Header — title left, dismiss button right.
+css += '.srcm__header { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }\n';
+css += ".srcm__title { flex: 1; margin: 0; font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 20px; font-weight: 600; line-height: 28px; color: #242424; }\n";
+css += '.srcm__dismiss { width: 32px; height: 32px; border-radius: 9999px; border: none; background: transparent; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #242424; transition: background 0.1s; flex-shrink: 0; }\n';
+css += '.srcm__dismiss:hover { background: rgba(36,36,36,0.04); }\n';
+css += '.srcm__dismiss:focus-visible { outline: 2px solid #000; outline-offset: 1px; box-shadow: 0 0 0 1px #fff inset; }\n';
+css += '.srcm__dismiss svg { width: 20px; height: 20px; }\n';
+// Search input — pill with grey border, no fill. Mirrors the Figma input
+// design (stroke #6f6f6f, rounded full).
+css += '.srcm__search { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 1px solid #6f6f6f; border-radius: 9999px; flex-shrink: 0; }\n';
+css += '.srcm__search-icon { width: 20px; height: 20px; flex-shrink: 0; color: #5d5d5d; display: inline-flex; align-items: center; justify-content: center; }\n';
+css += '.srcm__search-icon svg { width: 20px; height: 20px; display: block; }\n';
+css += ".srcm__search-input { flex: 1; border: none; outline: none; background: transparent; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; color: #242424; }\n";
+css += ".srcm__search-input::placeholder { color: #6f6f6f; }\n";
+// Body — vertical flex; list scrolls, sticky explore row sits below.
+css += '.srcm__body { display: flex; flex-direction: column; min-height: 0; flex: 1; }\n';
+// List — reuses .si row markup so toggle/connect styling stays consistent.
+// Min-height keeps the modal a comfortable size even when only a few rows
+// are visible (no jarring collapse). Max keeps it inside the viewport.
+// Fixed visible window of exactly 6 rows. Row total height = 56px (see
+// `.srcm__list .si` below), so 6 × 56 = 336px. No min/max flex — the
+// height is precise so the scroll affordance always shows the same
+// number of items regardless of viewport.
+css += '.srcm__list { height: 336px; overflow-y: auto; padding: 0; flex-shrink: 0; }\n';
+css += '.srcm__list .si { height: 56px; padding: 6px 0; }\n';
+css += '.srcm__list .si__inner { padding: 10px 16px; border-radius: 12px; }\n';
+css += '.srcm__list .si__label { font-size: 14px; }\n';
+// Sticky explore row — outside the scroll list, separated by a hairline.
+// Always visible regardless of scroll position. Mirrors the panel\'s
+// "Explore 40+ sources" CTA but reads as a terminal modal action.
+css += '.srcm__explore-wrap { flex-shrink: 0; border-top: 1px solid #ebebeb; padding: 8px 0 0; }\n';
+css += '.srcm__explore { display: flex; align-items: center; gap: 12px; height: 56px; padding: 10px 16px; border-radius: 12px; cursor: pointer; transition: background 0.1s; }\n';
+css += '.srcm__explore:hover { background: rgba(36,36,36,0.04); }\n';
+css += ".srcm__explore-label { flex: 1; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }\n";
+css += '.srcm__explore-icon { width: 20px; height: 20px; flex-shrink: 0; color: #242424; display: inline-flex; align-items: center; justify-content: center; }\n';
+css += '.srcm__explore-icon svg { width: 20px; height: 20px; display: block; }\n';
+// Status row — "N sources are on" + "Turn off all" link. Sits above the
+// list (sibling of #srcmList), doesn\'t scroll.
+css += '.srcm__status { display: flex; align-items: center; gap: 8px; padding: 4px 16px; flex-shrink: 0; }\n';
+css += ".srcm__status-label { flex: 1; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; font-weight: 400; line-height: 20px; color: #242424; }\n";
+css += ".srcm__turn-off { border: none; background: transparent; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; color: #242424; padding: 4px 8px; border-radius: 8px; transition: background 0.1s; }\n";
+css += '.srcm__turn-off:hover { background: rgba(36,36,36,0.04); }\n';
+css += '.srcm__turn-off:focus-visible { outline: 2px solid #000; outline-offset: 1px; }\n';
+
 // ─── Reset chip — floating dev-aid styled like the Variants chip ────
 // Disconnects every non-M365 source and returns the menu to its initial
 // 6-Discover state. Not a production control — only here to make
@@ -1500,22 +1648,16 @@ css += ".reset-chip { position: fixed; bottom: 16px; left: 16px; z-index: 99999;
 css += ".reset-chip:hover { background: #fafafa; }\n";
 css += ".reset-chip:focus-visible { outline: 2px solid #000; outline-offset: 1px; }\n";
 css += ".reset-chip svg { display: block; color: #5d5d5d; }\n";
-// Source-tab variant chip is hidden in the preview build (variant kept off
-// via the _sourceTabVariant default below). Tenant variant chip stays in the
-// bottom-right corner, and the Reset sources chip is repositioned above it
-// in the slot the Source-tab chip used to occupy.
-css += '#stChip { display: none !important; }\n';
-css += '#tvChip { right: 16px !important; bottom: 16px !important; }\n';
-css += '.reset-chip { left: auto !important; right: 16px !important; bottom: 64px !important; }\n';
 
 // Variant chips — segmented controls mounted bottom-right. Stacked from
 // right-to-left: Tenant (right-most), Source tab (left of it). Visible at
 // all times so variant state is one click away. Each chip dispatches a
-// bebop:variant-change CustomEvent so the corresponding listener handles
+// copilot:variant-change CustomEvent so the corresponding listener handles
 // downstream updates.
 css += ".tv-chip { position: fixed; bottom: 16px; z-index: 99999; display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #dedede; border-radius: 18px; padding: 4px 6px 4px 12px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 13px; color: #242424; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }\n";
 css += "#tvChip { right: 16px; }\n";
 css += "#stChip { right: 200px; }\n";
+css += "#lyChip { right: 400px; }\n";
 css += ".tv-chip__label { font-weight: 600; padding-right: 4px; color: #5d5d5d; }\n";
 css += ".tv-chip__seg { display: inline-flex; padding: 2px; background: #f5f5f5; border-radius: 12px; gap: 2px; }\n";
 css += ".tv-chip__btn { border: none; background: transparent; padding: 4px 10px; border-radius: 10px; font-family: inherit; font-size: 12px; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; }\n";
@@ -1536,8 +1678,8 @@ html += '</head>';
 html += '<body>';
 
 // Back bar (hover top edge to show)
-html += '<div class="bebop-shell-hover"></div>';
-html += '<div class="bebop-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
+html += '<div class="copilot-shell-hover"></div>';
+html += '<div class="copilot-shell-bar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div>';
 
 // ─── Shell container ───
 html += '<div class="shell">';
@@ -1696,17 +1838,19 @@ html += '</div>'; // end ci__container
 html += '</div>'; // end ci
 
 // Suggestion chips. `srcPromptChip` is the recently-connected source slot \u2014
-// hidden until a connect event sets `_recentSource`. Position after the
-// generic chips, before the overflow.
+// occupies the FIRST slot when a source is connected, replacing the generic
+// "Get to know Copilot" chip. Hidden by default until a connect event sets
+// `_recentSource`; the generic chip is hidden in tandem to keep three chips
+// in the rail.
 html += '<div class="sc-area">';
 html += '<div class="sc">';
-html += '<button class="sc__chip" data-text="Get to know Copilot better">Get to know Copilot</button>';
-html += '<button class="sc__chip" data-text="Prepare for what\u2019s ahead">Prepare for what\u2019s ahead</button>';
-html += '<button class="sc__chip" data-text="Create something inspiring">Create something inspiring</button>';
 html += '<button class="sc__chip sc__chip--source" id="srcPromptChip" type="button" aria-expanded="false" aria-controls="srcPromptList" aria-haspopup="true">';
 html += '<span class="sc__chip-logo" id="srcPromptChipLogo"></span>';
 html += '<span class="sc__chip-name" id="srcPromptChipName"></span>';
 html += '</button>';
+html += '<button class="sc__chip" id="scChipGetToKnow" data-text="Get to know Copilot better">Get to know Copilot</button>';
+html += '<button class="sc__chip" data-text="Prepare for what\u2019s ahead">Prepare for what\u2019s ahead</button>';
+html += '<button class="sc__chip" data-text="Create something inspiring">Create something inspiring</button>';
 html += '<button class="sc__overflow" aria-label="More suggestions">' + moreHorizontalIco + '</button>';
 html += '</div>';
 // Source-prompt list \u2014 vertical, sits under the chip row, hidden until the chip is clicked.
@@ -2056,12 +2200,14 @@ html += '<div class="sm-main__desc">Add and manage the sources Copilot uses to f
 html += '</div>';
 // Scrollable region: M365 card → Connected tile (if any) → Browse sources header → Browse tile.
 html += '<div class="sm-main__scroll">';
-// M365 card — always present, own bordered box.
+// M365 card — always present, own bordered box. Mirrors the tenant pattern:
+// 3-dot overflow opens a disabled "Microsoft enabled" label so the row\'s
+// admin-managed nature is discoverable, but no Disconnect path exists.
 html += '<div class="sm-list sm-list--m365" id="smListM365">';
-html += '<div class="sm-list__row sm-list__row--m365" data-id="m365" data-static="1">';
+html += '<div class="sm-list__row sm-list__row--m365" data-id="m365" data-m365="1" data-static="1">';
 html += '<span class="sm-logo sm-logo--svg">' + smCopilotIco + '</span>';
 html += '<div class="sm-row__meta"><div class="sm-row__name">Microsoft 365 Apps</div></div>';
-html += '<span class="sm-row__chevron">' + chevronRightIco + '</span>';
+html += '<button class="sm-row__more" data-action="more" data-id="m365" aria-label="More options for Microsoft 365 Apps" aria-haspopup="true" aria-expanded="false">' + smMoreHorizontalIco + '</button>';
 html += '</div>';
 html += '</div>';
 // Connected sources tile (Figma 491:7873) — separate bordered box, name-only rows,
@@ -2090,7 +2236,50 @@ html += '</svg>';
 html += '<span>Reset sources</span>';
 html += '</button>';
 
+// ─── Source modal (modal-variant of sources picker) ─────────────────
+// Mirrors the panel structure but as a centered modal (Figma 764:36786).
+// Same data + lazy-load contract; sticky "Explore more connectors" row
+// sits below the scroll list and stays visible regardless of scroll.
+html += '<div class="srcm-overlay" id="srcmOverlay" role="dialog" aria-modal="true" aria-labelledby="srcmTitle">';
+html += '<div class="srcm" role="document">';
+html += '<div class="srcm__header">';
+html += '<h2 class="srcm__title" id="srcmTitle">Change data sources</h2>';
+html += '<button class="srcm__dismiss" id="srcmDismiss" type="button" aria-label="Close">';
+html += '<svg viewBox="0 0 20 20" fill="none"><path d="M4.4 4.4a.75.75 0 0 1 1.06 0L10 8.94l4.54-4.54a.75.75 0 1 1 1.06 1.06L11.06 10l4.54 4.54a.75.75 0 1 1-1.06 1.06L10 11.06l-4.54 4.54a.75.75 0 1 1-1.06-1.06L8.94 10 4.4 5.46a.75.75 0 0 1 0-1.06Z" fill="currentColor"/></svg>';
+html += '</button>';
+html += '</div>';
+html += '<div class="srcm__search">';
+html += '<span class="srcm__search-icon">' + searchIco + '</span>';
+html += '<input type="text" id="srcmSearchInput" class="srcm__search-input" placeholder="Search" autocomplete="off" />';
+html += '</div>';
+html += '<div class="srcm__status">';
+html += '<span class="srcm__status-label" id="srcmStatusLabel">1 source is on</span>';
+html += '<button class="srcm__turn-off" id="srcmTurnOff" type="button">Turn off all</button>';
+html += '</div>';
+html += '<div class="srcm__body">';
+html += '<div class="srcm__list" id="srcmList"></div>';
+// Sticky explore CTA — outside the scroll list, always visible.
+html += '<div class="srcm__explore-wrap">';
+html += '<div class="srcm__explore" id="srcmExplore" role="button" tabindex="0">';
+html += '<span class="srcm__explore-icon">' + flowIco + '</span>';
+html += '<span class="srcm__explore-label">Explore more connectors</span>';
+html += '</div>';
+html += '</div>';
+html += '</div>';  // srcm__body
+html += '</div>';  // srcm
+html += '</div>';  // srcm-overlay
+
 // ─── Variant toggles (visible chips, bottom-right) ──────────────────
+// Layout chip — switches the sources picker between bottom-anchored Panel
+// (default) and centered Modal (Figma 764:36786).
+html += '<div class="tv-chip" id="lyChip" role="group" aria-label="Layout variant">';
+html += '<span class="tv-chip__label">Layout</span>';
+html += '<div class="tv-chip__seg">';
+html += '<button type="button" class="tv-chip__btn tv-chip__btn--active" data-ly="panel" aria-pressed="true">Panel</button>';
+html += '<button type="button" class="tv-chip__btn" data-ly="modal" aria-pressed="false">Modal</button>';
+html += '</div>';
+html += '</div>';
+
 // Source tab chip — gates whether the disabled-source pill below the
 // chat input ever appears. Default: On (matches today\'s behavior).
 html += '<div class="tv-chip" id="stChip" role="group" aria-label="Source tab variant">';
@@ -2294,18 +2483,10 @@ html += '\n';
 html += 'function openSources() {';
 html += '  var l = document.getElementById("srcList"); if (l) l.scrollTop = 0;';
 html += '  _srcQuery = "";';
+html += '  _srcLazyCount = SRC_LAZY_BATCH;';
 html += '  var inp = document.getElementById("srcSearchInput"); if (inp) inp.value = "";';
 html += '  renderSourceList();';
 html += '  srcOverlay.classList.add("src-overlay--open");';
-// If a source was just connected from inside this menu, scroll its row so it
-// sits at the bottom of the visible scroll window — visible to the user
-// without any extra scroll, but without pushing connected sources at the top
-// out of view.
-html += '  if (_justConnectedKey && l) {';
-html += '    var row = l.querySelector(\'.si[data-key="\' + _justConnectedKey + \'"]\');';
-html += '    if (row) { l.scrollTop = Math.max(0, row.offsetTop + row.offsetHeight - l.clientHeight); }';
-html += '    _justConnectedKey = null;';
-html += '  }';
 html += '}';
 
 // Sources tab update logic
@@ -2366,6 +2547,39 @@ html += '    icon16: \'' + gcontactIco.replace(/width="20"/g, 'width="16"').repl
 html += '  { key: "spglobal", name: "S&P Global", connected: false, active: false,';
 html += '    icon: \'' + spGlobalIco + '\',';
 html += '    icon16: \'' + spGlobalIco.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\' },';
+// Extended catalogue — popular enterprise SaaS connectors typically found in
+// the Microsoft Graph connectors gallery / Copilot connector marketplace.
+// Order here doesn\'t matter for display (orderedSources re-sorts), but it
+// roughly tracks generic enterprise-popularity ranking. Icons are inline
+// letter-avatar SVGs in each vendor\'s brand color.
+const newFccs: Array<{ key: string; name: string; ico: string }> = [
+  { key: 'salesforce', name: 'Salesforce', ico: salesforceIco },
+  { key: 'slack', name: 'Slack', ico: slackIco },
+  { key: 'zendesk', name: 'Zendesk', ico: zendeskIco },
+  { key: 'sap', name: 'SAP', ico: sapIco },
+  { key: 'workday', name: 'Workday', ico: workdayIco },
+  { key: 'box', name: 'Box', ico: boxIco },
+  { key: 'dropbox', name: 'Dropbox', ico: dropboxIco },
+  { key: 'oracle', name: 'Oracle', ico: oracleIco },
+  { key: 'asana', name: 'Asana', ico: asanaIco },
+  { key: 'monday', name: 'monday.com', ico: mondayIco },
+  { key: 'trello', name: 'Trello', ico: trelloIco },
+  { key: 'smartsheet', name: 'Smartsheet', ico: smartsheetIco },
+  { key: 'mailchimp', name: 'Mailchimp', ico: mailchimpIco },
+  { key: 'zoom', name: 'Zoom', ico: zoomIco },
+  { key: 'docusign', name: 'DocuSign', ico: docusignIco },
+  { key: 'miro', name: 'Miro', ico: miroIco },
+  { key: 'figma', name: 'Figma', ico: figmaIco },
+  { key: 'gitlab', name: 'GitLab', ico: gitlabIco },
+  { key: 'snowflake', name: 'Snowflake', ico: snowflakeIco },
+  { key: 'adobe', name: 'Adobe Experience Manager', ico: adobeIco },
+];
+for (const fcc of newFccs) {
+  const nameEsc = fcc.name.replace(/'/g, "\\'");
+  html += '  { key: "' + fcc.key + '", name: "' + nameEsc + '", connected: false, active: false,';
+  html += '    icon: \'' + fcc.ico + '\',';
+  html += '    icon16: \'' + fcc.ico.replace(/width="20"/g, 'width="16"').replace(/height="20"/g, 'height="16"') + '\' },';
+}
 // Tenant sources — admin-enabled. Default connected:true / active:true. The
 // runtime variant flag `_tenantVariant` gates whether they\'re visible; when
 // off, syncFromStorage flips them to connected:false so the rest of the
@@ -2392,7 +2606,7 @@ html += '\n';
 // ─── Cross-page state via localStorage ──────────────────────
 // Shape: { "<key>": <active-boolean> } — presence of a key = CONNECTED.
 // Disconnect writes happen elsewhere (Settings); we listen for changes.
-html += 'var STORAGE_KEY = "bebop:connected-sources";\n';
+html += 'var STORAGE_KEY = "copilot:connected-sources";\n';
 // Tenant variant flag. When false, tenant sources are flipped to
 // connected:false during sync so they\'re effectively absent from every
 // downstream surface.
@@ -2400,7 +2614,7 @@ html += 'var _tenantVariant = false;\n';
 // Source tab variant flag. When false, updateSourcesTab unconditionally
 // hides the pill below the chat input — even if disabled sources exist.
 // Default true preserves current behavior (show when ≥1 source is off).
-html += 'var _sourceTabVariant = false;\n';
+html += 'var _sourceTabVariant = true;\n';
 html += 'function loadState(){ try { var v = JSON.parse(localStorage.getItem(STORAGE_KEY) || \'{"m365":true}\'); return (v && typeof v === "object" && !Array.isArray(v)) ? v : {"m365":true}; } catch(e) { return {"m365":true}; } }\n';
 html += 'function saveState(state){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }\n';
 html += 'function syncFromStorage(){\n';
@@ -2434,17 +2648,43 @@ html += '}\n';
 //   1. M365 apps (pinned) — always row 1.
 //   2. Connected FCCs + admin-enabled tenant sources, merged and sorted
 //      alphabetically as a single group.
-//   3. Discover FCCs (unconnected, non-pinned), alphabetical, sliced to
-//      max(3, 6 - connected_count). With 0/1/2 connected → 6/5/4 discover;
-//      3+ connected → 3 discover. Pool exhaustion (very high connect count)
-//      gracefully renders fewer than 3.
-// Trailing "Explore more sources" tile is appended by renderSourceList, not
-// here. Search-active state bypasses this function entirely — see
-// renderSourceList for the flat alphabetical filter path.
+//   3. Discover FCCs (unconnected, non-pinned), alphabetical — full catalogue,
+//      no cap. renderSourceList slices to _srcLazyCount for lazy paging.
+// Trailing "Explore 40+ sources" tile is appended by renderSourceList only
+// once every catalogue row has been lazy-loaded. Search-active state bypasses
+// this function entirely — see renderSourceList for the flat alphabetical
+// filter path.
 html += 'var _srcQuery = "";';
-// Tracks the key of the most recent connect operation so openSources() can
-// scroll that row into view. Cleared once consumed.
-html += 'var _justConnectedKey = null;';
+// Lazy-load state. Lazy load applies ONLY to the discover (unconnected)
+// tail — M365, connected FCCs, and admin-enabled tenant sources always
+// render in full on first paint. They\'re part of the user\'s working set
+// and shouldn\'t require a scroll/wait to appear.
+//   SRC_LAZY_BATCH    — discover items fetched per page.
+//   SRC_LAZY_DELAY_MS — synthetic fetch delay. 350ms reads as a typical
+//                       network round-trip and gives the pulsing loading
+//                       row a clear, visible beat before the new items
+//                       slide in.
+//   _srcLazyCount     — current number of *discover* rows in the DOM (the
+//                       connected head is always fully rendered). Reset
+//                       on every openSources() / search / reset so the menu
+//                       always reopens to the first discover page.
+//   _srcLazyLoading   — re-entrancy guard. Set while a batch is in-flight
+//                       so rapid scrolls don\'t queue duplicate loads.
+//   _srcLazyObs       — IntersectionObserver instance watching the sentinel.
+//   SRC_LAZY_DWELL_MS — short pause between sentinel entering view and the
+//                       fetch actually firing. 50ms filters out fly-by
+//                       scrolls (mouse-wheel flicks, momentum scroll
+//                       overshoot) without making intentional scrolls feel
+//                       gated. Cancelled if the user scrolls back away
+//                       before the timer elapses.
+//   _srcLazyDwellTimer — pending dwell setTimeout handle, or null.
+html += 'var SRC_LAZY_BATCH = 5;';
+html += 'var SRC_LAZY_DELAY_MS = 350;';
+html += 'var SRC_LAZY_DWELL_MS = 50;';
+html += 'var _srcLazyCount = 5;';
+html += 'var _srcLazyLoading = false;';
+html += 'var _srcLazyObs = null;';
+html += 'var _srcLazyDwellTimer = null;';
 // Featured connector pool — these unconnected FCCs sort before the rest
 // (alphabetical within each subgroup, no visual separator). Shared with
 // the Settings page so both surfaces order unconnected sources identically.
@@ -2467,16 +2707,12 @@ html += '    else discoverAll.push(s);';
 html += '  });';
 html += '  connectedAll.sort(function(a, b) { return a.name.localeCompare(b.name); });';
 // Unconnected band: featured-then-rest, alphabetical within each group.
+// Full catalogue — no cap. renderSourceList handles paging via _srcLazyCount.
 html += '  discoverAll = sortByFeaturedThenName(discoverAll);';
-// Discover taper math: total of connected FCCs + admin-enabled tenant
-// sources determines the discover cap. With tenant on (5 sources) and
-// 0 user connections, total = 5 → discover = max(3, 1) = 3.
-html += '  var discoverCount = Math.max(3, 6 - connectedAll.length);';
-html += '  var discover = discoverAll.slice(0, discoverCount);';
 html += '  var result = [];';
 html += '  if (m365) result.push(m365);';
 html += '  for (var i = 0; i < connectedAll.length; i++) result.push(connectedAll[i]);';
-html += '  for (var j = 0; j < discover.length; j++) result.push(discover[j]);';
+html += '  for (var j = 0; j < discoverAll.length; j++) result.push(discoverAll[j]);';
 html += '  return result;';
 html += '}';
 html += '\n';
@@ -2484,12 +2720,53 @@ html += '\n';
 // Render the source list rows from the data model. Click handling on
 // Connect / toggle / footer is delegated to the panel container (below).
 // When _srcQuery is non-empty, the list flattens to an alphabetical filter
-// across the FULL catalogue (every entry in `sources`, including discover
-// items hidden by the cap). Otherwise it uses the lifecycle composition.
+// across the FULL catalogue. Otherwise it uses the lifecycle composition,
+// sliced to _srcLazyCount so the unconnected tail loads in batches as the
+// user scrolls.
+// Single-row HTML builder. Shared by full render and lazy append so the
+// markup stays identical. `enter` adds .si--enter so newly-appended rows
+// can fade in (full render uses enter=false — rows show immediately).
+html += 'function _srcRowHtml(s, enter) {';
+html += '  var dataSrc = s.connected ? \' data-src="\' + s.key + \'"\' : "";';
+html += '  var enterCls = enter ? " si--enter" : "";';
+html += '  var html = \'<div class="si\' + enterCls + \'" data-key="\' + s.key + \'" data-name="\' + s.name + \'"\' + dataSrc + \'>\';';
+html += '  html += \'<div class="si__inner">\';';
+html += '  html += \'<span class="si__icon">\' + s.icon + \'</span>\';';
+html += '  html += \'<span class="si__label">\' + s.name + \'</span>\';';
+html += '  if (s.connected) {';
+html += '    if (s.subtitle) html += \'<span class="si__sublabel">\' + s.subtitle + \'</span>\';';
+// Toggle reflects ACTIVE (not connected) — connected sources whose toggle is
+// off still render with the toggle in off-state, never with a Connect CTA.
+html += '    var onCls = s.active ? " tgl-track--on" : "";';
+html += '    html += \'<div class="si__toggle-area"><div class="tgl-track\' + onCls + \'" data-toggle-key="\' + s.key + \'"><div class="tgl-thumb"></div></div></div>\';';
+html += '  } else {';
+html += '    html += \'<button class="si__connect" type="button" data-connect-key="\' + s.key + \'">Connect</button>\';';
+html += '  }';
+html += '  html += \'</div></div>\';';
+html += '  return html;';
+html += '}';
+html += '\n';
+// Trailing CTA — surfaces only after the full catalogue has paged in. Kept
+// as a single string so the lazy-append path can drop it in without
+// re-stringifying.
+html += 'var SRC_EXPLORE_TILE_HTML = \'<div class="si" id="srcConnectMore" role="button" tabindex="0"><div class="si__inner"><span class="si__icon">' + flowIco.replace(/'/g, "\\'") + '</span><span class="si__label">Explore 40+ sources</span></div></div>\';';
+html += '\n';
+// Loading row shown during the synthetic delay between scroll-trigger and
+// the new rows being inserted.
+html += 'var SRC_LOADING_ROW_HTML = \'<div class="si si--loading" id="srcLoadingRow"><div class="si__inner"><span class="si__dot"></span><span class="si__dot"></span><span class="si__dot"></span></div></div>\';';
+html += '\n';
+// Sentinel — invisible anchor at the end of the catalogue rows that the
+// IntersectionObserver watches. Present only while more rows remain to
+// page in; replaced by the Explore tile once the catalogue is exhausted.
+html += 'var SRC_SENTINEL_HTML = \'<div class="src-lazy-sentinel" id="srcLazySentinel"></div>\';';
+html += '\n';
+
 html += 'function renderSourceList() {';
 html += '  var list = document.getElementById("srcList");';
 html += '  if (!list) return;';
+html += '  var prevScroll = list.scrollTop;';
 html += '  var arr;';
+html += '  var hasMore = false;';
 html += '  if (_srcQuery) {';
 html += '    var ql = _srcQuery.toLowerCase();';
 // Group matches by connection status so connected sources stay above
@@ -2512,30 +2789,286 @@ html += '    if (m365Match) arr.push(m365Match);';
 html += '    for (var i = 0; i < connMatches.length; i++) arr.push(connMatches[i]);';
 html += '    for (var j = 0; j < discMatches.length; j++) arr.push(discMatches[j]);';
 html += '  } else {';
-html += '    arr = orderedSources();';
+html += '    var full = orderedSources();';
+// Discover tail = unconnected non-tenant non-pinned sources. Connected head
+// (M365 + connected FCCs + tenant-enabled) is everything else in `full` and
+// always renders eagerly.
+html += '    var discoverAll = sources.filter(function(s){ return !s.pinned && !s.tenant && !s.connected; });';
+html += '    var connectedHead = full.length - discoverAll.length;';
+html += '    var visibleDiscover = Math.min(_srcLazyCount, discoverAll.length);';
+html += '    var visibleCount = connectedHead + visibleDiscover;';
+html += '    if (visibleCount < full.length) { hasMore = true; arr = full.slice(0, visibleCount); }';
+html += '    else arr = full;';
 html += '  }';
 html += '  var rows = "";';
-html += '  arr.forEach(function(s) {';
-html += '    var dataSrc = s.connected ? \' data-src="\' + s.key + \'"\' : "";';
-html += '    rows += \'<div class="si" data-key="\' + s.key + \'" data-name="\' + s.name + \'"\' + dataSrc + \'>\';';
-html += '    rows += \'<div class="si__inner">\';';
-html += '    rows += \'<span class="si__icon">\' + s.icon + \'</span>\';';
-html += '    rows += \'<span class="si__label">\' + s.name + \'</span>\';';
-html += '    if (s.connected) {';
-html += '      if (s.subtitle) rows += \'<span class="si__sublabel">\' + s.subtitle + \'</span>\';';
-// Toggle reflects ACTIVE (not connected) — connected sources whose toggle is
-// off still render with the toggle in off-state, never with a Connect CTA.
-html += '      var onCls = s.active ? " tgl-track--on" : "";';
-html += '      rows += \'<div class="si__toggle-area"><div class="tgl-track\' + onCls + \'" data-toggle-key="\' + s.key + \'"><div class="tgl-thumb"></div></div></div>\';';
-html += '    } else {';
-html += '      rows += \'<button class="si__connect" type="button" data-connect-key="\' + s.key + \'">Connect</button>\';';
-html += '    }';
-html += '    rows += \'</div></div>\';';
-html += '  });';
-// Trailing "Connect more sources" — same .si row, hover-only highlight, sits
-// at the end of the scroll list (NOT pinned).
-html += '  rows += \'<div class="si" id="srcConnectMore" role="button" tabindex="0"><div class="si__inner"><span class="si__icon">' + flowIco.replace(/'/g, "\\'") + '</span><span class="si__label">Explore more sources</span></div></div>\';';
+html += '  arr.forEach(function(s) { rows += _srcRowHtml(s, false); });';
+// Footer slot: sentinel while more rows remain to lazy-load, otherwise the
+// Explore tile. Never both — the sentinel\'s sole job is to fire the next
+// batch; the tile is the terminal CTA.
+html += '  rows += hasMore ? SRC_SENTINEL_HTML : SRC_EXPLORE_TILE_HTML;';
 html += '  list.innerHTML = rows;';
+// Preserve scroll across full re-renders (toggle, connect, search, reset).
+html += '  list.scrollTop = prevScroll;';
+// Cancel any in-flight lazy fetch — the full re-render obsoletes it.
+html += '  _srcLazyLoading = false;';
+html += '  if (_srcLazyDwellTimer) { clearTimeout(_srcLazyDwellTimer); _srcLazyDwellTimer = null; }';
+// (Re)wire the observer to the freshly-rendered sentinel.
+html += '  _setupSrcLazyObserver();';
+html += '}';
+html += '\n';
+
+// Lazy-append next page. Called by the IntersectionObserver when the
+// sentinel scrolls into view. Three phases:
+//   1. Swap sentinel for a loading row (keeps row height stable so scroll
+//      doesn\'t shift; gives the user feedback that more is on the way).
+//   2. Wait SRC_LAZY_DELAY_MS to simulate a network fetch.
+//   3. Replace loading row with the new batch + fresh sentinel (or the
+//      Explore tile if the catalogue is now fully loaded). New rows fade
+//      in via .si--enter → strip the class on next frame to run the
+//      opacity/translate transition.
+// Re-entrancy guarded by _srcLazyLoading. Search-active state and
+// catalogue-exhausted state both short-circuit at the top.
+html += 'function loadMoreSources() {';
+html += '  if (_srcLazyLoading) return;';
+html += '  if (_srcQuery) return;';
+html += '  var list = document.getElementById("srcList");';
+html += '  if (!list) return;';
+html += '  var full = orderedSources();';
+html += '  var discoverAll = sources.filter(function(s){ return !s.pinned && !s.tenant && !s.connected; });';
+html += '  var connectedHead = full.length - discoverAll.length;';
+html += '  if (_srcLazyCount >= discoverAll.length) return;';
+html += '  var sentinel = document.getElementById("srcLazySentinel");';
+html += '  if (!sentinel) return;';
+html += '  _srcLazyLoading = true;';
+// Phase 1 — sentinel → loading row. Observer stays attached but the
+// sentinel is gone from the DOM, so it won\'t fire again until we restore it.
+html += '  if (_srcLazyObs) { try { _srcLazyObs.unobserve(sentinel); } catch(_) {} }';
+html += '  sentinel.outerHTML = SRC_LOADING_ROW_HTML;';
+html += '  setTimeout(function() {';
+html += '    var loadingEl = document.getElementById("srcLoadingRow");';
+// If a full re-render happened during the delay (search/toggle/reset),
+// _srcLazyLoading was cleared and the loading row is gone — bail out.
+html += '    if (!loadingEl || !_srcLazyLoading) { _srcLazyLoading = false; return; }';
+html += '    var prevCount = _srcLazyCount;';
+html += '    _srcLazyCount = Math.min(discoverAll.length, _srcLazyCount + SRC_LAZY_BATCH);';
+// Build rows from the discover slice of `full` — connected head is already
+// in the DOM and never re-rendered by the lazy path.
+html += '    var newRows = "";';
+html += '    for (var i = prevCount; i < _srcLazyCount; i++) newRows += _srcRowHtml(full[connectedHead + i], true);';
+// Footer slot mirrors renderSourceList\'s rule: sentinel if more remain,
+// otherwise the Explore tile (terminal CTA).
+html += '    var done = _srcLazyCount >= discoverAll.length;';
+html += '    newRows += done ? SRC_EXPLORE_TILE_HTML : SRC_SENTINEL_HTML;';
+html += '    loadingEl.outerHTML = newRows;';
+// Run the fade-in: clear .si--enter on the next frame so the transition
+// kicks off from the initial (opacity 0, translateY 4px) state.
+html += '    requestAnimationFrame(function() {';
+html += '      var entering = list.querySelectorAll(".si--enter");';
+html += '      for (var k = 0; k < entering.length; k++) entering[k].classList.remove("si--enter");';
+html += '    });';
+html += '    _srcLazyLoading = false;';
+// Rewire observer to the new sentinel (or disconnect if done).
+html += '    if (done) { if (_srcLazyObs) { _srcLazyObs.disconnect(); _srcLazyObs = null; } }';
+html += '    else { _setupSrcLazyObserver(); }';
+html += '  }, SRC_LAZY_DELAY_MS);';
+html += '}';
+html += '\n';
+
+// Observer setup. Watches the sentinel with `root: srcList` and a generous
+// rootMargin so the next batch starts loading before the user reaches the
+// absolute end — by the time the synthetic delay completes, new rows are
+// in place without the user ever seeing an empty bottom.
+html += 'function _setupSrcLazyObserver() {';
+html += '  var list = document.getElementById("srcList");';
+html += '  if (!list) return;';
+html += '  var sentinel = document.getElementById("srcLazySentinel");';
+html += '  if (!sentinel) {';
+// No sentinel means we\'re either showing the search results or the catalogue
+// is fully loaded. Drop the observer in either case.
+html += '    if (_srcLazyObs) { _srcLazyObs.disconnect(); _srcLazyObs = null; }';
+html += '    return;';
+html += '  }';
+html += '  if (_srcLazyObs) _srcLazyObs.disconnect();';
+// Two-phase trigger: sentinel-enters-view starts a dwell timer; the timer
+// firing actually calls loadMoreSources. Scrolling back out before the
+// timer elapses cancels it, so a quick flick past the bottom won\'t fetch.
+html += '  _srcLazyObs = new IntersectionObserver(function(entries) {';
+html += '    for (var i = 0; i < entries.length; i++) {';
+html += '      var entry = entries[i];';
+html += '      if (entry.isIntersecting) {';
+html += '        if (_srcLazyDwellTimer) clearTimeout(_srcLazyDwellTimer);';
+html += '        _srcLazyDwellTimer = setTimeout(function() {';
+html += '          _srcLazyDwellTimer = null;';
+html += '          loadMoreSources();';
+html += '        }, SRC_LAZY_DWELL_MS);';
+html += '      } else {';
+html += '        if (_srcLazyDwellTimer) { clearTimeout(_srcLazyDwellTimer); _srcLazyDwellTimer = null; }';
+html += '      }';
+html += '    }';
+html += '  }, { root: list, rootMargin: "120px 0px 0px 0px", threshold: 0 });';
+html += '  _srcLazyObs.observe(sentinel);';
+html += '}';
+html += '\n';
+
+// ─── Source modal — mirror of panel render path, targeting #srcmList ─
+// Separate state from the panel so each surface\'s scroll position and lazy
+// page count are independent. Row builder (_srcRowHtml) is shared; only the
+// list element, search query, and sentinel are surface-local. The Explore
+// row is NOT rendered inside the list — it lives in the surrounding
+// .srcm__explore-wrap and is always visible.
+html += 'var _srcmQuery = "";';
+html += 'var _srcmLazyCount = SRC_LAZY_BATCH;';
+html += 'var _srcmLazyLoading = false;';
+html += 'var _srcmLazyObs = null;';
+html += 'var _srcmLazyDwellTimer = null;';
+html += '\n';
+
+html += 'function renderSrcmList() {';
+html += '  var list = document.getElementById("srcmList");';
+html += '  if (!list) return;';
+html += '  var prevScroll = list.scrollTop;';
+html += '  var arr;';
+html += '  var hasMore = false;';
+html += '  if (_srcmQuery) {';
+html += '    var ql = _srcmQuery.toLowerCase();';
+html += '    var byName = function(a, b) { return a.name.localeCompare(b.name); };';
+html += '    var m365Match = null, connMatches = [], discMatches = [];';
+html += '    sources.forEach(function(s) {';
+html += '      if (s.tenant && !_tenantVariant) return;';
+html += '      if (s.name.toLowerCase().indexOf(ql) === -1) return;';
+html += '      if (s.pinned) m365Match = s;';
+html += '      else if (s.connected) connMatches.push(s);';
+html += '      else discMatches.push(s);';
+html += '    });';
+html += '    connMatches.sort(byName);';
+html += '    discMatches = sortByFeaturedThenName(discMatches);';
+html += '    arr = [];';
+html += '    if (m365Match) arr.push(m365Match);';
+html += '    for (var i = 0; i < connMatches.length; i++) arr.push(connMatches[i]);';
+html += '    for (var j = 0; j < discMatches.length; j++) arr.push(discMatches[j]);';
+html += '  } else {';
+html += '    var full = orderedSources();';
+html += '    var discoverAll = sources.filter(function(s){ return !s.pinned && !s.tenant && !s.connected; });';
+html += '    var connectedHead = full.length - discoverAll.length;';
+html += '    var visibleDiscover = Math.min(_srcmLazyCount, discoverAll.length);';
+html += '    var visibleCount = connectedHead + visibleDiscover;';
+html += '    if (visibleCount < full.length) { hasMore = true; arr = full.slice(0, visibleCount); }';
+html += '    else arr = full;';
+html += '  }';
+html += '  var rows = "";';
+html += '  arr.forEach(function(s) { rows += _srcRowHtml(s, false); });';
+// Sentinel only when more remain; no inline Explore tile (it\'s sticky outside).
+html += '  if (hasMore) rows += \'<div class="src-lazy-sentinel" id="srcmLazySentinel"></div>\';';
+html += '  list.innerHTML = rows;';
+html += '  list.scrollTop = prevScroll;';
+html += '  _srcmLazyLoading = false;';
+html += '  if (_srcmLazyDwellTimer) { clearTimeout(_srcmLazyDwellTimer); _srcmLazyDwellTimer = null; }';
+html += '  _setupSrcmLazyObserver();';
+html += '}';
+html += '\n';
+
+html += 'function loadMoreSrcm() {';
+html += '  if (_srcmLazyLoading) return;';
+html += '  if (_srcmQuery) return;';
+html += '  var list = document.getElementById("srcmList");';
+html += '  if (!list) return;';
+html += '  var full = orderedSources();';
+html += '  var discoverAll = sources.filter(function(s){ return !s.pinned && !s.tenant && !s.connected; });';
+html += '  var connectedHead = full.length - discoverAll.length;';
+html += '  if (_srcmLazyCount >= discoverAll.length) return;';
+html += '  var sentinel = document.getElementById("srcmLazySentinel");';
+html += '  if (!sentinel) return;';
+html += '  _srcmLazyLoading = true;';
+html += '  if (_srcmLazyObs) { try { _srcmLazyObs.unobserve(sentinel); } catch(_) {} }';
+// Modal loading row id is namespaced so it doesn\'t collide with the panel.
+html += '  sentinel.outerHTML = \'<div class="si si--loading" id="srcmLoadingRow"><div class="si__inner"><span class="si__dot"></span><span class="si__dot"></span><span class="si__dot"></span></div></div>\';';
+html += '  setTimeout(function() {';
+html += '    var loadingEl = document.getElementById("srcmLoadingRow");';
+html += '    if (!loadingEl || !_srcmLazyLoading) { _srcmLazyLoading = false; return; }';
+html += '    var prevCount = _srcmLazyCount;';
+html += '    _srcmLazyCount = Math.min(discoverAll.length, _srcmLazyCount + SRC_LAZY_BATCH);';
+html += '    var newRows = "";';
+html += '    for (var i = prevCount; i < _srcmLazyCount; i++) newRows += _srcRowHtml(full[connectedHead + i], true);';
+html += '    var done = _srcmLazyCount >= discoverAll.length;';
+html += '    if (!done) newRows += \'<div class="src-lazy-sentinel" id="srcmLazySentinel"></div>\';';
+html += '    loadingEl.outerHTML = newRows;';
+html += '    requestAnimationFrame(function() {';
+html += '      var entering = list.querySelectorAll(".si--enter");';
+html += '      for (var k = 0; k < entering.length; k++) entering[k].classList.remove("si--enter");';
+html += '    });';
+html += '    _srcmLazyLoading = false;';
+html += '    if (done) { if (_srcmLazyObs) { _srcmLazyObs.disconnect(); _srcmLazyObs = null; } }';
+html += '    else { _setupSrcmLazyObserver(); }';
+html += '  }, SRC_LAZY_DELAY_MS);';
+html += '}';
+html += '\n';
+
+html += 'function _setupSrcmLazyObserver() {';
+html += '  var list = document.getElementById("srcmList");';
+html += '  if (!list) return;';
+html += '  var sentinel = document.getElementById("srcmLazySentinel");';
+html += '  if (!sentinel) {';
+html += '    if (_srcmLazyObs) { _srcmLazyObs.disconnect(); _srcmLazyObs = null; }';
+html += '    return;';
+html += '  }';
+html += '  if (_srcmLazyObs) _srcmLazyObs.disconnect();';
+html += '  _srcmLazyObs = new IntersectionObserver(function(entries) {';
+html += '    for (var i = 0; i < entries.length; i++) {';
+html += '      var entry = entries[i];';
+html += '      if (entry.isIntersecting) {';
+html += '        if (_srcmLazyDwellTimer) clearTimeout(_srcmLazyDwellTimer);';
+html += '        _srcmLazyDwellTimer = setTimeout(function() {';
+html += '          _srcmLazyDwellTimer = null;';
+html += '          loadMoreSrcm();';
+html += '        }, SRC_LAZY_DWELL_MS);';
+html += '      } else {';
+html += '        if (_srcmLazyDwellTimer) { clearTimeout(_srcmLazyDwellTimer); _srcmLazyDwellTimer = null; }';
+html += '      }';
+html += '    }';
+html += '  }, { root: list, rootMargin: "120px 0px 0px 0px", threshold: 0 });';
+html += '  _srcmLazyObs.observe(sentinel);';
+html += '}';
+html += '\n';
+
+// Modal-specific status row updater. Mirrors the panel\'s "N sources are on"
+// + "Turn off all" affordance.
+html += 'function updateSrcmStatus() {';
+html += '  var activeCount = sources.filter(function(s){ return s.active; }).length;';
+html += '  var label = document.getElementById("srcmStatusLabel");';
+html += '  if (label) label.textContent = activeCount + " " + (activeCount === 1 ? "source is" : "sources are") + " on";';
+html += '  var off = document.getElementById("srcmTurnOff");';
+html += '  if (off) off.style.visibility = activeCount > 0 ? "" : "hidden";';
+html += '}';
+html += '\n';
+
+// Open / close the modal. Always resets search + lazy paging so the modal
+// re-opens to a clean first page (matches openSources for the panel).
+html += 'function openSrcModal() {';
+html += '  var overlay = document.getElementById("srcmOverlay");';
+html += '  if (!overlay) return;';
+html += '  _srcmQuery = "";';
+html += '  _srcmLazyCount = SRC_LAZY_BATCH;';
+html += '  var inp = document.getElementById("srcmSearchInput"); if (inp) inp.value = "";';
+html += '  var list = document.getElementById("srcmList"); if (list) list.scrollTop = 0;';
+html += '  renderSrcmList();';
+html += '  updateSrcmStatus();';
+html += '  overlay.classList.add("srcm-overlay--open");';
+html += '}';
+html += '\n';
+html += 'function closeSrcModal() {';
+html += '  var overlay = document.getElementById("srcmOverlay");';
+html += '  if (!overlay) return;';
+html += '  overlay.classList.remove("srcm-overlay--open");';
+html += '  if (_srcmLazyDwellTimer) { clearTimeout(_srcmLazyDwellTimer); _srcmLazyDwellTimer = null; }';
+html += '}';
+html += '\n';
+
+// Layout variant — chooses which surface "Change data sources" opens.
+// Default panel; URL key ?layout=modal toggles modal on reload.
+html += 'var _layoutVariant = "panel";';
+html += 'function openSourcesSurface() {';
+html += '  if (_layoutVariant === "modal") openSrcModal();';
+html += '  else openSources();';
 html += '}';
 html += '\n';
 
@@ -2588,14 +3121,27 @@ html += '\n';
 // toggleActive() flips active without touching connected — so the source stays
 // in the menu even when toggled off. Both persist and re-render. Disconnect is
 // NOT exposed in this menu; it\'s a Settings-only operation.
+// Shared post-mutation refresh — keeps every open surface in sync after a
+// connect/disconnect/toggle. Cheap no-op when the modal isn\'t open
+// (renderSrcmList early-exits if #srcmList isn\'t in the DOM... it always
+// is, so we gate on the overlay state).
+html += 'function _refreshAllSrcSurfaces() {';
+html += '  renderSourceList();';
+html += '  updateSourcesTab();';
+html += '  var overlay = document.getElementById("srcmOverlay");';
+html += '  if (overlay && overlay.classList.contains("srcm-overlay--open")) {';
+html += '    renderSrcmList();';
+html += '    updateSrcmStatus();';
+html += '  }';
+html += '}';
+html += '\n';
 html += 'function connectSource(key) {';
 html += '  var s = sources.filter(function(x){ return x.key === key; })[0];';
 html += '  if (!s) return;';
 html += '  s.connected = true;';
 html += '  s.active = true;';
 html += '  persistState();';
-html += '  renderSourceList();';
-html += '  updateSourcesTab();';
+html += '  _refreshAllSrcSurfaces();';
 html += '}';
 html += '\n';
 // Symmetric disconnect — drops the source back to "Connect" state in the menu, persists,
@@ -2606,8 +3152,7 @@ html += '  if (!s || s.key === "m365") return;';
 html += '  s.connected = false;';
 html += '  s.active = false;';
 html += '  persistState();';
-html += '  renderSourceList();';
-html += '  updateSourcesTab();';
+html += '  _refreshAllSrcSurfaces();';
 html += '}';
 html += '\n';
 html += 'function toggleActive(key) {';
@@ -2615,8 +3160,7 @@ html += '  var s = sources.filter(function(x){ return x.key === key; })[0];';
 html += '  if (!s || !s.connected) return;';
 html += '  s.active = !s.active;';
 html += '  persistState();';
-html += '  renderSourceList();';
-html += '  updateSourcesTab();';
+html += '  _refreshAllSrcSurfaces();';
 html += '}';
 html += '\n';
 // Back-compat shim — older call sites pass setConnected(key, true). Route to
@@ -2628,7 +3172,7 @@ html += '\n';
 // The most recently connected source occupies a single chip slot next to the
 // generic suggestion chips. Click toggles a vertical list of source-specific
 // prompts. Persists across reloads; replaced when the user connects another source.
-html += 'var RECENT_SOURCE_KEY = "bebop:recent-source";';
+html += 'var RECENT_SOURCE_KEY = "copilot:recent-source";';
 html += '\n';
 // Source-specific prompt sets. Moody\'s mirrors Figma 460:71219 exactly; other
 // sources use representative defaults so the chip works for any connector.
@@ -2659,6 +3203,7 @@ html += '  var chip = document.getElementById("srcPromptChip");';
 html += '  var logo = document.getElementById("srcPromptChipLogo");';
 html += '  var name = document.getElementById("srcPromptChipName");';
 html += '  var list = document.getElementById("srcPromptList");';
+html += '  var genericChip = document.getElementById("scChipGetToKnow");';
 html += '  if (!chip || !logo || !name || !list) return;';
 html += '  var key = null;';
 html += '  try { key = localStorage.getItem(RECENT_SOURCE_KEY); } catch(_e) {}';
@@ -2671,6 +3216,8 @@ html += '    chip.classList.remove("sc__chip--active");';
 html += '    chip.setAttribute("aria-expanded", "false");';
 html += '    list.classList.remove("sc-prompts--open");';
 html += '    list.innerHTML = "";';
+// Restore the generic "Get to know Copilot" chip when no recent source.
+html += '    if (genericChip) genericChip.style.display = "";';
 html += '    return;';
 html += '  }';
 // Replacing a previous recent source resets the chip to the default (light) state.
@@ -2681,8 +3228,13 @@ html += '  logo.innerHTML = src.icon || "";';
 // Chip label override map — LSEG uses the short form in the chip per Figma;
 // the longer name still appears in the Source Filter and Settings rows.
 html += '  var chipLabel = ({ lseg: "LSEG" })[src.key] || src.name;';
-html += '  name.textContent = chipLabel;';
+// Source chip text reads "Explore your <Source>" — surfaces the prompts as
+// an exploratory affordance rather than a bare source name.
+html += '  name.textContent = "Explore your " + chipLabel;';
 html += '  chip.classList.add("sc__chip--visible");';
+// Hide the generic "Get to know Copilot" chip so the source chip occupies
+// its slot without overflowing the rail.
+html += '  if (genericChip) genericChip.style.display = "none";';
 // Populate prompts list. Fall back to a generic prompt if no curated set exists.
 html += '  var prompts = SRC_PROMPTS[key] || ["Ask " + src.name + " about your latest data"];';
 html += '  var rows = "";';
@@ -2726,9 +3278,6 @@ html += '    origConnect(key);';
 html += '    if (wasUnconnected) {';
 html += '      try { localStorage.setItem(RECENT_SOURCE_KEY, key); } catch(_e) {}';
 html += '      renderSourcePromptChip();';
-// Remember the just-connected key so the next openSources() can scroll its row
-// into view as the last visible item.
-html += '      _justConnectedKey = key;';
 html += '    }';
 html += '  };';
 html += '  var origDisconnect = disconnectSource;';
@@ -2774,9 +3323,17 @@ html += '  updateSourcesTab();';
 html += '}';
 html += '\n';
 
-// "Change data sources" in add menu → instant swap (no frost gap)
+// "Change data sources" in add menu → routes to the active layout surface.
+// Modal variant: close the add-menu overlay and open the centered modal.
+// Panel variant: original instant-swap behavior (no frost gap between
+// add-menu and bottom panel).
 html += 'changeDsBtn.addEventListener(\"click\", function(e) {';
 html += '  e.stopPropagation();';
+html += '  if (_layoutVariant === "modal") {';
+html += '    amOverlay.classList.remove("am-overlay--open");';
+html += '    openSrcModal();';
+html += '    return;';
+html += '  }';
 html += '  var srcPanel = srcOverlay.querySelector(\".src-panel\");';
 // Disable ALL transitions for instant swap
 html += '  srcOverlay.style.transition = \"none\";';
@@ -2786,6 +3343,7 @@ html += '  if (srcPanel) srcPanel.style.transition = \"none\";';
 // query, no matter where the user scrolled or what they typed last time.
 html += '  var srcListEl = document.getElementById(\"srcList\"); if (srcListEl) srcListEl.scrollTop = 0;';
 html += '  _srcQuery = "";';
+html += '  _srcLazyCount = SRC_LAZY_BATCH;';
 html += '  var srcInp = document.getElementById("srcSearchInput"); if (srcInp) srcInp.value = "";';
 html += '  renderSourceList();';
 // Swap states
@@ -2803,6 +3361,109 @@ html += '\n';
 html += 'srcDismiss.addEventListener(\"click\", function() { closeSources(); });';
 html += '\n';
 
+// ─── Source modal wiring ────────────────────────────────────────────
+// Dismiss button + click-outside + Escape all close the modal. Escape
+// listener guards against firing when a different modal owns focus.
+html += '(function(){';
+html += '  var overlay = document.getElementById("srcmOverlay");';
+html += '  if (!overlay) return;';
+html += '  var dismiss = document.getElementById("srcmDismiss");';
+html += '  if (dismiss) dismiss.addEventListener("click", function(){ closeSrcModal(); });';
+html += '  overlay.addEventListener("click", function(e){ if (e.target === overlay) closeSrcModal(); });';
+html += '  document.addEventListener("keydown", function(e){';
+html += '    if (e.key === "Escape" && overlay.classList.contains("srcm-overlay--open")) closeSrcModal();';
+html += '  });';
+html += '})();';
+html += '\n';
+
+// Modal search — same contract as the panel\'s search input but targets
+// _srcmQuery and re-renders the modal list.
+html += '(function(){';
+html += '  var inp = document.getElementById("srcmSearchInput");';
+html += '  if (!inp) return;';
+html += '  inp.addEventListener("input", function(e){';
+html += '    _srcmQuery = (e.target.value || "").trim();';
+html += '    _srcmLazyCount = SRC_LAZY_BATCH;';
+html += '    var l = document.getElementById("srcmList"); if (l) l.scrollTop = 0;';
+html += '    renderSrcmList();';
+html += '  });';
+html += '})();';
+html += '\n';
+
+// Turn off all — flips active=false on every connected source. Mirrors the
+// panel\'s status-row affordance.
+html += '(function(){';
+html += '  var btn = document.getElementById("srcmTurnOff");';
+html += '  if (!btn) return;';
+html += '  btn.addEventListener("click", function(){';
+html += '    sources.forEach(function(s){ if (s.connected) s.active = false; });';
+html += '    persistState();';
+html += '    renderSrcmList();';
+html += '    updateSrcmStatus();';
+html += '    renderSourceList();';
+html += '    updateSourcesTab();';
+html += '  });';
+html += '})();';
+html += '\n';
+
+// Modal list click delegation — Connect button and toggle track. Mirrors
+// the panel\'s delegated click handler at #srcList.
+html += '(function(){';
+html += '  var list = document.getElementById("srcmList");';
+html += '  if (!list) return;';
+html += '  list.addEventListener("click", function(e){';
+html += '    var connectBtn = e.target.closest(".si__connect");';
+html += '    if (connectBtn) {';
+html += '      var key = connectBtn.getAttribute("data-connect-key");';
+html += '      var src = sources.filter(function(s){ return s.key === key; })[0];';
+html += '      var name = src ? src.name : "";';
+// Route through the connect dialog like the panel does.
+html += '      var si = connectBtn.closest(".si");';
+html += '      var iconEl = si ? si.querySelector(".si__icon") : null;';
+html += '      var iconHtml = iconEl ? iconEl.innerHTML : "";';
+html += '      window._connActive = { si: si, key: key, name: name, from: "modal" };';
+html += '      _connActive = window._connActive;';
+html += '      var titleEl = document.getElementById("connDlgTitle");';
+html += '      if (titleEl) titleEl.textContent = "Connect " + name + "?";';
+html += '      var bodyEl = document.getElementById("connDlgBody");';
+html += '      if (bodyEl) bodyEl.innerHTML = "Let Copilot securely read your content from " + name + ". You can manage your sources in <a href=\'#\'>Settings</a>.";';
+html += '      var icoEl = document.getElementById("connDlgIco");';
+html += '      if (icoEl) icoEl.innerHTML = iconHtml;';
+html += '      var connectEl = document.getElementById("connDlgConnect");';
+html += '      if (connectEl) connectEl.textContent = "Continue to " + name;';
+html += '      var overlay = document.getElementById("connOverlay");';
+html += '      if (overlay) overlay.classList.add("conn-overlay--open");';
+// Close the modal so the dialog stacks cleanly.
+html += '      closeSrcModal();';
+html += '      return;';
+html += '    }';
+html += '    var track = e.target.closest(".tgl-track");';
+html += '    if (track) {';
+html += '      var tkey = track.getAttribute("data-toggle-key");';
+html += '      toggleActive(tkey);';
+html += '      renderSrcmList();';
+html += '      updateSrcmStatus();';
+html += '    }';
+html += '  });';
+html += '})();';
+html += '\n';
+
+// Modal explore CTA — closes the modal and routes to Settings on the
+// Explore (source catalogue) tab. Mirrors the panel\'s openMoreSources
+// hand-off so both surfaces land on the same destination.
+html += '(function(){';
+html += '  var ex = document.getElementById("srcmExplore");';
+html += '  if (!ex) return;';
+html += '  function go(){';
+html += '    closeSrcModal();';
+html += '    if (typeof window.openCopilotSettings === "function") window.openCopilotSettings("explore");';
+html += '  }';
+html += '  ex.addEventListener("click", go);';
+html += '  ex.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });';
+html += '})();';
+html += '\n';
+
+
 // Search input — typing flattens the list to alphabetical matches across the
 // full catalogue; clearing reverts to the lifecycle composition.
 html += '(function(){';
@@ -2810,9 +3471,16 @@ html += '  var inp = document.getElementById("srcSearchInput");';
 html += '  if (!inp) return;';
 html += '  inp.addEventListener("input", function(e) {';
 html += '    _srcQuery = (e.target.value || "").trim();';
+// Snap back to first lazy page so clearing a search doesn't strand the user
+// mid-catalogue with a half-filled list.
+html += '    _srcLazyCount = SRC_LAZY_BATCH;';
+html += '    var l = document.getElementById("srcList"); if (l) l.scrollTop = 0;';
 html += '    renderSourceList();';
 html += '  });';
 html += '})();';
+// Lazy-load trigger lives in loadMoreSources + _setupSrcLazyObserver. The
+// observer is wired by renderSourceList on every full re-render — no extra
+// init needed here.
 html += '\n';
 
 // Reset chip — wipes connected state for everything except M365 and snaps
@@ -2824,24 +3492,26 @@ html += '  btn.addEventListener("click", function(){';
 html += '    saveState({"m365": true});';
 html += '    syncFromStorage();';
 html += '    _srcQuery = "";';
+html += '    _srcLazyCount = SRC_LAZY_BATCH;';
+html += '    var l = document.getElementById("srcList"); if (l) l.scrollTop = 0;';
 html += '    var inp = document.getElementById("srcSearchInput"); if (inp) inp.value = "";';
 html += '    renderSourceList();';
 html += '    updateSourcesTab();';
-html += '    document.dispatchEvent(new CustomEvent("bebop:sources-reset"));';
+html += '    document.dispatchEvent(new CustomEvent("copilot:sources-reset"));';
 html += '  });';
 html += '})();';
 html += '\n';
 
-// Tenant sources variant — listens for bebop:variant-change (custom event
+// Tenant sources variant — listens for copilot:variant-change (custom event
 // dispatched by the visible chip below or future hooks). Flips the flag,
 // re-syncs source state, and re-renders every surface that reads it.
-html += 'document.addEventListener("bebop:variant-change", function(e){';
+html += 'document.addEventListener("copilot:variant-change", function(e){';
 html += '  if (!e || !e.detail || e.detail.group !== "tenantSources") return;';
 html += '  _tenantVariant = (e.detail.variant === "on");';
 html += '  syncFromStorage();';
 html += '  renderSourceList();';
 html += '  if (typeof updateSourcesTab === "function") updateSourcesTab();';
-html += '  document.dispatchEvent(new CustomEvent("bebop:tenant-variant-change"));';
+html += '  document.dispatchEvent(new CustomEvent("copilot:tenant-variant-change"));';
 html += '});';
 html += '\n';
 
@@ -2863,13 +3533,52 @@ html += '      var u = new URL(location.href);';
 html += '      if (value === "on") u.searchParams.set("tenant", "on"); else u.searchParams.delete("tenant");';
 html += '      history.replaceState(null, "", u.toString());';
 html += '    } catch(_e) {}';
-html += '    document.dispatchEvent(new CustomEvent("bebop:variant-change", { detail: { group: "tenantSources", variant: value } }));';
+html += '    document.dispatchEvent(new CustomEvent("copilot:variant-change", { detail: { group: "tenantSources", variant: value } }));';
 html += '  }';
 html += '  btns.forEach(function(b){ b.addEventListener("click", function(){ setActive(b.getAttribute("data-tv")); }); });';
 // Hydrate from URL on first paint so reloads preserve state.
 html += '  try {';
 html += '    var initial = new URL(location.href).searchParams.get("tenant");';
 html += '    if (initial === "on") setActive("on");';
+html += '  } catch(_e) {}';
+html += '})();';
+html += '\n';
+
+// Layout variant listener — flips the flag. When switching mid-flow, also
+// close whichever surface is currently open so the next trigger opens the
+// new variant cleanly. Must be registered BEFORE the chip IIFE so the
+// initial URL-driven setActive() fires into a live listener.
+html += 'document.addEventListener("copilot:variant-change", function(e){';
+html += '  if (!e || !e.detail || e.detail.group !== "layout") return;';
+html += '  _layoutVariant = e.detail.variant;';
+html += '  closeSources();';
+html += '  closeSrcModal();';
+html += '});';
+html += '\n';
+
+// Layout chip — same pattern as Tenant/Source tab. Default Panel.
+// URL key: ?layout=modal (omit when panel, since panel is default).
+html += '(function(){';
+html += '  var chip = document.getElementById("lyChip");';
+html += '  if (!chip) return;';
+html += '  var btns = chip.querySelectorAll(".tv-chip__btn");';
+html += '  function setActive(value){';
+html += '    btns.forEach(function(b){';
+html += '      var on = b.getAttribute("data-ly") === value;';
+html += '      b.classList.toggle("tv-chip__btn--active", on);';
+html += '      b.setAttribute("aria-pressed", on ? "true" : "false");';
+html += '    });';
+html += '    try {';
+html += '      var u = new URL(location.href);';
+html += '      if (value === "modal") u.searchParams.set("layout", "modal"); else u.searchParams.delete("layout");';
+html += '      history.replaceState(null, "", u.toString());';
+html += '    } catch(_e) {}';
+html += '    document.dispatchEvent(new CustomEvent("copilot:variant-change", { detail: { group: "layout", variant: value } }));';
+html += '  }';
+html += '  btns.forEach(function(b){ b.addEventListener("click", function(){ setActive(b.getAttribute("data-ly")); }); });';
+html += '  try {';
+html += '    var initial = new URL(location.href).searchParams.get("layout");';
+html += '    if (initial === "modal") setActive("modal");';
 html += '  } catch(_e) {}';
 html += '})();';
 html += '\n';
@@ -2891,7 +3600,7 @@ html += '      var u = new URL(location.href);';
 html += '      if (value === "off") u.searchParams.set("srcTab", "off"); else u.searchParams.delete("srcTab");';
 html += '      history.replaceState(null, "", u.toString());';
 html += '    } catch(_e) {}';
-html += '    document.dispatchEvent(new CustomEvent("bebop:variant-change", { detail: { group: "sourceTab", variant: value } }));';
+html += '    document.dispatchEvent(new CustomEvent("copilot:variant-change", { detail: { group: "sourceTab", variant: value } }));';
 html += '  }';
 html += '  btns.forEach(function(b){ b.addEventListener("click", function(){ setActive(b.getAttribute("data-st")); }); });';
 html += '  try {';
@@ -2903,7 +3612,7 @@ html += '\n';
 
 // Source tab variant listener — flips the flag and re-runs updateSourcesTab
 // so the pill\'s visibility recalculates immediately.
-html += 'document.addEventListener("bebop:variant-change", function(e){';
+html += 'document.addEventListener("copilot:variant-change", function(e){';
 html += '  if (!e || !e.detail || e.detail.group !== "sourceTab") return;';
 html += '  _sourceTabVariant = (e.detail.variant === "on");';
 html += '  if (typeof updateSourcesTab === "function") updateSourcesTab();';
@@ -2911,8 +3620,8 @@ html += '});';
 html += '\n';
 
 // Sources Tab click → open sources overlay
-html += 'srcTab.addEventListener(\"click\", function() { openSources(); });';
-html += 'srcTab2.addEventListener(\"click\", function() { openSources(); });';
+html += 'srcTab.addEventListener(\"click\", function() { openSourcesSurface(); });';
+html += 'srcTab2.addEventListener(\"click\", function() { openSourcesSurface(); });';
 html += '\n';
 
 // Click outside sources panel closes it
@@ -3079,21 +3788,33 @@ html += '  connOverlay.classList.remove("conn-overlay--open");';
 html += '  var fromSettings = (window._connActive && window._connActive.from === "settings") || (_connActive && _connActive.from === "settings");';
 html += '  _connActive = null; window._connActive = null;';
 html += '  if (fromSettings) { if (typeof window.openCopilotSettings === "function") window.openCopilotSettings("explore"); }';
-html += '  else { openSources(); }';
+html += '  else { openSourcesSurface(); }';
 html += '});';
 html += '\n';
 
 // Connect — commit state, close dialog, return to originating surface (Sources menu or Settings).
+// When the dialog was opened from the modal source picker, scroll the
+// just-connected row into view so the user can see the result without
+// hunting through the list (it sorts alphabetically within the connected
+// section and can land below the fold).
 html += 'connDlgConnect.addEventListener("click", function() {';
 html += '  var active = window._connActive || _connActive;';
 html += '  if (!active) return;';
 html += '  var key = active.key;';
 html += '  var fromSettings = active.from === "settings";';
+html += '  var fromModal = active.from === "modal";';
 html += '  setConnected(key, true);';
 html += '  connOverlay.classList.remove("conn-overlay--open");';
 html += '  _connActive = null; window._connActive = null;';
 html += '  if (fromSettings) { if (typeof window.openCopilotSettings === "function") window.openCopilotSettings("connected"); }';
-html += '  else { openSources(); }';
+html += '  else { openSourcesSurface(); }';
+html += '  if (fromModal) {';
+html += '    requestAnimationFrame(function(){';
+html += '      var list = document.getElementById("srcmList");';
+html += '      var row = list && list.querySelector(\'.si[data-key="\' + key + \'"]\');';
+html += '      if (row && typeof row.scrollIntoView === "function") row.scrollIntoView({ block: "center" });';
+html += '    });';
+html += '  }';
 html += '});';
 html += '\n';
 
@@ -3411,7 +4132,7 @@ html += '\n';
 // ─── Settings Modal — IIFE keeps state private; exposes window.openCopilotSettings() ───
 // Single-page Browse sources: M365 card + one list with connected (alphabetical)
 // then unconnected (alphabetical). State is SHARED with the FCC sources menu via the
-// same localStorage key (`bebop:connected-sources`, shape `{ "<id>": <activeBool> }`).
+// same localStorage key (`copilot:connected-sources`, shape `{ "<id>": <activeBool> }`).
 // Settings only owns the keys it renders — it preserves m365 and unknown keys so
 // toggle state set by the other surface isn\'t clobbered.
 // Inject the connector data so the renderer can build rows on demand.
@@ -3507,7 +4228,7 @@ html += '    }\n';
 html += '  }\n';
 html += '  input.addEventListener("input", renderSmList);\n';
 // Tenant variant flip — admin-enabled rows appear/disappear.
-html += '  document.addEventListener("bebop:tenant-variant-change", renderSmList);\n';
+html += '  document.addEventListener("copilot:tenant-variant-change", renderSmList);\n';
 // Connect — route through the shared Connect dialog. On confirm, the dialog handler
 // calls setConnected(id, true) and re-opens settings on the Connected tab. On cancel,
 // it re-opens settings on the Explore tab (where the row still lives with its Connect CTA).
@@ -3546,11 +4267,16 @@ html += '    closeAllPops();\n';
 html += '    if (open) return;\n';
 html += '    var pop = document.createElement("div");\n';
 html += '    pop.className = "sm-pop";\n';
-// Tenant rows: render a disabled "Admin enabled" label (no action). User-connected
-// rows: render the Disconnect action.
+// Pop content by row type:
+//   M365 row → disabled "Microsoft enabled" (Microsoft-managed, no Disconnect)
+//   Tenant row → disabled "Admin enabled" (admin-managed, no Disconnect)
+//   User-connected row → "Disconnect" action.
 html += '    var row = btn.closest(".sm-list__row");\n';
+html += '    var isM365 = row && row.getAttribute("data-m365") === "1";\n';
 html += '    var isTenant = row && row.getAttribute("data-tenant") === "1";\n';
-html += '    if (isTenant) {\n';
+html += '    if (isM365) {\n';
+html += '      pop.innerHTML = \'<span class="sm-pop__item sm-pop__item--disabled" aria-disabled="true">Microsoft enabled</span>\';\n';
+html += '    } else if (isTenant) {\n';
 html += '      pop.innerHTML = \'<span class="sm-pop__item sm-pop__item--disabled" aria-disabled="true">Admin enabled</span>\';\n';
 html += '    } else {\n';
 html += '      pop.innerHTML = \'<button class="sm-pop__item" type="button" data-pop-action="disconnect" data-id="\' + btn.getAttribute("data-id") + \'">Disconnect</button>\';\n';

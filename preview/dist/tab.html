@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Tab &amp; TabList Preview</title><style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
+body { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; background: #f3f3f3; padding: 40px 24px; color: #242424; }
 h1 { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 8px; }
 h2 { font-size: 18px; font-weight: 600; margin: 40px 0 16px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
 h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
@@ -17,8 +17,8 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 .tab {
   display: inline-flex; align-items: center; justify-content: center;
   position: relative; cursor: pointer; border: none;
-  font-family: 'Segoe UI', 'Segoe Sans', sans-serif;
-  font-size: 14px; font-weight: 400; line-height: 1.4;
+  font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px; font-weight: 420; line-height: 20px;
   letter-spacing: 0; white-space: nowrap;
   transition: background 0.1s;
   outline: none;
@@ -32,11 +32,13 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 .tab .tab__ico-f { display: none; }
 .tab.sel .tab__ico-r { display: none; }
 .tab.sel .tab__ico-f { display: inline-flex; }
+.tab.no-ico .tab__ico-r, .tab.no-ico .tab__ico-f { display: none; }
+.tab.no-label .tab__label { display: none; }
 
 /* ─── Text layout (Icon+Label or Text-only) ─── */
 .tab--text {
   min-height: 32px; min-width: 32px;
-  padding: 6px 10px; gap: 4px;
+  padding: 6px 12px; gap: 4px;
   border-radius: 12px;
 }
 
@@ -47,24 +49,53 @@ h3 { font-size: 14px; font-weight: 600; margin: 20px 0 12px; color: #5d5d5d; }
 }
 
 /* ─── Unselected states ─── */
-.tab:hover:not(:disabled):not(.sel) { background: rgba(36,36,36,0.04); color: #1d1d1d; }
+.tab:hover:not(:disabled):not(.sel) { background: rgba(24,24,24,0.04); color: #181818; }
+.tab:active:not(:disabled):not(.sel) { background: rgba(13,13,13,0.08); color: #0d0d0d; }
 
 /* ─── Selected states ─── */
-.tab.sel { background: #242424; color: #fff; font-weight: 600; }
-.tab.sel:hover:not(:disabled) { background: #2b2b2b; color: #fff; }
+.tab.sel { background: #242424; color: #fff; font-weight: 625; }
+.tab.sel:hover:not(:disabled) { background: #313131; color: #fff; }
+.tab.sel:active:not(:disabled) { background: #3e3e3e; color: #fff; }
 
 /* ─── Disabled ─── */
-.tab:disabled { color: #929292; cursor: not-allowed; background: rgba(36,36,36,0); }
-.tab.sel:disabled { background: #ebebeb; color: #929292; }
+.tab:disabled { color: rgba(0,0,0,0.43); cursor: not-allowed; background: rgba(143,143,143,0.5); }
+.tab.sel:disabled { background: rgba(143,143,143,0.5); color: rgba(0,0,0,0.43); }
 
 /* ─── Focus ring ─── */
 .tab:focus-visible { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }
+
+/* ─── Hover/focus demo forcing ─── */
+.hover-demo .tab { background: rgba(24,24,24,0.04); color: #181818; }
+.hover-demo .tab.sel { background: #313131; color: #fff; }
+.focus-demo .tab { outline: 2px solid #000; outline-offset: 0; box-shadow: inset 0 0 0 1px #fff; }
+
+/* ─── End content (trailing icon button) ─── */
+.tablist-strip { display: flex; align-items: center; gap: 4px; width: 400px; }
+.tablist-strip .tablist { flex: 1 0 0; min-width: 0; overflow: clip; }
+.tab-end {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 6px; border-radius: 9999px;
+  border: 1px solid rgba(36,36,36,0); background: transparent; color: #242424;
+  cursor: pointer; flex-shrink: 0;
+}
+.tab-end:hover { background: rgba(24,24,24,0.04); }
+.tab-end svg { width: 20px; height: 20px; display: block; }
+
+/* ─── Usage guidance ─── */
+.usage__sec { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px 22px; margin-bottom: 12px; }
+.usage__sec h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; margin: 0 0 10px; color: #242424; }
+.usage__sec p.lead { font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 10px; }
+.usage__sub { font-size: 12px; font-weight: 600; color: #242424; margin: 12px 0 6px; }
+.usage__sec ul { list-style: none; display: flex; flex-direction: column; gap: 7px; margin: 0; }
+.usage__sec li { font-size: 13px; line-height: 1.55; color: #5d5d5d; padding-left: 18px; position: relative; }
+.usage__sec li::before { content: ''; position: absolute; left: 2px; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: #c7c7c7; }
+.usage__sec li b { color: #242424; font-weight: 600; }
 
 /* ─── Bebop page overrides (injected by _inject.ts) ─── */
 body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif !important; color: #242424; min-height: 100vh; display: block !important; align-items: initial !important; flex-direction: initial !important; }
 
 /* Page wrapper */
-.bp-header { max-width: 900px; margin: 0 auto; padding: 60px 48px 0; }
+.bp-header { max-width: 920px; margin: 0 auto; padding: 60px 48px 0; }
 .bp-header__top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .bp-header__title { font-family: Aptos, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; color: #242424; line-height: 1.2; }
 .bp-header__tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; }
@@ -75,7 +106,7 @@ body { background: #fff !important; padding: 0 !important; margin: 0 !important;
 .bp-header__state { font-size: 12px; color: #6f6f6f; background: #f5f5f5; padding: 3px 10px; border-radius: 8px; }
 
 /* Content area — override all wrapper variants */
-.wrap, .page, .section { max-width: 900px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
+.wrap, .page, .section { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; padding-left: 48px !important; padding-right: 48px !important; }
 
 /* Headings */
 h1 { display: none !important; }
@@ -83,13 +114,125 @@ h1 { display: none !important; }
 h2 { font-family: 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #242424 !important; margin: 40px 0 16px !important; padding-bottom: 10px !important; border-bottom: 1px solid #f0f0f0 !important; }
 h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; color: #929292 !important; margin: 20px 0 12px !important; border: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Unified primitive scaffold (bp-*)
+   One anatomy for every primitive page: Stage → Variants → States → Specs →
+   Guidance. Generators emit semantic bp-* markup; this stylesheet gives them
+   a consistent One Copilot surface (Segoe Sans + opsz, radius 16 cards,
+   Shadow/Low). Legacy classes (.section/.matrix/.grid/.row/.rl) are also
+   normalized below so pages not yet converted still match the system.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Section shell — every showcase block is a centered, titled region */
+.bp-section { max-width: 920px; margin: 0 auto 44px; padding: 0 48px; }
+.bp-section__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.bp-section__title { font-family: 'Segoe Sans', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; line-height: 22px; }
+.bp-section__hint { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; color: #929292; line-height: 20px; }
+.bp-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* Sub-label — the small uppercase caption used inside cards */
+.bp-lbl { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 1. Stage — the interactive area ── */
+.bp-stage { max-width: 920px; margin: 0 auto 16px; padding: 0 48px; }
+.bp-stage__canvas { position: relative; min-height: 220px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 48px; border: 1px solid #ebebeb; border-radius: 16px; background-color: #fafafa; background-image: radial-gradient(#e4e4e4 1px, transparent 1px); background-size: 16px 16px; background-position: -8px -8px; }
+.bp-stage__canvas--dark { background-color: #1f1f1f; background-image: radial-gradient(#3a3a3a 1px, transparent 1px); }
+/* Controls rail — drives the stage */
+.bp-controls { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 12px; padding: 14px 18px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; }
+.bp-control { display: inline-flex; align-items: center; gap: 10px; }
+.bp-control > .bp-lbl { flex-shrink: 0; }
+/* Segmented control built from our own switcher styling */
+.bp-seg { display: inline-flex; gap: 2px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.bp-seg button { height: 26px; padding: 0 12px; border: none; background: transparent; border-radius: 7px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 400; color: #5d5d5d; cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+.bp-seg button:hover { color: #242424; }
+.bp-seg button.is-active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+/* ── 2. Variants — card grid, one tile per configuration ── */
+.bp-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.bp-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 100px; padding: 24px 20px; background: #fff; border: 1px solid #ebebeb; border-radius: 12px; text-align: center; }
+.bp-tile__label { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; }
+
+/* ── 3. States — matrix that scrolls INSIDE its own card ── */
+.bp-matrix-wrap { max-width: 920px; margin: 0 auto; overflow-x: auto; background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.bp-matrix { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; }
+.bp-matrix th, .bp-matrix td { padding: 18px 22px; text-align: left; vertical-align: middle; }
+.bp-matrix thead th { position: sticky; top: 0; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #929292; background: #fff; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.bp-matrix thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.bp-matrix tbody th { position: sticky; left: 0; z-index: 1; font-size: 11px; font-weight: 600; color: #5d5d5d; background: #fff; white-space: nowrap; box-shadow: 1px 0 0 #f0f0f0; }
+.bp-matrix tbody td { border-bottom: 1px solid #f7f7f7; }
+.bp-matrix tbody tr:last-child td, .bp-matrix tbody tr:last-child th { border-bottom: none; }
+
+/* ── 4. Specs — token readout ── */
+.bp-specs { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: #f0f0f0; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.bp-spec { background: #fff; padding: 16px 20px; }
+.bp-spec__k { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #929292; margin-bottom: 5px; }
+.bp-spec__v { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; color: #242424; font-variant-numeric: tabular-nums; }
+
+/* ── 5. Guidance — preserve existing Do/Don't usage content, house in cards ── */
+.bp-guidance { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.bp-guide { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 20px; }
+.bp-guide__head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; }
+.bp-guide--do .bp-guide__head { color: #0f7b3f; }
+.bp-guide--dont .bp-guide__head { color: #b10e1c; }
+.bp-guide__dot { width: 8px; height: 8px; border-radius: 50%; }
+.bp-guide--do .bp-guide__dot { background: #0f7b3f; }
+.bp-guide--dont .bp-guide__dot { background: #b10e1c; }
+.bp-guide ul { margin: 0; padding-left: 18px; }
+.bp-guide li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.6; color: #5d5d5d; margin-bottom: 6px; }
+
+/* Usage guidance — long-form, One Copilot surface (Segoe Sans, radius 16 card) */
+.bp-usage { max-width: 920px; margin: 0 auto; padding: 0 48px; }
+.bp-usage__card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); padding: 32px 36px; display: flex; flex-direction: column; gap: 28px; }
+.bp-usage__sec { display: flex; flex-direction: column; gap: 8px; }
+.bp-usage__sec h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; margin: 0; line-height: 20px; }
+.bp-usage__sec p { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin: 0 0 8px; }
+.bp-usage__sec p:last-child { margin-bottom: 0; }
+.bp-usage__sec strong { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+.bp-usage__sec ul { margin: 4px 0 0; padding-left: 18px; }
+.bp-usage__sec li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 14px; line-height: 20px; color: #5d5d5d; margin-bottom: 6px; }
+.bp-usage__sec li strong, .bp-usage__sec li b { font-weight: 625; font-variation-settings: 'opsz' 8, 'wght' 625; color: #242424; }
+
+/* ═══ Legacy guidance normalization → One Copilot styling (every page) ═══
+   Bespoke guidance blocks (.when / .usage__col / .usage__sec / .a11y and the
+   long-form .usage doc) are re-skinned here so guidance reads identically
+   across all primitive AND compound pages: Segoe Sans + opsz, #5d5d5d body,
+   #ebebeb radius-12 cards, one type scale. Only type + card chrome is set —
+   never display — so each block keeps its own layout (Do/Don't grid, doc
+   card, section stack). */
+.when { max-width: 920px; margin-left: auto !important; margin-right: auto !important; border-color: #ebebeb !important; border-radius: 16px !important; padding: 18px 22px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 14px !important; line-height: 20px !important; color: #5d5d5d !important; }
+.when strong { font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage__col { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px !important; }
+.usage__col h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 12px !important; }
+.usage__col li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 13px !important; line-height: 1.6 !important; color: #5d5d5d !important; }
+.usage__col li::before { top: 8px !important; }
+
+.usage__sec { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.usage__sec h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; letter-spacing: 0 !important; margin-bottom: 10px !important; }
+.usage__sec p, .usage__sec li, .usage__sec p.lead { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; font-size: 14px !important; line-height: 20px !important; }
+.usage__sub { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+
+.usage h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage h4 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; }
+.usage p, .usage li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; line-height: 20px !important; }
+
+.a11y { border-color: #ebebeb !important; border-radius: 12px !important; padding: 20px 24px !important; }
+.a11y h3 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 15px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; }
+.a11y li { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; color: #5d5d5d !important; }
+.bp-usage__sec code { font-family: 'Cascadia Code', ui-monospace, monospace; font-size: 12.5px; background: #f5f5f5; padding: 1px 5px; border-radius: 4px; }
+
+/* ── Legacy normalization — make un-converted pages match the system ── */
+/* Wrap bespoke .matrix cards in the unified surface + let them scroll */
+.matrix { background: #fff !important; border: 1px solid #ebebeb !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04); max-width: 100%; overflow-x: auto; }
+.section-title { font-family: 'Segoe Sans', 'Segoe UI', sans-serif !important; font-size: 16px !important; font-weight: 625 !important; font-variation-settings: 'opsz' 8, 'wght' 625 !important; color: #242424 !important; border-bottom: 1px solid #f0f0f0 !important; padding-bottom: 10px !important; }
+
 /* Rows and cells */
 .row { gap: 24px !important; margin-bottom: 20px !important; }
 .cell { gap: 8px !important; }
 .rl { font-size: 11px !important; font-weight: 600 !important; color: #929292 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
 
 /* ─── Related components ─── */
-.bp-related { max-width: 900px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
+.bp-related { max-width: 920px; margin: 0 auto; padding: 80px 48px; margin-top: 60px; border-top: 1px solid #f0f0f0; }
 .bp-related__title { font-size: 16px; font-weight: 600; color: #242424; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
 .bp-related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
 .bp-related__card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s, border-color 0.15s, box-shadow 0.15s; }
@@ -102,10 +245,10 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 .bp-related__card-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 8px; width: fit-content; }
 
 /* ─── Back bar (sticky, frosted) ─── */
-.bebop-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
-.bebop-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
-.bebop-backbar a:hover { background: rgba(36,36,36,0.04); }
-.bebop-backbar a svg { width: 16px; height: 16px; }
+.copilot-backbar { position: sticky; top: 0; left: 0; right: 0; z-index: 9999; height: 48px; display: flex; align-items: center; padding: 0 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #dedede; }
+.copilot-backbar a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #242424; font-family: 'Segoe UI', sans-serif; font-size: 14px; transition: background 0.1s; }
+.copilot-backbar a:hover { background: rgba(36,36,36,0.04); }
+.copilot-backbar a svg { width: 16px; height: 16px; }
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; }
@@ -114,9 +257,8 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 ::-webkit-scrollbar-thumb:hover { border: 0; }
 * { scrollbar-width: thin; scrollbar-color: #6f6f6f transparent; }
 
-</style></head><body><!-- INJECT:BACKBAR --><div class="bebop-backbar"><a href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Tab & TabList</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Pill-style tabs and tablist. Supports text and icon-only layouts, selected and unselected states, and single-select tablist behavior.</p><div class="bp-header__states"><span class="bp-header__state">Rest</span><span class="bp-header__state">Hover</span><span class="bp-header__state">Selected</span><span class="bp-header__state">Disabled</span><span class="bp-header__state">Focused</span></div></div><!-- /INJECT:HEADER --><div class="wrap">
-<h1>Tab &amp; TabList — Component Preview</h1>
-<p class="hint">Click tabs to toggle selection. Use Tab key for focus ring. Hover for hover state.</p>
+</style></head><body><!-- INJECT:BACKBAR --><div class="copilot-backbar"><a href="../tokens.html"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to catalog</a></div><!-- /INJECT:BACKBAR --><!-- INJECT:HEADER --><div class="bp-header"><div class="bp-header__top"><span class="bp-header__title">Tab & TabList</span><span class="bp-header__tag bp-header__tag--primitive">Primitive</span></div><p class="bp-header__desc">Pill-style tabs and tablist. Supports text and icon-only layouts, selected and unselected states, and single-select tablist behavior.</p><div class="bp-header__states"><span class="bp-header__state">Rest</span><span class="bp-header__state">Hover</span><span class="bp-header__state">Selected</span><span class="bp-header__state">Disabled</span><span class="bp-header__state">Focused</span></div></div><!-- /INJECT:HEADER --><div class="wrap">
+<div class="bp-stage"><div class="bp-stage__canvas"><button id="heroTab" class="tab tab--text sel"><span class="tab__ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="tab__ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3C4.34315 3 3 4.34315 3 6V14C3 14.6495 3.20642 15.2509 3.55724 15.7419L8.94759 10.4345C9.53144 9.85964 10.4686 9.85964 11.0524 10.4345L16.4428 15.7419C16.7936 15.2509 17 14.6495 17 14V6C17 4.34315 15.6569 3 14 3H6ZM6 17C5.35372 17 4.75517 16.7956 4.26544 16.448L9.6492 11.1471C9.84381 10.9555 10.1562 10.9555 10.3508 11.1471L15.7346 16.448C15.2448 16.7956 14.6463 17 14 17H6ZM12.5 8.75C11.8096 8.75 11.25 8.19036 11.25 7.5C11.25 6.80964 11.8096 6.25 12.5 6.25C13.1904 6.25 13.75 6.80964 13.75 7.5C13.75 8.19036 13.1904 8.75 12.5 8.75Z" fill="currentColor"/></svg></span><span class="tab__label">Tab</span></button></div><div class="bp-controls"><div class="bp-control"><span class="bp-lbl">Layout</span><div class="bp-seg" data-seg="layout"><button type="button" data-ctrl="layout" data-value="both" class="is-active">Icon + text</button><button type="button" data-ctrl="layout" data-value="text">Text</button><button type="button" data-ctrl="layout" data-value="icon">Icon</button></div></div><div class="bp-control"><span class="bp-lbl">State</span><div class="bp-seg" data-seg="state"><button type="button" data-ctrl="state" data-value="rest">Rest</button><button type="button" data-ctrl="state" data-value="selected" class="is-active">Selected</button><button type="button" data-ctrl="state" data-value="disabled">Disabled</button></div></div></div></div>
 <h2>TabList — Text Only</h2>
 <div class="tablist" data-tablist>
 <button class="tab tab--text sel"><span class="tab__label">All</span></button>
@@ -137,6 +279,17 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 <button class="tab tab--ico sel"><span class="tab__ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="tab__ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3C4.34315 3 3 4.34315 3 6V14C3 14.6495 3.20642 15.2509 3.55724 15.7419L8.94759 10.4345C9.53144 9.85964 10.4686 9.85964 11.0524 10.4345L16.4428 15.7419C16.7936 15.2509 17 14.6495 17 14V6C17 4.34315 15.6569 3 14 3H6ZM6 17C5.35372 17 4.75517 16.7956 4.26544 16.448L9.6492 11.1471C9.84381 10.9555 10.1562 10.9555 10.3508 11.1471L15.7346 16.448C15.2448 16.7956 14.6463 17 14 17H6ZM12.5 8.75C11.8096 8.75 11.25 8.19036 11.25 7.5C11.25 6.80964 11.8096 6.25 12.5 6.25C13.1904 6.25 13.75 6.80964 13.75 7.5C13.75 8.19036 13.1904 8.75 12.5 8.75Z" fill="currentColor"/></svg></span></button>
 <button class="tab tab--ico"><span class="tab__ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V9H9V4H6ZM10 4V9H16V6C16 4.89543 15.1046 4 14 4H10ZM16 10H10V16H14C15.1046 16 16 15.1046 16 14V10ZM9 16V10H4V14C4 15.1046 4.89543 16 6 16H9Z" fill="currentColor"/></svg></span><span class="tab__ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3C4.34315 3 3 4.34315 3 6V9.5H9.5V3H6ZM10.5 3V9.5H17V6C17 4.34315 15.6569 3 14 3H10.5ZM17 10.5H10.5V17H14C15.6569 17 17 15.6569 17 14V10.5ZM9.5 17V10.5H3V14C3 15.6569 4.34315 17 6 17H9.5Z" fill="currentColor"/></svg></span></button>
 <button class="tab tab--ico"><span class="tab__ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 5.25C2.5 4.83579 2.83579 4.5 3.25 4.5H16.75C17.1642 4.5 17.5 4.83579 17.5 5.25C17.5 5.66421 17.1642 6 16.75 6H3.25C2.83579 6 2.5 5.66421 2.5 5.25ZM2.5 10C2.5 9.58579 2.83579 9.25 3.25 9.25H16.75C17.1642 9.25 17.5 9.58579 17.5 10C17.5 10.4142 17.1642 10.75 16.75 10.75H3.25C2.83579 10.75 2.5 10.4142 2.5 10ZM3.25 14C2.83579 14 2.5 14.3358 2.5 14.75C2.5 15.1642 2.83579 15.5 3.25 15.5H16.75C17.1642 15.5 17.5 15.1642 17.5 14.75C17.5 14.3358 17.1642 14 16.75 14H3.25Z" fill="currentColor"/></svg></span><span class="tab__ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 5.25C2.5 4.83579 2.83579 4.5 3.25 4.5H16.75C17.1642 4.5 17.5 4.83579 17.5 5.25C17.5 5.66421 17.1642 6 16.75 6H3.25C2.83579 6 2.5 5.66421 2.5 5.25ZM2.5 10C2.5 9.58579 2.83579 9.25 3.25 9.25H16.75C17.1642 9.25 17.5 9.58579 17.5 10C17.5 10.4142 17.1642 10.75 16.75 10.75H3.25C2.83579 10.75 2.5 10.4142 2.5 10ZM3.25 14C2.83579 14 2.5 14.3358 2.5 14.75C2.5 15.1642 2.83579 15.5 3.25 15.5H16.75C17.1642 15.5 17.5 15.1642 17.5 14.75C17.5 14.3358 17.1642 14 16.75 14H3.25Z" fill="currentColor"/></svg></span></button>
+</div>
+<h2>TabList — With End Content</h2>
+<p class="hint" style="text-align:left;margin:0 0 12px">The trailing action lives in the End content slot, pinned to the trailing edge; the tab strip clips its overflow.</p>
+<div class="tablist-strip">
+<div class="tablist" data-tablist>
+<button class="tab tab--text sel"><span class="tab__label">All</span></button>
+<button class="tab tab--text"><span class="tab__label">Files</span></button>
+<button class="tab tab--text"><span class="tab__label">People</span></button>
+<button class="tab tab--text"><span class="tab__label">Chats</span></button>
+</div>
+<button class="tab-end" aria-label="More tabs"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8537 7.64582C16.0493 7.84073 16.0499 8.15731 15.855 8.35292L10.39 13.8374C10.1751 14.0531 9.82574 14.0531 9.6108 13.8374L4.14582 8.35292C3.9509 8.15731 3.95147 7.84073 4.14708 7.64582C4.34269 7.4509 4.65927 7.45147 4.85418 7.64708L10.0004 12.8117L15.1466 7.64708C15.3415 7.45147 15.6581 7.4509 15.8537 7.64582Z" fill="currentColor"/></svg></button>
 </div>
 <h2>Tab States — Text (Icon + Label)</h2>
 <h3>Unselected</h3>
@@ -173,8 +326,53 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
 <div class="cell"><span class="rl">Selected</span><button class="tab tab--text sel"><span class="tab__ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="tab__ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3C4.34315 3 3 4.34315 3 6V14C3 14.6495 3.20642 15.2509 3.55724 15.7419L8.94759 10.4345C9.53144 9.85964 10.4686 9.85964 11.0524 10.4345L16.4428 15.7419C16.7936 15.2509 17 14.6495 17 14V6C17 4.34315 15.6569 3 14 3H6ZM6 17C5.35372 17 4.75517 16.7956 4.26544 16.448L9.6492 11.1471C9.84381 10.9555 10.1562 10.9555 10.3508 11.1471L15.7346 16.448C15.2448 16.7956 14.6463 17 14 17H6ZM12.5 8.75C11.8096 8.75 11.25 8.19036 11.25 7.5C11.25 6.80964 11.8096 6.25 12.5 6.25C13.1904 6.25 13.75 6.80964 13.75 7.5C13.75 8.19036 13.1904 8.75 12.5 8.75Z" fill="currentColor"/></svg></span><span class="tab__label">Tab</span></button></div>
 <div class="cell"><span class="rl">Disabled</span><button class="tab tab--text" disabled><span class="tab__ico-r"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7.5C14 8.32843 13.3284 9 12.5 9C11.6716 9 11 8.32843 11 7.5C11 6.67157 11.6716 6 12.5 6C13.3284 6 14 6.67157 14 7.5ZM13 7.5C13 7.22386 12.7761 7 12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8C12.7761 8 13 7.77614 13 7.5ZM3 6C3 4.34315 4.34315 3 6 3H14C15.6569 3 17 4.34315 17 6V14C17 15.6569 15.6569 17 14 17H6C4.34315 17 3 15.6569 3 14V6ZM6 4C4.89543 4 4 4.89543 4 6V14C4 14.3726 4.10191 14.7215 4.27937 15.0201L8.94868 10.432C9.53227 9.85859 10.4677 9.85859 11.0513 10.432L15.7206 15.0201C15.8981 14.7215 16 14.3726 16 14V6C16 4.89543 15.1046 4 14 4H6ZM6 16H14C14.3692 16 14.7149 15.9 15.0118 15.7256L10.3504 11.1453C10.1559 10.9542 9.84409 10.9542 9.64956 11.1453L4.98824 15.7256C5.28505 15.9 5.63085 16 6 16Z" fill="currentColor"/></svg></span><span class="tab__ico-f"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3C4.34315 3 3 4.34315 3 6V14C3 14.6495 3.20642 15.2509 3.55724 15.7419L8.94759 10.4345C9.53144 9.85964 10.4686 9.85964 11.0524 10.4345L16.4428 15.7419C16.7936 15.2509 17 14.6495 17 14V6C17 4.34315 15.6569 3 14 3H6ZM6 17C5.35372 17 4.75517 16.7956 4.26544 16.448L9.6492 11.1471C9.84381 10.9555 10.1562 10.9555 10.3508 11.1471L15.7346 16.448C15.2448 16.7956 14.6463 17 14 17H6ZM12.5 8.75C11.8096 8.75 11.25 8.19036 11.25 7.5C11.25 6.80964 11.8096 6.25 12.5 6.25C13.1904 6.25 13.75 6.80964 13.75 7.5C13.75 8.19036 13.1904 8.75 12.5 8.75Z" fill="currentColor"/></svg></span><span class="tab__label">Tab</span></button></div>
 </div>
+<h2>Tab — Usage guidance</h2>
+<div class="usage__sec"><h3>Behavior</h3><ul>
+<li>Use a tab to switch between related content panels within a persistent container (Files, People, Chats) — only one panel is visible at a time.</li>
+<li>A tablist must always have exactly one active tab. Zero or multiple selected tabs is invalid — always keep one Selected=True.</li>
+<li>Don't use Disabled to represent an inactive tab. Disabled means unavailable; use Selected=False for the non-active tab.</li>
+<li>When Selected changes, the label weight shifts Regular (420) → Semibold (625). Reserve layout space at the Semibold width (ghost node) so the layout doesn't reflow.</li>
+<li>Never use a tab outside of a tablist — it isn't a standalone control.</li>
+</ul></div>
+<div class="usage__sec"><h3>Layout</h3>
+<p class="lead">Tab ships in two layouts — choose based on available space and icon recognizability.</p><ul>
+<li><b>Icon + label</b> is the default. The label improves discoverability and is right in most surfaces.</li>
+<li><b>Icon only</b> is for space-constrained contexts where the icon is self-explanatory. The container becomes circular and padding squares up — always provide an aria-label.</li>
+<li>Apply the correct radius token: Icon + label uses base-300 (12px); Icon only uses circular. Don't hardcode pixels.</li>
+<li>For the icon slot, use the Fluent Image icon as the default — never placeholder shapes or custom vectors.</li>
+</ul></div>
+<div class="usage__sec"><h3>Accessibility</h3><ul>
+<li><b>aria-label on Icon only tabs:</b> describe the content panel, not the icon — “Settings”, not “Gear icon”.</li>
+<li><b>Reduced motion:</b> when prefers-reduced-motion: reduce is set, tab transitions are instant.</li>
+</ul></div>
+<div class="usage__sec"><h3>Content</h3><ul>
+<li>Always use functional typography on labels. Never apply content-set type — tabs are interactive UI chrome, not editorial content.</li>
+</ul></div>
+<h2>TabList — Usage guidance</h2>
+<div class="usage__sec"><h3>Behavior</h3>
+<p class="lead">Tablist groups related tabs into a horizontal navigation strip for switching between mutually exclusive content panels, with an optional trailing end-content action.</p>
+<div class="usage__sub">Selection</div><ul>
+<li>Always keep exactly one tab Selected=true. Zero or multiple selected tabs is invalid state.</li></ul>
+<div class="usage__sub">End content</div><ul>
+<li>Place trailing actions in the End content slot — appending a standalone sibling button breaks alignment and the keyboard model.</li></ul>
+<div class="usage__sub">Container styling</div><ul>
+<li>Never apply a background fill or stroke to the container — tablist is a transparent layout wrapper; visual weight comes from the child tabs.</li>
+</ul></div>
+<div class="usage__sec"><h3>Layout</h3><ul>
+<li>Use the gap token — don't hardcode pixel values.</li>
+<li>Don't mix tab layouts within one tablist. Use either all Icon + text or all Icon only — mixing breaks rhythm and hit targets.</li>
+</ul></div>
+<div class="usage__sec"><h3>Accessibility</h3><ul>
+<li><b>Roving tabindex:</b> the tablist is a single tab stop with arrow-key navigation between tabs — don't make each tab a separate tab stop.</li>
+<li><b>Accessible name:</b> aria-label the container by purpose (“Message categories”), not by listing tab names.</li>
+<li><b>Tabpanels:</b> pair each tab with a role="tabpanel"; hide inactive panels with the hidden attribute rather than removing them from the DOM.</li>
+</ul></div>
 </div>
 <script>
+  (function(){ var hero=document.getElementById("heroTab"); var st={layout:"both",state:"selected"};
+    function paint(){ var cls=["tab"]; if(st.layout==="icon"){cls.push("tab--ico","no-label");} else {cls.push("tab--text"); if(st.layout==="text")cls.push("no-ico");} if(st.state==="selected")cls.push("sel"); hero.className=cls.join(" "); hero.disabled=st.state==="disabled"; }
+    document.querySelectorAll("[data-ctrl]").forEach(function(btn){ btn.addEventListener("click", function(){ var name=btn.getAttribute("data-ctrl"); st[name]=btn.getAttribute("data-value"); var seg=btn.parentNode; seg.querySelectorAll("button").forEach(function(b){ b.classList.toggle("is-active", b===btn); }); paint(); }); });
+    paint(); })();
   // TabList behavior: single-select within each tablist
   document.querySelectorAll("[data-tablist]").forEach(tl => {
     tl.querySelectorAll(".tab").forEach(t => {
@@ -192,4 +390,4 @@ h3 { font-family: 'Segoe UI', sans-serif !important; font-size: 13px !important;
       t.classList.toggle("sel");
     });
   });
-</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="divider.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Divider</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Horizontal and vertical divider lines with optional inline content label. Suppor...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="nav.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Nav</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Sidebar navigation with expand and collapse toggle, nav items, pinned and chat s...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a></div></div><!-- /INJECT:RELATED --></body></html>
+</script><!-- INJECT:RELATED --><div class="bp-related"><div class="bp-related__title">Related Components</div><div class="bp-related__grid"><a class="bp-related__card" href="button.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Button</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Multi-variant button with 4 styles (subtle, outline, secondary, primary), 3 size...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="divider.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Divider</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">Non-interactive separator. Horizontal and vertical lines with an optional conten...</span><span class="bp-related__card-tag bp-header__tag--primitive">Primitive</span></a><a class="bp-related__card" href="nav.html"><div class="bp-related__card-top"><span class="bp-related__card-name">Side Nav</span><svg class="bp-related__card-arrow" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bp-related__card-desc">The single shared navigation shell (Work variant). Header (Copilot + open/apps/c...</span><span class="bp-related__card-tag bp-header__tag--compound">Compound</span></a></div></div><!-- /INJECT:RELATED --></body></html>

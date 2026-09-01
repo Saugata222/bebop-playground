@@ -27,8 +27,8 @@ export const toolbarSizeLarge = {
   buttonSize: '40px',
   /** Button padding — reuses buttonIconOnlyLarge */
   buttonPadding: '10px',
-  /** Icon size */
-  iconSize: '16px',
+  /** Icon size — One Copilot Large uses 20px */
+  iconSize: '20px',
   /** Button border radius */
   buttonBorderRadius: '9999px',
 } as const;

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Design Variants — M365 Copilot Playground</title>
+<style>
+@font-face { font-family: 'Segoe Sans'; src: url('fonts/Segoe-sans.woff2') format('woff2-variations'), url('fonts/Segoe-sans.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Segoe Sans'; src: url('fonts/Segoe-sans-Italic.woff2') format('woff2-variations'), url('fonts/Segoe-sans-Italic.woff2') format('woff2'); font-weight: 100 900; font-style: italic; font-display: swap; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', 'Segoe Sans', system-ui, -apple-system, sans-serif; background: #1a1a1a; color: #e0e0e0; min-height: 100vh; }
+
+.topbar { position: sticky; top: 0; z-index: 50; background: rgba(26,26,26,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #333; display: flex; align-items: center; gap: 12px; padding: 0 48px; height: 56px; }
+.topbar__back { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 6px 12px; border-radius: 12px; text-decoration: none; color: #e0e0e0; font-size: 14px; transition: background 0.1s; }
+.topbar__back:hover { background: rgba(255,255,255,0.06); }
+.topbar__back svg { width: 16px; height: 16px; }
+
+.page { max-width: 708px; margin: 0 auto; padding: 60px 48px 100px; }
+.page h1 { font-family: 'Segoe Sans', 'Segoe UI', sans-serif; font-size: 36px; font-weight: 300; line-height: 1.2; margin-bottom: 8px; color: #fff; }
+.page h1 strong { font-weight: 400; }
+.page > .subtitle { font-size: 15px; color: #999; line-height: 1.6; margin-bottom: 48px; }
+
+.step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 36px; }
+.step__num { width: 32px; height: 32px; border-radius: 9999px; background: #fff; color: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+.step__body { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.step__title { font-size: 16px; font-weight: 600; color: #fff; }
+.step__text { font-size: 14px; color: #999; line-height: 1.6; }
+.step__text a { color: #e0e0e0; text-decoration: none; }
+.step__text a:hover { text-decoration: underline; }
+.step__text code { background: #2a2a2a; padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: 'Cascadia Code', monospace; color: #ccc; }
+
+.prompt-box { background: #2a2a2a; padding: 14px 18px; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; }
+.prompt-item { display: flex; align-items: flex-start; gap: 8px; }
+.prompt-item__text { font-size: 13px; font-style: italic; color: #ccc; line-height: 1.5; flex: 1; }
+.prompt-item .copy-btn { width: 24px; height: 24px; margin-top: 1px; }
+.prompt-item .copy-btn svg { width: 14px; height: 14px; }
+
+.copy-btn { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; background: transparent; color: #777; cursor: pointer; border-radius: 6px; transition: background 0.1s, color 0.1s; flex-shrink: 0; }
+.copy-btn:hover { background: #333; color: #e0e0e0; }
+.copy-btn svg { width: 16px; height: 16px; }
+
+.section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #666; margin-bottom: 20px; }
+
+.detail-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding-left: 4px; }
+.detail-list li { font-size: 14px; color: #999; line-height: 1.6; list-style: none; padding-left: 18px; position: relative; }
+.detail-list li::before { content: ''; position: absolute; left: 0; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: #555; }
+
+.back-footer { text-align: center; padding: 20px 0; }
+.back-footer a { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 8px 16px; border-radius: 12px; background: #fff; color: #1a1a1a; font-size: 14px; text-decoration: none; transition: background 0.1s; }
+.back-footer a:hover { background: #e0e0e0; }
+.back-footer a svg { width: 16px; height: 16px; }
+
+.divider { height: 1px; background: #333; margin: 48px 0; }
+
+/* ─── Inline UI visuals (matches live _variants.ts runtime) ─── */
+.viz { margin: 16px 0 0; display: flex; flex-direction: column; gap: 12px; }
+.viz__caption { font-size: 12px; color: #666; line-height: 1.5; }
+.viz__frame { position: relative; height: 320px; background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%); border: 1px solid #2a2a2a; border-radius: 12px; overflow: hidden; }
+.viz__frame__label { position: absolute; top: 12px; left: 14px; font-size: 11px; font-weight: 600; color: #929292; text-transform: uppercase; letter-spacing: 1px; }
+.viz__chip { position: absolute; bottom: 16px; right: 16px; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #fff; border: 1px solid #dedede; border-radius: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); font-family: 'Segoe UI', sans-serif; font-size: 13px; color: #242424; z-index: 1; }
+.viz__chip__count { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 9px; background: #242424; color: #fff; font-size: 11px; font-weight: 600; }
+.viz__panel { position: absolute; right: 16px; bottom: 60px; width: 320px; padding: 14px; background: #fff; border: 1px solid #dedede; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 14px; }
+.viz__panel__title { display: flex; align-items: center; justify-content: space-between; font-size: 16px; font-weight: 400; color: #242424; line-height: 1; }
+.viz__panel__close { width: 28px; height: 28px; border-radius: 9999px; background: rgba(36,36,36,0.04); color: #242424; display: inline-flex; align-items: center; justify-content: center; margin: -6px -6px -6px 0; }
+.viz__panel__close svg { width: 16px; height: 16px; }
+.viz__group { display: flex; flex-direction: column; gap: 8px; }
+.viz__group__label { font-size: 11px; font-weight: 600; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.04em; line-height: 15px; }
+.viz__seg { display: flex; gap: 4px; height: 34px; padding: 3px; background: #f5f5f5; border-radius: 10px; }
+.viz__seg__btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 1; height: 28px; padding: 0 12px; border-radius: 7px; font-size: 12px; font-weight: 400; color: #5d5d5d; white-space: nowrap; }
+.viz__seg__btn--active { background: #fff; color: #242424; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+.viz__seg__btn__dot { width: 5px; height: 5px; border-radius: 50%; background: #929292; flex-shrink: 0; }
+.viz__seg__btn--active .viz__seg__btn__dot { background: #242424; }
+.viz__url { display: block; margin-top: 12px; padding: 10px 14px; background: #2a2a2a; border-radius: 10px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12px; color: #ccc; word-break: break-all; }
+.viz__url em { color: #6f6f6f; font-style: normal; }
+.viz__url strong { color: #7bb36b; font-weight: 400; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 9999px; background-clip: content-box; border: 2px solid transparent; }
+::-webkit-scrollbar-thumb:hover { border: 0; }
+* { scrollbar-width: thin; scrollbar-color: #555 transparent; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar__back" href="playground.html">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Playground
+  </a>
+</div>
+
+<div class="page">
+  <h1><strong>Design Variants</strong></h1>
+  <p class="subtitle">Toggle between multiple versions of the same UI region inside any experiment &mdash; explore options live without rewriting code.</p>
+
+  <!-- Step 1: Ask for variants -->
+  <div class="step">
+    <span class="step__num">1</span>
+    <div class="step__body">
+      <span class="step__title">Ask for a few versions of the same thing</span>
+      <span class="step__text">The AI picks up on phrasing like &ldquo;what if we tried&hellip;&rdquo;, &ldquo;show me with and without&hellip;&rdquo;, or &ldquo;A/B this&rdquo; and wires them up as toggleable variants &mdash; instead of replacing what you already have.</span>
+      <div class="prompt-box" style="margin-top:8px">
+        <div class="prompt-item"><span class="prompt-item__text">"What if we tried a compact and a hero version of this card?"</span><button class="copy-btn" onclick="copy(this,'What if we tried a compact and a hero version of this card?')" title="Copy"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.2"/></svg></button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Toggle live -->
+  <div class="step">
+    <span class="step__num">2</span>
+    <div class="step__body">
+      <span class="step__title">Toggle live with the Variants chip</span>
+      <span class="step__text">When an experiment has variants, a floating <strong style="color:#e0e0e0;">Variants</strong> chip appears bottom-right. Click it (or press <code>V</code>) to open the panel and switch between options. The default option is marked with a small dot.</span>
+      <div class="viz">
+        <div class="viz__frame" aria-hidden="true">
+          <span class="viz__frame__label">Your experiment</span>
+          <div class="viz__panel">
+            <div class="viz__panel__title">
+              Variants
+              <span class="viz__panel__close"><svg viewBox="0 0 16 16" fill="none"><path d="M2.58859 2.71569L2.64645 2.64645C2.82001 2.47288 3.08944 2.4536 3.28431 2.58859L3.35355 2.64645L8 7.293L12.6464 2.64645C12.8417 2.45118 13.1583 2.45118 13.3536 2.64645C13.5488 2.84171 13.5488 3.15829 13.3536 3.35355L8.707 8L13.3536 12.6464C13.5271 12.82 13.5464 13.0894 13.4114 13.2843L13.3536 13.3536C13.18 13.5271 12.9106 13.5464 12.7157 13.4114L12.6464 13.3536L8 8.707L3.35355 13.3536C3.15829 13.5488 2.84171 13.5488 2.64645 13.3536C2.45118 13.1583 2.45118 12.8417 2.64645 12.6464L7.293 8L2.64645 3.35355C2.47288 3.17999 2.4536 2.91056 2.58859 2.71569Z" fill="currentColor"/></svg></span>
+            </div>
+            <div class="viz__group">
+              <span class="viz__group__label">Card layout</span>
+              <div class="viz__seg">
+                <span class="viz__seg__btn viz__seg__btn--active"><span class="viz__seg__btn__dot"></span>Compact</span>
+                <span class="viz__seg__btn">With image</span>
+                <span class="viz__seg__btn">Hero</span>
+              </div>
+            </div>
+            <div class="viz__group">
+              <span class="viz__group__label">Dialog style</span>
+              <div class="viz__seg">
+                <span class="viz__seg__btn viz__seg__btn--active"><span class="viz__seg__btn__dot"></span>Text only</span>
+                <span class="viz__seg__btn">With hero</span>
+              </div>
+            </div>
+          </div>
+          <div class="viz__chip">Variants <span class="viz__chip__count">3</span></div>
+        </div>
+        <span class="viz__caption">The chip sits quietly in the bottom-right of any experiment with variants. Click it to open the panel &mdash; each group toggles independently, and the dot marks the default.</span>
+      </div>
+      <ul class="detail-list" style="margin-top:20px;">
+        <li>Multiple groups work independently &mdash; card &times; dialog &times; menu can each have their own set.</li>
+        <li>The panel only shows groups that are currently visible on screen, so it stays quiet when you&rsquo;re deep in a flow.</li>
+        <li>Variants inside dialogs or overlays are picked up automatically as they open.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 3: Share -->
+  <div class="step">
+    <span class="step__num">3</span>
+    <div class="step__body">
+      <span class="step__title">Share the exact view you&rsquo;re looking at</span>
+      <span class="step__text">Your current selection is saved in the page URL. Copy the URL and send it &mdash; anyone opening it sees exactly your combo.</span>
+      <div class="viz__url" aria-hidden="true"><em>/myExperiment.html?v=</em><strong>card:hero,dialog:text</strong></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="back-footer">
+    <a href="playground.html">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 13l-5-5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Playground
+    </a>
+  </div>
+</div>
+
+<script>
+function copy(btn, text) {
+  navigator.clipboard.writeText(text).then(function() {
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%"><path d="M13.8639 3.65511C14.0533 3.85606 14.0439 4.17251 13.8429 4.36191L5.91309 11.8358C5.67573 12.0595 5.30311 12.0526 5.07417 11.8203L2.39384 9.09995C2.20003 8.90325 2.20237 8.58667 2.39907 8.39286C2.59578 8.19905 2.91235 8.2014 3.10616 8.3981L5.51192 10.8398L13.1571 3.63419C13.358 3.44479 13.6745 3.45416 13.8639 3.65511Z" fill="currentColor"/></svg>';
+    setTimeout(function() { btn.innerHTML = orig; }, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
