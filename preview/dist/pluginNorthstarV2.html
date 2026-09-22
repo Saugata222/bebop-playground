@@ -6594,51 +6594,33 @@ function mountPluginV2(model, assets) {
     function requestAdd(id, done = null) {
         const item = entry(id), restore = overlay.hidden ? null : modalPaint;
         afterAdd = done || (restore ? () => details(id) : () => { closeModal(); catalog(); });
-        if (!state.installed[id] && item.kind === 'connector' && ready(id)) {
-            state.installed[id] = true;
-            state.automatic[id] = true;
-            log('Added ' + item.name + ' using its existing connection');
+        if (state.installed[id]) {
             const callback = afterAdd;
             afterAdd = null;
-            catalog();
             callback?.();
             return;
         }
-        if (state.installed[id] && (item.kind === 'plugin' || ready(id))) {
-            afterAdd();
+        state.installed[id] = true;
+        log('Added ' + item.name);
+        catalog();
+        if (item.kind === 'connector' && ready(id)) {
+            const callback = afterAdd;
+            afterAdd = null;
+            callback?.();
             return;
         }
-        if (!state.variants.consent) {
-            state.installed[id] = true;
-            log('Added ' + item.name);
-            catalog();
-            const cancel = () => { afterAdd = null; if (restore)
-                details(id);
-            else
-                closeModal(); };
-            if (item.kind === 'connector') {
-                authenticate(id, () => { const callback = afterAdd; afterAdd = null; callback?.(); });
-                modalCancel = cancel;
-            }
-            else
-                setup(id, cancel);
-            return;
-        }
+        const cancel = () => { afterAdd = null; afterAuth = null; if (restore)
+            details(id);
+        else
+            closeModal(); };
         if (item.kind === 'connector') {
             authenticate(id, () => { const callback = afterAdd; afterAdd = null; callback?.(); });
-            return;
-        }
-        if (state.variants.consent) {
-            const restore = overlay.hidden ? null : modalPaint;
-            automaticDrafts[id] = state.automatic[id] !== false;
-            setup(id, () => { delete automaticDrafts[id]; afterAdd = null; restore?.(); });
+            modalCancel = cancel;
         }
         else
-            finishAdd(id, true);
+            setup(id, cancel);
     }
-    const automaticDrafts = {};
     let authLegalReturn = null;
-    function finishAdd(id, automatic) { state.installed[id] = true; state.automatic[id] = automatic; log('Added ' + entry(id).name + (automatic ? ' with automatic use' : ' for explicit use only')); catalog(); setup(id); }
     function setup(id, cancel = null) {
         const item = entry(id);
         const descriptions = { azure: 'Boards, repos, pipelines, and artifacts', github: 'Manage repositories, issues, and pull requests' };
@@ -6656,18 +6638,17 @@ function mountPluginV2(model, assets) {
     function authenticate(id, done = null) {
         const item = entry(id);
         afterAuth = done || (() => details(id));
-        automaticDrafts[id] ?? (automaticDrafts[id] = state.automatic[id] !== false);
         const restore = overlay.hidden ? null : modalPaint;
-        const cancel = () => { delete automaticDrafts[id]; afterAuth = null; if (restore)
+        const cancel = () => { afterAuth = null; if (restore)
             restore();
         else if (state.pending)
             renderChat(); };
         const title = (state.connections[id] === 'expired' ? 'Reconnect ' : 'Connect to ') + item.name;
-        const body = '<div class="v2-connect-copy v2-connect-description"><p>Let Copilot securely read your content from ' + escape(item.name) + '. ' + (state.variants.consent ? 'You can manage it in &lsquo;Plugins&rsquo;.' : 'You can manage sources in settings.') + '</p></div>'
+        const body = '<div class="v2-connect-copy v2-connect-description"><p>Let Copilot securely read your content from ' + escape(item.name) + '. You can manage sources in settings.</p></div>'
             + '<div class="v2-connect-meta"><div><span>Developed by</span><p>' + escape(item.publisher) + '</p></div><div><span>MCP Endpoint</span><p>' + escape(item.endpoint || 'Not provided') + '</p></div><div><span>More info</span><p><button type="button" data-v2="connection-legal" data-id="' + escape(id) + '">Privacy Policy</button>, <button type="button" data-v2="connection-legal" data-id="' + escape(id) + '">Terms of Service</button></p></div></div>';
         connectionCard(item, title, body, button('auth-signin', 'Continue to ' + item.name, id, true), cancel);
     }
-    function completeConnection(id) { state.installed[id] = true; state.connections[id] = 'ready'; state.automatic[id] = automaticDrafts[id] ?? state.automatic[id] !== false; delete automaticDrafts[id]; log('Connected ' + entry(id).name + ' (simulated)'); const callback = afterAuth; afterAuth = null; closeModal(); catalog(); callback?.(); }
+    function completeConnection(id) { state.installed[id] = true; state.connections[id] = 'ready'; log('Connected ' + entry(id).name + ' (simulated)'); const callback = afterAuth; afterAuth = null; closeModal(); catalog(); callback?.(); }
     const policyMenu = document.createElement('div');
     policyMenu.id = 'v2PolicyMenu';
     policyMenu.className = 'v2 v2-policy-menu';
@@ -7101,7 +7082,7 @@ function mountPluginV2(model, assets) {
         picker.className = 'v2 v2-picker v2-picker--ciq' + (pickerKind === 'content' ? ' v2-picker--modal' : '');
         shell.classList.toggle('v2-ciq-query', pickerKind === 'inline' && /^\s*[@/][^@/\n]*$/.test(textarea.value) && scopes.length === 0);
         const preferred = ['hubspot', 'lseg', 'moodys', 'canva', 'google-calendar'];
-        const needsAdd = (item) => !state.installed[item.id] || (item.kind === 'connector' && !ready(item.id));
+        const needsAdd = (item) => !state.installed[item.id];
         const candidates = entries.filter(item => (item.name + ' ' + item.category + ' ' + item.description).toLowerCase().includes(pickerQuery.toLowerCase())).sort((first, second) => {
             const firstNeedsAdd = needsAdd(first), secondNeedsAdd = needsAdd(second);
             if (firstNeedsAdd !== secondNeedsAdd)
@@ -7118,7 +7099,7 @@ function mountPluginV2(model, assets) {
             content = '<button class="v2-card-main v2-ciq-back" data-v2="picker-back">' + icon('back') + escape(item.name) + '</button>' + pickerSources(item) + item.skills.filter(skill => (skill.name + ' ' + skill.id).toLowerCase().includes(pickerQuery.toLowerCase())).map(skill => skillRow(item, skill)).join('');
         }
         else if (pickerTab === 'all' || pickerTab === 'plugins') {
-            content = candidates.map(item => '<div class="v2-picker-row" data-ciq-package="' + item.id + '"><button class="v2-card-main" data-v2="pick" data-id="' + item.id + '">' + logo(item) + '<span class="v2-ciq-name">' + escape(item.id === 'hubspot' ? 'Hubspot' : item.id === 'moodys' ? 'Moody\u2019s' : item.name) + '</span><small title="' + escape(descriptions[item.id] || item.description) + '">' + escape(descriptions[item.id] || item.description) + '</small></button>' + (!state.installed[item.id] || item.kind === 'connector' && !ready(item.id) ? '<button class="v2-btn v2-ciq-add" data-v2="picker-add" data-id="' + item.id + '" aria-label="Add ' + escape(item.name) + '">Add</button>' : iconButton('picker-skills', 'Skills in ' + item.name, 'right', item.id)) + '</div>').join('');
+            content = candidates.map(item => '<div class="v2-picker-row" data-ciq-package="' + item.id + '"><button class="v2-card-main" data-v2="pick" data-id="' + item.id + '">' + logo(item) + '<span class="v2-ciq-name">' + escape(item.id === 'hubspot' ? 'Hubspot' : item.id === 'moodys' ? 'Moody\u2019s' : item.name) + '</span><small title="' + escape(descriptions[item.id] || item.description) + '">' + escape(descriptions[item.id] || item.description) + '</small></button>' + (!state.installed[item.id] ? '<button class="v2-btn v2-ciq-add" data-v2="picker-add" data-id="' + item.id + '" aria-label="Add ' + escape(item.name) + '">Add</button>' : iconButton('picker-skills', 'Skills in ' + item.name, 'right', item.id)) + '</div>').join('');
             if (pickerTab === 'all')
                 content += entries.flatMap(item => item.skills.filter(skill => (skill.name + ' ' + skill.id).toLowerCase().includes(pickerQuery.toLowerCase())).map(skill => skillRow(item, skill))).join('');
         }
@@ -7308,7 +7289,7 @@ function mountPluginV2(model, assets) {
             else if (action === 'pdp-auth') {
                 const [owner, source] = id.split('|');
                 authenticate(source, () => details(owner));
-                if (!state.variants.consent)
+                if (entry(owner).kind === 'plugin')
                     openSso(source, modalCancel);
             }
             else if (action === 'detail-tool') {
@@ -7333,13 +7314,6 @@ function mountPluginV2(model, assets) {
             else if (action === 'add')
                 requestAdd(id);
             else if (action === 'finish-add' || action === 'finish-try') {
-                if (state.variants.consent) {
-                    state.installed[id] = true;
-                    state.automatic[id] = automaticDrafts[id] ?? state.automatic[id] !== false;
-                    delete automaticDrafts[id];
-                    log('Added ' + entry(id).name);
-                    catalog();
-                }
                 const callback = afterAdd;
                 afterAdd = null;
                 closeModal();
@@ -7371,8 +7345,7 @@ function mountPluginV2(model, assets) {
                 const [owner, source] = id.split('|');
                 const restore = modalPaint;
                 authenticate(source, () => restore ? restore() : setup(owner));
-                if (!state.variants.consent)
-                    openSso(source, modalCancel);
+                openSso(source, modalCancel);
             }
             else if (action === 'auth-signin')
                 openSso(id);
@@ -7440,9 +7413,15 @@ function mountPluginV2(model, assets) {
                 addScope(owner, skill);
             }
             else if (action === 'picker-add') {
-                const kind = pickerKind;
-                requestAdd(id, () => { if (kind === 'csf' || kind === 'inline' || kind === 'content')
-                    addScope(id); });
+                const kind = pickerKind, owner = pickerOwner, anchor = pickerAnchor, query = pickerQuery, tab = pickerTab;
+                requestAdd(id, () => addScope(id));
+                if (!overlay.hidden) {
+                    const cancel = modalCancel;
+                    modalCancel = () => { cancel?.(); openPicker(kind, anchor, query); pickerOwner = owner; pickerTab = tab; if (kind === 'csf')
+                        renderSourcesPicker();
+                    else
+                        renderPicker(); };
+                }
             }
             else if (action === 'added-picker') {
                 openPicker('content', control);
@@ -7684,10 +7663,7 @@ function mountPluginV2(model, assets) {
         const input = picker.querySelector('input');
         input.focus({ preventScroll: true });
     } }, true);
-    window.addEventListener('change', event => { const target = event.target; if (target.dataset.autoDraft) {
-        automaticDrafts[target.dataset.autoDraft] = target.checked;
-        return;
-    } if (target.id === 'v2ConsentVariant' || target.id === 'v2RecommendationVariant') {
+    window.addEventListener('change', event => { const target = event.target; if (target.id === 'v2ConsentVariant' || target.id === 'v2RecommendationVariant') {
         state.variants[target.id === 'v2ConsentVariant' ? 'consent' : 'recommendations'] = target.checked;
         if (!state.variants.recommendations)
             recommendation = null;
